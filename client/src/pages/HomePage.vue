@@ -6,6 +6,7 @@ import StarMap from "@/components/StarMap.vue";
 
 <template>
   <h1>home page</h1>
+
   <div>
     <StarMap />
 

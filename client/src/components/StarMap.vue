@@ -115,7 +115,7 @@ const myConfig = {
   // projectionRatio: null, // Optional override for default projection ratio
   orientationfixed: true,
   stars: {
-    show: false,
+    show: true,
   },
   dsos: {
     show: false,
@@ -212,4 +212,11 @@ function showPlanets() {
 </template>
 
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+#celestial-map {
+  background-size: cover;
+  background-attachment: fixed;
+  background-image: url(https://th.bing.com/th/id/OIP.EjJLdmebYop7DfBKiPClUwHaHa?w=736&h=736&rs=1&pid=ImgDetMain);
+
+}
+</style>
