@@ -10,6 +10,7 @@ export class GroupsController extends BaseController {
       .get('/:groupId', this.getGroupById)
       .use(Auth0Provider.getAuthorizedUserInfo)
       .post('', this.createGroup)
+      .put('/:groupId', this.editGroup)
   }
 
 
@@ -21,7 +22,6 @@ export class GroupsController extends BaseController {
       next(error)
     }
   }
-
 
   async createGroup(request, response, next) {
     try {
@@ -44,5 +44,16 @@ export class GroupsController extends BaseController {
     }
   }
 
+  async editGroup(request, response, next) {
+    try {
+      const groupId = request.params.groupId
+      const updateData = request.body
+      const userInfo = request.userInfo
+      const updatedGroup = await groupsService.editGroup(groupId, updateData, userInfo.id)
+      response.send(updatedGroup)
+    } catch (error) {
+      next(error)
+    }
+  }
 
 }
