@@ -1,0 +1,48 @@
+import { Auth0Provider } from "@bcwdev/auth0provider";
+import { groupsService } from "../services/GroupsService";
+import BaseController from "../utils/BaseController";
+
+export class GroupsController extends BaseController {
+  constructor() {
+    super('api/groups')
+    this.router
+      .get('', this.getAllGroups)
+      .get('/:groupId', this.getGroupById)
+      .use(Auth0Provider.getAuthorizedUserInfo)
+      .post('', this.createGroup)
+  }
+
+
+  async getAllGroups(request, response, next) {
+    try {
+      const groups = await groupsService.getAllGroups()
+      response.send(groups)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+
+  async createGroup(request, response, next) {
+    try {
+      const groupData = request.body
+      groupData.creatorId = request.userInfo.id
+      const group = await groupsService.createGroup(groupData)
+      response.send(group)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async getGroupById(request, response, next) {
+    try {
+      const groupId = request.params.groupId
+      const group = await groupsService.getGroupById(groupId)
+      response.send(group)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+
+}
