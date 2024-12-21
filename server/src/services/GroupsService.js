@@ -6,7 +6,6 @@ class GroupsService {
   async editGroup(groupId, updateData, userInfo) {
     const originalGroup = await dbContext.Groups.findById(groupId)
 
-
     if (!originalGroup) { throw new Error(`Invalid group id ${groupId}`) }
     if (userInfo != originalGroup.creatorId) { throw new Forbidden("CANNOT EDIT THIS GROUP, IT DOESN'T BELONG TO YOU, BRAH") }
     if (updateData.description) originalGroup.description = updateData.description
@@ -16,6 +15,7 @@ class GroupsService {
   }
   async getGroupById(groupId) {
     const group = await dbContext.Groups.findById(groupId).populate('creator', 'name picture')
+    if (group == null) { throw new Error(`Invalid group id${groupId}`) }
     return group
   }
   async createGroup(groupData) {
