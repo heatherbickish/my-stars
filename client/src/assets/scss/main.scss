@@ -2,6 +2,11 @@
 @import "./_utilities.scss";
 @import "./loaders.scss";
 
+*{
+  margin: 0;
+  padding: 0;
+}
+
 body {
   overscroll-behavior: none;
 }
@@ -20,4 +25,6 @@ main {
 a {
   text-decoration: none;
 }
-
+ul,li{
+  list-style: none;
+}

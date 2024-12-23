@@ -1,6 +1,6 @@
 <script setup>
 // import Celestial from 'd3-celestial';
-import { onMounted } from 'vue';
+import { onMounted } from "vue";
 
 // var config = {
 //   width: 0,     // Default width, 0 = full parent width; height is determined by projection
@@ -110,8 +110,8 @@ import { onMounted } from 'vue';
 
 const myConfig = {
   transform: "galactic",
-  background: { fill: "#ffffff", stroke: "#000000", opacity: .01 }, // Background style
-  center: [1300, 43.615021, -116.202316],       // Initial center coordinates in equatorial transformation [hours, degrees, degrees],
+  background: { fill: "#ffffff", stroke: "#000000", opacity: 0.01 }, // Background style
+  center: [1300, 43.615021, -116.202316], // Initial center coordinates in equatorial transformation [hours, degrees, degrees],
   // projectionRatio: null, // Optional override for default projection ratio
   orientationfixed: true,
   stars: {
@@ -121,102 +121,118 @@ const myConfig = {
     show: false,
   },
   mw: {
-    show: true,    // Show Milky Way as filled polygons
-    style: { fill: "#00ffff", opacity: "0.15" }
+    show: true, // Show Milky Way as filled polygons
+    style: { fill: "#00ffff", opacity: "0.15" },
   },
   constellations: {
     show: true,
     names: true,
     desig: false,
   },
-  horizon: {  //Show horizon marker, if location is set and map projection is all-sky
+  horizon: {
+    //Show horizon marker, if location is set and map projection is all-sky
     show: false,
     stroke: "#cccccc", // Line
     width: 1.0,
-    fill: "#000000",   // Area below horizon
-    opacity: 0.5
+    fill: "#000000", // Area below horizon
+    opacity: 0.5,
   },
-  daylight: {  //Show day sky as a gradient, if location is set and map projection is hemispheric
-    show: false
+  daylight: {
+    //Show day sky as a gradient, if location is set and map projection is hemispheric
+    show: false,
   },
-  planets: {  //Show planet locations, if date-time is set
+  planets: {
+    //Show planet locations, if date-time is set
     show: false,
     // List of all objects to show
-    which: ["sol", "mer", "ven", "ter", "lun", "mar", "jup", "sat", "ura", "nep"],
+    which: [
+      "sol",
+      "mer",
+      "ven",
+      "ter",
+      "lun",
+      "mar",
+      "jup",
+      "sat",
+      "ura",
+      "nep",
+    ],
     // Font styles for planetary symbols
-    symbols: {  // Character and color for each symbol in 'which' above (simple circle: \u25cf), optional size override for Sun & Moon
-      "sol": { symbol: "\u2609", letter: "Su", fill: "#ffff00", size: "" },
-      "mer": { symbol: "\u263f", letter: "Me", fill: "#cccccc" },
-      "ven": { symbol: "\u2640", letter: "V", fill: "#eeeecc" },
-      "ter": { symbol: "\u2295", letter: "T", fill: "#00ccff" },
-      "lun": { symbol: "\u25cf", letter: "L", fill: "#ffffff", size: "" }, // overridden by generated crecent, except letter & size
-      "mar": { symbol: "\u2642", letter: "Ma", fill: "#ff6600" },
-      "cer": { symbol: "\u26b3", letter: "C", fill: "#cccccc" },
-      "ves": { symbol: "\u26b6", letter: "Ma", fill: "#cccccc" },
-      "jup": { symbol: "\u2643", letter: "J", fill: "#ffaa33" },
-      "sat": { symbol: "\u2644", letter: "Sa", fill: "#ffdd66" },
-      "ura": { symbol: "\u2645", letter: "U", fill: "#66ccff" },
-      "nep": { symbol: "\u2646", letter: "N", fill: "#6666ff" },
-      "plu": { symbol: "\u2647", letter: "P", fill: "#aaaaaa" },
-      "eri": { symbol: "\u26aa", letter: "E", fill: "#eeeeee" }
+    symbols: {
+      // Character and color for each symbol in 'which' above (simple circle: \u25cf), optional size override for Sun & Moon
+      sol: { symbol: "\u2609", letter: "Su", fill: "#ffff00", size: "" },
+      mer: { symbol: "\u263f", letter: "Me", fill: "#cccccc" },
+      ven: { symbol: "\u2640", letter: "V", fill: "#eeeecc" },
+      ter: { symbol: "\u2295", letter: "T", fill: "#00ccff" },
+      lun: { symbol: "\u25cf", letter: "L", fill: "#ffffff", size: "" }, // overridden by generated crecent, except letter & size
+      mar: { symbol: "\u2642", letter: "Ma", fill: "#ff6600" },
+      cer: { symbol: "\u26b3", letter: "C", fill: "#cccccc" },
+      ves: { symbol: "\u26b6", letter: "Ma", fill: "#cccccc" },
+      jup: { symbol: "\u2643", letter: "J", fill: "#ffaa33" },
+      sat: { symbol: "\u2644", letter: "Sa", fill: "#ffdd66" },
+      ura: { symbol: "\u2645", letter: "U", fill: "#66ccff" },
+      nep: { symbol: "\u2646", letter: "N", fill: "#6666ff" },
+      plu: { symbol: "\u2647", letter: "P", fill: "#aaaaaa" },
+      eri: { symbol: "\u26aa", letter: "E", fill: "#eeeeee" },
     },
     symbolStyle: {
-      fill: "#00ccff", font: "bold 17px 'Lucida Sans Unicode', Consolas, sans-serif",
-      align: "center", baseline: "middle"
+      fill: "#00ccff",
+      font: "bold 17px 'Lucida Sans Unicode', Consolas, sans-serif",
+      align: "center",
+      baseline: "middle",
     },
-    symbolType: "symbol",  // Type of planet symbol: 'symbol' graphic planet sign, 'disk' filled circle scaled by magnitude
-    // 'letter': 1 or 2 letters S Me V L Ma J S U N     
-    names: true,          // Show name in nameType language next to symbol
-    nameStyle: { fill: "#00ccff", font: "14px 'Lucida Sans Unicode', Consolas, sans-serif", align: "right", baseline: "top" },
-    namesType: "desig"     // Language of planet name (see list below of language codes available for planets), 
+    symbolType: "symbol", // Type of planet symbol: 'symbol' graphic planet sign, 'disk' filled circle scaled by magnitude
+    // 'letter': 1 or 2 letters S Me V L Ma J S U N
+    names: true, // Show name in nameType language next to symbol
+    nameStyle: {
+      fill: "#00ccff",
+      font: "14px 'Lucida Sans Unicode', Consolas, sans-serif",
+      align: "right",
+      baseline: "top",
+    },
+    namesType: "desig", // Language of planet name (see list below of language codes available for planets),
     // or desig = 3-letter designation
   },
-}
-
+};
 
 function drawMap() {
   // @ts-ignore
   if (!window.Celestial) {
-    return setTimeout(() => { console.log('huh'); drawMap() }, 300)
+    return setTimeout(() => {
+      console.log("huh");
+      drawMap();
+    }, 300);
   }
   // @ts-ignore
   // eslint-disable-next-line no-undef
   // Celestial.date(new Date())
   // @ts-ignore
   // eslint-disable-next-line no-undef
-  Celestial.display(myConfig)
+  Celestial.display(myConfig);
 }
 
 onMounted(() => {
-  drawMap()
+  drawMap();
   // Celestial.display(config)
-})
+});
 
 function showPlanets() {
-  myConfig.planets.show = !myConfig.planets.show
-  drawMap()
+  myConfig.planets.show = !myConfig.planets.show;
+  drawMap();
 }
-
-
 </script>
-
 
 <template>
   <div>
-    <h2>
-      starmap vvvv
-    </h2>
     <button @click="showPlanets">Toggle Planets 🌎</button>
     <div id="celestial-map"></div>
   </div>
 </template>
-
 
 <style lang="scss" scoped>
 #celestial-map {
   background-size: cover;
   background-attachment: fixed;
   background-image: url(https://th.bing.com/th/id/OIP.EjJLdmebYop7DfBKiPClUwHaHa?w=736&h=736&rs=1&pid=ImgDetMain);
-
 }
 </style>
