@@ -15,7 +15,7 @@ class GroupsService {
   }
   async getGroupById(groupId) {
     const group = await dbContext.Groups.findById(groupId).populate('creator', 'name picture')
-    if (group == null) { throw new Error(`Invalid group id${groupId}`) }
+    // if (group == null) { throw new Error(`Invalid group id${groupId}`) }
     return group
   }
   async createGroup(groupData) {
