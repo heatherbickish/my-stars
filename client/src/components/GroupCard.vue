@@ -18,12 +18,16 @@ defineProps({
       <div>
         <span>245 members</span>
       </div>
-      <div
-        role="button"
-        class="join-btn d-flex justify-content-center align-items-center"
+      <router-link
+        :to="{ name: 'Group Details Page', params: { groupId: groupProp.id } }"
       >
-        <span>Join Group</span>
-      </div>
+        <div
+          role="button"
+          class="join-btn d-flex justify-content-center align-items-center"
+        >
+          <span>Join Group</span>
+        </div>
+      </router-link>
     </div>
   </div>
 </template>

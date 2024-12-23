@@ -22,6 +22,11 @@ const routes = [
     component: loadPage('GroupsPage')
   },
   {
+    path: '/groups/:groupId',
+    name: 'Group Details Page',
+    component: loadPage('GroupDetailsPage')
+  },
+  {
     path: '/account',
     name: 'Account',
     component: loadPage('AccountPage'),
