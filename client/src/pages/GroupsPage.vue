@@ -1,4 +1,26 @@
-<script setup></script>
+<script setup>
+import { AppState } from "@/AppState";
+import GroupCard from "@/components/GroupCard.vue";
+import { groupsService } from "@/services/GroupsService";
+import { logger } from "@/utils/Logger";
+import Pop from "@/utils/Pop";
+import { computed, onMounted } from "vue";
+
+const groups = computed(() => AppState.groups);
+
+onMounted(() => {
+  getAllGroups();
+});
+
+async function getAllGroups() {
+  try {
+    await groupsService.getAllGroups();
+  } catch (error) {
+    Pop.meow(error);
+    logger.error(error);
+  }
+}
+</script>
 
 <template>
   <section class="row justify-content-center">
@@ -86,26 +108,8 @@
     </div>
     <div class="col-md-10">
       <section class="row">
-        <div class="col-md-3">
-          <div class="card" style="width: 18rem">
-            <img
-              class="card-img-top"
-              src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-6/470026724_2704125069782808_4076253806320419557_n.jpg?stp=dst-jpg_p720x720_tt6&_nc_cat=1&ccb=1-7&_nc_sid=2285d6&_nc_ohc=QG9xCEIxb_0Q7kNvgEh4Duf&_nc_zt=23&_nc_ht=scontent-sea1-1.xx&_nc_gid=AwjSkpnDO2R404OHhLgYr2B&oh=00_AYAqvjI21XD3AoYYy2uXtEdvWOneNHcyQfffIOc288do2w&oe=676F74AA"
-              alt="Card image cap"
-            />
-            <div class="card-body text-center">
-              <h5>Nebula Network</h5>
-              <div>
-                <span>245 members</span>
-              </div>
-              <div
-                role="button"
-                class="create-btn d-flex justify-content-center align-items-center"
-              >
-                <span>Join Group</span>
-              </div>
-            </div>
-          </div>
+        <div v-for="group in groups" :key="group.id" class="col-md-3 mb-4">
+          <GroupCard :groupProp="group" />
         </div>
       </section>
     </div>

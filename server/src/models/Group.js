@@ -17,3 +17,10 @@ GroupSchema.virtual('creator', {
   foreignField: '_id',
   justOne: true
 })
+
+GroupSchema.virtual('memberCount', {
+  localField: '_id',
+  ref: 'Member',
+  foreignField: 'groupId',
+  count: true
+})

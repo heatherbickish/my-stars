@@ -1,0 +1,43 @@
+<script setup>
+import { Group } from "@/models/Group";
+
+defineProps({
+  groupProp: { type: Group, required: true },
+});
+</script>
+
+<template>
+  <div class="card shadow" style="width: 18rem">
+    <img
+      class="card-img-top cover-img img-fluid"
+      :src="groupProp.coverImg"
+      alt="Card image cap"
+    />
+    <div class="card-body text-center">
+      <h5>{{ groupProp.name }}</h5>
+      <div>
+        <span>245 members</span>
+      </div>
+      <div
+        role="button"
+        class="join-btn d-flex justify-content-center align-items-center"
+      >
+        <span>Join Group</span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.cover-img {
+  height: 30dvh;
+  width: 100%;
+  object-fit: cover;
+}
+.join-btn {
+  width: 100%;
+  height: 40px;
+  background-color: lightblue;
+  color: blue;
+}
+</style>
