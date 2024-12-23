@@ -7,7 +7,7 @@ import { AppState } from "./AppState.js";
   <header class="container-fluid p-0">
     <Navbar />
   </header>
-  <main>
+  <main class="container-fluid">
     <router-view />
   </main>
   <footer></footer>
