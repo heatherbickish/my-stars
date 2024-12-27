@@ -109,7 +109,9 @@ import { onMounted } from "vue";
 // };
 
 const myConfig = {
-  transform: "galactic",
+  // transform: "robinson",
+  projection: "orthographic",
+  width: 500,
   background: { fill: "#ffffff", stroke: "#000000", opacity: 0.01 }, // Background style
   center: [1300, 43.615021, -116.202316], // Initial center coordinates in equatorial transformation [hours, degrees, degrees],
   // projectionRatio: null, // Optional override for default projection ratio
