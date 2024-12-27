@@ -43,7 +43,7 @@ import { onMounted } from "vue";
 //     //data: 'stars.8.json' // Alternative deeper data source for stellar data
 //   },
 //   dsos: {
-//     show: true,    // Show Deep Space Objects
+//     show: false,    // Show Deep Space Objects
 //     limit: 6,      // Show only DSOs brighter than limit magnitude
 //     names: true,   // Show DSO names
 //     desig: true,   // Show short DSO names
@@ -111,7 +111,8 @@ import { onMounted } from "vue";
 const myConfig = {
   // transform: "robinson",
   projection: "orthographic",
-  width: 500,
+  width: 800,
+  form: true,
   background: { fill: "#ffffff", stroke: "#000000", opacity: 0.01 }, // Background style
   center: [1300, 43.615021, -116.202316], // Initial center coordinates in equatorial transformation [hours, degrees, degrees],
   // projectionRatio: null, // Optional override for default projection ratio
@@ -119,9 +120,9 @@ const myConfig = {
   stars: {
     show: true,
   },
-  dsos: {
-    show: false,
-  },
+  // dsos: {
+  //   show: true,
+  // },
   mw: {
     show: true, // Show Milky Way as filled polygons
     style: { fill: "#00ffff", opacity: "0.15" },
@@ -218,16 +219,16 @@ onMounted(() => {
   // Celestial.display(config)
 });
 
-function showPlanets() {
-  myConfig.planets.show = !myConfig.planets.show;
-  drawMap();
-}
+// function showPlanets() {
+//   myConfig.planets.show = !myConfig.planets.show;
+//   drawMap();
+// }
 </script>
 
 <template>
   <div>
-    <button @click="showPlanets">Toggle Planets 🌎</button>
-    <div id="celestial-map"></div>
+    <!-- <button @click="showPlanets">Toggle Planets 🌎</button> -->
+    <div class="d-flex justify-content-center" id="celestial-map"></div>
   </div>
 </template>
 
@@ -235,6 +236,6 @@ function showPlanets() {
 #celestial-map {
   background-size: cover;
   background-attachment: fixed;
-  background-image: url(https://th.bing.com/th/id/OIP.EjJLdmebYop7DfBKiPClUwHaHa?w=736&h=736&rs=1&pid=ImgDetMain);
+  background-image: url(https://images.unsplash.com/photo-1449100840062-49e9aca7c8ec?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8ODB8fHNwYWNlfGVufDB8fDB8fHwy);
 }
 </style>

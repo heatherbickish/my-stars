@@ -9,11 +9,11 @@ onMounted(() => {
   document.documentElement.setAttribute("data-bs-theme", theme.value);
 });
 
-function toggleTheme() {
-  theme.value = theme.value == "light" ? "dark" : "light";
-  document.documentElement.setAttribute("data-bs-theme", theme.value);
-  saveState("theme", theme.value);
-}
+// function toggleTheme() {
+//   theme.value = theme.value == "light" ? "dark" : "light";
+//   document.documentElement.setAttribute("data-bs-theme", theme.value);
+//   saveState("theme", theme.value);
+// }
 </script>
 
 <template>
@@ -22,21 +22,14 @@ function toggleTheme() {
       <div class="col-md-2">
         <router-link class="navbar-brand d-flex" :to="{ name: 'Home' }">
           <div class="d-flex align-items-center">
-            <img
-              alt="logo"
-              src="../assets/img/telescope.png"
-              height="45"
-              class=""
-            />
+            <img alt="logo" src="../assets/img/telescope.png" height="45" class="" />
             <span class="site-name fs-1">My Stars</span>
           </div>
         </router-link>
       </div>
       <div class="col-md-5 col-12">
         <div>
-          <ul
-            class="w-100 d-flex justify-content-around align-items-center p-0 m-0"
-          >
+          <ul class="w-100 d-flex justify-content-around align-items-center p-0 m-0">
             <li>
               <!-- <router-link
             :to="{ name: 'About' }"
@@ -46,66 +39,38 @@ function toggleTheme() {
           </router-link> -->
             </li>
             <li>
-              <router-link
-                :to="{ name: 'Groups' }"
-                class="btn lighten-30 selectable routerlink"
-              >
+              <router-link :to="{ name: 'Groups' }" class="btn lighten-30 selectable routerlink">
                 Groups
               </router-link>
             </li>
             <li>
               <div>
                 <div class="dropdown my-2 my-lg-0">
-                  <div
-                    type="button"
-                    class="tab border-0 selectable no-select"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
+                  <div type="button" class="tab border-0 selectable no-select" data-bs-toggle="dropdown"
+                    aria-expanded="false">
                     Equipment
                   </div>
-                  <div
-                    class="dropdown-menu p-0 drop-down"
-                    style="left: -35%; margin-top: 20%"
-                    aria-labelledby="authDropdown"
-                  >
+                  <div class="dropdown-menu p-0 drop-down" style="left: -35%; margin-top: 20%"
+                    aria-labelledby="authDropdown">
                     <div class="list-group">
-                      <div
-                        class="list-group-item dropdown-item list-group-item-action text-center"
-                        style="background-color: #24093e"
-                      >
-                        <a
-                          href="https://www.amazon.com/s?k=telescope&ref=nb_sb_noss"
-                          target="_blank"
-                          class="fs-5"
-                          id="telescopes"
-                        >
+                      <div class="list-group-item dropdown-item list-group-item-action text-center"
+                        style="background-color: #24093e">
+                        <a href="https://www.amazon.com/s?k=telescope&ref=nb_sb_noss" target="_blank" class="fs-5"
+                          id="telescopes">
                           Telescopes
                         </a>
                       </div>
-                      <div
-                        class="list-group-item dropdown-item list-group-item-action text-center"
-                        style="background-color: #24093e"
-                      >
-                        <a
-                          href="https://www.amazon.com/s?k=binocular&ref=nb_sb_noss"
-                          target="_blank"
-                          class="fs-5"
-                          id="binoculars"
-                        >
+                      <div class="list-group-item dropdown-item list-group-item-action text-center"
+                        style="background-color: #24093e">
+                        <a href="https://www.amazon.com/s?k=binocular&ref=nb_sb_noss" target="_blank" class="fs-5"
+                          id="binoculars">
                           Binoculars
                         </a>
                       </div>
-                      <div
-                        class="list-group-item dropdown-item list-group-item-action text-center"
-                        style="background-color: #24093e"
-                      >
-                        <a
-                          href="https://www.amazon.com/s?k=astronomy+accessories&crid=1LNWNYEIU3XVF&sprefix=astronomy+accessories%2Caps%2C477&ref=nb_sb_noss_1"
-                          target="_blank"
-                          class="fs-5"
-                          id="accessories"
-                        >
+                      <div class="list-group-item dropdown-item list-group-item-action text-center"
+                        style="background-color: #24093e">
+                        <a href="https://www.amazon.com/s?k=astronomy+accessories&crid=1LNWNYEIU3XVF&sprefix=astronomy+accessories%2Caps%2C477&ref=nb_sb_noss_1"
+                          target="_blank" class="fs-5" id="accessories">
                           Accessories
                         </a>
                       </div>
@@ -117,32 +82,25 @@ function toggleTheme() {
             <li>
               <div>
                 <div class="dropdown my-2 my-lg-0">
-                  <div
-                    type="button"
-                    class="tab border-0 selectable no-select"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
+                  <div type="button" class="tab border-0 selectable no-select" data-bs-toggle="dropdown"
+                    aria-expanded="false">
                     More
                   </div>
-                  <div
-                    class="dropdown-menu p-0"
-                    style="left: -100%; margin-top: 40%"
-                    aria-labelledby="authDropdown"
-                  >
+                  <div class="dropdown-menu p-0" style="left: -100%; margin-top: 40%" aria-labelledby="authDropdown">
                     <div class="list-group">
-                      <div
-                        class="list-group-item dropdown-item list-group-item-action text-center"
-                        style="background-color: #24093e"
-                      >
-                        <a
-                          href="#"
-                          target="_blank"
-                          class="fs-5"
-                          id="news-feeds"
-                        >
-                          News Feeds
-                        </a>
+                      <div class="list-group-item dropdown-item list-group-item-action text-center"
+                        style="background-color: #24093e">
+                        <router-link :to="{ name: 'News Feed' }" id="gallery-1" class="fs-5">
+                          News Feed
+                        </router-link>
+                      </div>
+                    </div>
+                    <div class="list-group">
+                      <div class="list-group-item dropdown-item list-group-item-action text-center"
+                        style="background-color: #24093e">
+                        <router-link :to="{ name: 'Gallery' }" id="gallery-1" class="fs-5">
+                          Gallery
+                        </router-link>
                       </div>
                     </div>
                   </div>
@@ -176,6 +134,7 @@ function toggleTheme() {
 a {
   color: #ffff00;
 }
+
 a:hover {
   text-decoration: none;
 }
@@ -189,30 +148,38 @@ a:hover {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
+
 nav {
   background-color: #24093e;
   font-family: "Island Moments", serif;
 }
+
 .site-name {
   color: #ffff00;
 }
+
 .routerlink {
   color: #ffff00;
   font-size: 30px;
 }
+
 .tab {
   color: #ffff00;
   font-size: 30px;
 }
-ul > li:hover {
+
+ul>li:hover {
   color: white;
 }
+
 #telescopes,
 #binoculars,
 #accessories,
-#news-feeds {
+#news-feeds,
+#gallery-1 {
   font-family: arial;
 }
+
 @media screen and (min-width: 576px) {
   nav {
     height: 64px;

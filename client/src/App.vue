@@ -1,6 +1,7 @@
 <script setup>
 import Navbar from "./components/Navbar.vue";
 import { AppState } from "./AppState.js";
+import ModalWrapper from "./components/ModalWrapper.vue";
 </script>
 
 <template>
@@ -11,6 +12,7 @@ import { AppState } from "./AppState.js";
     <router-view />
   </main>
   <footer></footer>
+  <ModalWrapper />
 </template>
 
 <style lang="scss">
