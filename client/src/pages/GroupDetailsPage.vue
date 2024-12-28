@@ -7,6 +7,7 @@ import { computed, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 const posts = computed(() => AppState.posts)
+const group = computed(() => AppState.activeGroup)
 const route = useRoute()
 
 // watch(route, () => {
@@ -41,7 +42,7 @@ async function getPosts() {
           " class="cover-image"></div>
         <div class="d-flex justify-content-between align-items-center">
           <div>
-            <h1>Nebula Network</h1>
+            <h1>{{ }}</h1>
             <p>2100 members</p>
           </div>
           <div>
