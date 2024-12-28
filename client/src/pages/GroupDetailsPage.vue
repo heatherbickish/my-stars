@@ -1,6 +1,7 @@
 <script setup>
 import { AppState } from '@/AppState';
 import { groupsService } from "@/services/GroupsService";
+import { membersService } from '@/services/MembersService';
 import { postsService } from '@/services/PostsService';
 import { logger } from '@/utils/Logger';
 import Pop from '@/utils/Pop';
@@ -10,6 +11,7 @@ import { useRoute } from 'vue-router';
 const group = computed(() => AppState.activeGroup)
 const posts = computed(() => AppState.posts)
 const account = computed(() => AppState.account);
+const joinedGroups = computed(() => AppState.joinedGroups);
 const route = useRoute()
 
 watch(route, () => {
@@ -55,6 +57,28 @@ async function deletePost(postId){
   }
 }
 
+async function createMember(){
+  try {
+    const memberData = {groupId: route.params.groupId};
+    await membersService.createMember(memberData);
+  } catch (error) {
+    Pop.meow(error);
+    logger.error(error);
+
+  }
+}
+
+async function deleteMember(){
+  try{
+    const confirmed = await Pop.confirm("Are you sure you want to leave this group?");
+    if(!confirmed) return;
+    await membersService.deleteMember(memberId);
+  }catch(error){
+    Pop.meow(error);
+    logger.error(error);
+  }
+}
+
 </script>
 
 <template>
@@ -71,9 +95,13 @@ async function deletePost(postId){
               <p>2100 members</p>
             </div>
             <div>
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#postModal">
+              <button type="button" class="btn btn-primary me-3" data-bs-toggle="modal" data-bs-target="#postModal">
                 Create Post
               </button>
+              <!-- <button v-if="account" @click="cancelEvent()" class="btn btn-danger"
+              title="Cancel Event"> {{ group.joined? 'Leave' : 'Join' }} Group</button> -->
+              <button v-if="group.joined" @click="deleteMember(group.id)">Leave Group</button>
+              <button v-else @click="createMember()">Join Group</button>
             </div>
           </div>
         </div>

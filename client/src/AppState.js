@@ -11,5 +11,9 @@ export const AppState = reactive({
   /**@type {import('./models/Post.js').Post[]} */
   posts: [],
   /** @type {import('./models/Group.js').Group} user info from the database*/
-  activeGroup: null
+  activeGroup: null,
+  /**@type {import('./models/Member.js').Member[]} */
+  members: [],
+  /**@type {import('./models/Member.js').Member[]} */
+  joinedGroups: []
 })

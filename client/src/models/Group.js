@@ -6,5 +6,6 @@ export class Group {
     this.description = data.description;
     this.coverImg = data.coverImg;
     this.memberCount = data.memberCount;
+    this.joined = data.joined;
   }
 }

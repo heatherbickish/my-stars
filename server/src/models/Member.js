@@ -1,9 +1,9 @@
 import { Schema } from "mongoose";
 
 export const MemberSchema = new Schema({
-  name: { type: String, maxLength: 50, required: true },
+  // name: { type: String, maxLength: 50, required: true },
   accountId: { type: Schema.ObjectId, ref: 'Account', required: true },
-  groupId: { type: Schema.ObjectId, ref: 'Group', required: true }
+  groupId: { type: Schema.ObjectId, ref: 'Group'}
 },
   {
     timestamps: true,

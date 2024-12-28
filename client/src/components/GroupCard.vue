@@ -25,7 +25,7 @@ defineProps({
           role="button"
           class="join-btn d-flex justify-content-center align-items-center"
         >
-          <span>Join Group</span>
+          <span>Visit Group</span>
         </div>
       </router-link>
     </div>
