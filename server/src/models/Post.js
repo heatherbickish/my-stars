@@ -2,10 +2,10 @@ import { Schema } from "mongoose";
 
 export const PostSchema = new Schema({
   creatorId: { type: Schema.ObjectId, ref: 'Account', required: true },
-  imgUrl: { type: String, maxLength: 2000 },
-  groupId: { type: Schema.ObjectId, ref: 'Group', },
-  body: { type: String, minLength: 3, maxLength: 1000 },
-  location: { type: String, maxLength: 100, }
+  imgUrl: { type: String, maxLength: 2000},
+  groupId: { type: Schema.ObjectId, ref: 'Group'},
+  body: { type: String, minLength: 3, maxLength: 1000, required: true}
+  // location: { type: String, maxLength: 100, }
 },
   {
     timestamps: true,
@@ -18,4 +18,3 @@ PostSchema.virtual('creator', {
   foreignField: '_id',
   justOne: true
 })
-

@@ -9,6 +9,7 @@ import { useRoute } from 'vue-router';
 
 const group = computed(() => AppState.activeGroup)
 const posts = computed(() => AppState.posts)
+const account = computed(() => AppState.account);
 const route = useRoute()
 
 watch(route, () => {
@@ -43,6 +44,16 @@ async function getPostsByGroupId() {
   }
 }
 
+async function deletePost(postId){
+  try{
+    const confirmed = await Pop.confirm("Are you sure you want to delete this post?");
+    if(!confirmed) return;
+    await postsService.deletePost(postId);
+  }catch(error){
+    Pop.meow(error);
+    logger.error(error);
+  }
+}
 
 </script>
 
@@ -79,7 +90,7 @@ async function getPostsByGroupId() {
                 <div class="d-flex justify-content-between p-3">
                   <div class="d-flex">
                     <div>
-                      <img :src="post.imgUrl" alt="" class="creator-img me-2" />
+                      <img :src="post.creator.picture" alt="" class="creator-img me-2" />
                     </div>
                     <div>
                       <p>{{ post.creatorId.name }}</p>
@@ -87,8 +98,8 @@ async function getPostsByGroupId() {
                     </div>
                   </div>
                   <div>
-                    <button class="btn bg-warning me-2">Edit</button>
-                    <button class="btn bg-warning">Delete</button>
+                    <button v-if="post.creatorId == account?.id" class="btn bg-warning me-2">Edit</button>
+                    <button v-if="post.creatorId == account?.id" @click="deletePost(post.id)" class="btn bg-warning">Delete</button>
                   </div>
                 </div>
                 <p>

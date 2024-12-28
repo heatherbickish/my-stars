@@ -11,16 +11,18 @@ const route = useRoute();
 const editablePostData = ref({
   body: "",
   imgUrl: "",
-//   image: null,
-  groupId: route.params.groupId,
+  groupId: ''
 });
 
 async function createPost() {
   try {
+    // @ts-ignore
+    editablePostData.value.groupId = route.params.groupId;
+    console.log(editablePostData.value.groupId)
     await postsService.createPost(editablePostData.value);
     editablePostData.value.body = "";
-    // editablePostData.value.image = null;
-    editablePostData.value.imgUrl = "",
+    editablePostData.value.imgUrl = "";
+    editablePostData.value.groupId = "";
     Modal.getInstance("#postModal").hide();
   } catch (error) {
     Pop.error(error);
