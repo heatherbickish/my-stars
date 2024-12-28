@@ -4,6 +4,12 @@ import { Group } from "@/models/Group.js";
 import { AppState } from "@/AppState.js";
 
 class GroupsService {
+  async createGroup(groupData) {
+    const response = await api.post('api/groups', groupData)
+    const group = new Group(response.data)
+    AppState.groups.push(group)
+    return group
+  }
   async getGroupById(groupId) {
     const response = await api.get(`api/groups/${groupId}`)
     const group = new Group(response.data)

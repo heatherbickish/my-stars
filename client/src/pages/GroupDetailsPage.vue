@@ -5,13 +5,14 @@ import { membersService } from '@/services/MembersService';
 import { postsService } from '@/services/PostsService';
 import { logger } from '@/utils/Logger';
 import Pop from '@/utils/Pop';
-import { computed, onMounted, watch } from 'vue';
+import { computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 const group = computed(() => AppState.activeGroup)
 const posts = computed(() => AppState.posts)
 const account = computed(() => AppState.account);
-const joinedGroups = computed(() => AppState.joinedGroups);
+// const hasJoined = computed(() => .value.some(ticketProfile => ticketProfile.accountId == account.value?.id))
+// const joinedGroups = computed(() => AppState.joinedGroups);
 const route = useRoute()
 
 watch(route, () => {
@@ -46,20 +47,20 @@ async function getPostsByGroupId() {
   }
 }
 
-async function deletePost(postId){
-  try{
+async function deletePost(postId) {
+  try {
     const confirmed = await Pop.confirm("Are you sure you want to delete this post?");
-    if(!confirmed) return;
+    if (!confirmed) return;
     await postsService.deletePost(postId);
-  }catch(error){
+  } catch (error) {
     Pop.meow(error);
     logger.error(error);
   }
 }
 
-async function createMember(){
+async function createMember() {
   try {
-    const memberData = {groupId: route.params.groupId};
+    const memberData = { groupId: route.params.groupId };
     await membersService.createMember(memberData);
   } catch (error) {
     Pop.meow(error);
@@ -68,12 +69,12 @@ async function createMember(){
   }
 }
 
-async function deleteMember(){
-  try{
+async function deleteMember(memberId) {
+  try {
     const confirmed = await Pop.confirm("Are you sure you want to leave this group?");
-    if(!confirmed) return;
+    if (!confirmed) return;
     await membersService.deleteMember(memberId);
-  }catch(error){
+  } catch (error) {
     Pop.meow(error);
     logger.error(error);
   }
@@ -100,7 +101,7 @@ async function deleteMember(){
               </button>
               <!-- <button v-if="account" @click="cancelEvent()" class="btn btn-danger"
               title="Cancel Event"> {{ group.joined? 'Leave' : 'Join' }} Group</button> -->
-              <button v-if="group.joined" @click="deleteMember(group.id)">Leave Group</button>
+              <button v-if="group.joined" @click="deleteMember()">Leave Group</button>
               <button v-else @click="createMember()">Join Group</button>
             </div>
           </div>
@@ -127,7 +128,8 @@ async function deleteMember(){
                   </div>
                   <div>
                     <button v-if="post.creatorId == account?.id" class="btn bg-warning me-2">Edit</button>
-                    <button v-if="post.creatorId == account?.id" @click="deletePost(post.id)" class="btn bg-warning">Delete</button>
+                    <button v-if="post.creatorId == account?.id" @click="deletePost(post.id)"
+                      class="btn bg-warning">Delete</button>
                   </div>
                 </div>
                 <p>

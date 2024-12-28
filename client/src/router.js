@@ -38,10 +38,16 @@ const routes = [
     component: loadPage('GalleryPage'),
   },
   {
+    path: '/create',
+    name: 'Create',
+    component: loadPage('CreatePage')
+  },
+  {
     path: '/newsfeed',
     name: 'News Feed',
     component: loadPage('NewsFeedPage'),
   },
+
 ]
 
 export const router = createRouter({
