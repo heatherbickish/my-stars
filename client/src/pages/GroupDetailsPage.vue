@@ -1,32 +1,45 @@
 <script setup>
 import { AppState } from '@/AppState';
+import { groupsService } from "@/services/GroupsService";
 import { postsService } from '@/services/PostsService';
 import { logger } from '@/utils/Logger';
 import Pop from '@/utils/Pop';
 import { computed, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
-const posts = computed(() => AppState.posts)
 const group = computed(() => AppState.activeGroup)
+const posts = computed(() => AppState.posts)
 const route = useRoute()
 
-// watch(route, () => {
+watch(route, () => {
+  getGroupById()
+  getPostsByGroupId()
+}, { immediate: true })
+
+// onMounted(() => {
 //   getPosts()
 // })
 
-onMounted(() => {
-  getPosts()
-})
+async function getGroupById() {
+  try {
+    const groupId = route.params.groupId
+    await groupsService.getGroupById(groupId)
+  }
+  catch (error) {
+    Pop.meow(error);
+    logger.error('[GETTING GROUP BY ID]', error)
+  }
+}
 
-
-async function getPosts() {
+async function getPostsByGroupId() {
   try {
     const groupId = route.params.groupId
     logger.log(groupId)
-    await postsService.getPosts(groupId)
+    await postsService.getPostsByGroupId(groupId)
   }
   catch (error) {
-    Pop.error(error);
+    Pop.meow(error);
+    logger.error('[GETTING POST BY GROUP ID]', error)
   }
 }
 
@@ -34,161 +47,168 @@ async function getPosts() {
 </script>
 
 <template>
-  <section class="row img-box mb-4">
-    <div class="col-md-12 px-5">
-      <div>
-        <div style="
-            background-image: url(https://images.unsplash.com/photo-1502318217862-aa4e294ba657?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8c3BhY2V8ZW58MHx8MHx8fDI%3D);
-          " class="cover-image"></div>
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <h1>{{ }}</h1>
-            <p>2100 members</p>
-          </div>
-          <div>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#postModal">
-              Create Post
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <section class="row justify-content-center">
-    <div class="col-md-6">
-      <section v-for="post in posts" :key="post.id" class="row">
+  <div v-if="group">
+    <section class="row img-box mb-4">
+      <div class="col-md-12 px-5">
         <div>
-          <div class="col-md-12 shadow mb-5">
+          <div class="mt-3">
+            <img :src="group.coverImg" alt="" class="cover-image">
+          </div>
+          <div class="d-flex justify-content-between align-items-center">
             <div>
-              <div class="d-flex justify-content-between p-3">
-                <div class="d-flex">
-                  <div>
-                    <img :src="post.imgUrl" alt="" class="creator-img me-2" />
+              <h1>{{ group.name }}</h1>
+              <p>2100 members</p>
+            </div>
+            <div>
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#postModal">
+                Create Post
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION posts -->
+    <section class="row justify-content-center">
+      <div class="col-md-6">
+        <section v-for="post in posts" :key="post.id" class="row">
+          <div>
+            <div class="col-md-12 shadow mb-5">
+              <div>
+                <div class="d-flex justify-content-between p-3">
+                  <div class="d-flex">
+                    <div>
+                      <img :src="post.imgUrl" alt="" class="creator-img me-2" />
+                    </div>
+                    <div>
+                      <p>{{ post.creatorId.name }}</p>
+                      <span>{{ post.createdAt.toLocaleDateString() }}</span>
+                    </div>
                   </div>
                   <div>
-                    <p>{{ post.creatorId.name }}</p>
-                    <span>{{ post.createdAt.toLocaleDateString() }}</span>
+                    <button class="btn bg-warning me-2">Edit</button>
+                    <button class="btn bg-warning">Delete</button>
                   </div>
                 </div>
-                <div>
-                  <button class="btn bg-warning me-2">Edit</button>
-                  <button class="btn bg-warning">Delete</button>
+                <p>
+                  {{ post.body }}
+                </p>
+
+                <!-- SECTION comments -->
+                <div class="mb-4">
+                  <img :src="post.imgUrl" alt="" class="post-img" />
                 </div>
-              </div>
-              <p>
-                {{ post.body }}
-              </p>
-              <div class="mb-4">
-                <img :src="post.imgUrl" alt="" class="post-img" />
-              </div>
-              <div class="bg-light d-flex justify-content-center">
-                <div class="me-5 selectable rounded p-3 d-flex align-items-center">
-                  <span class="mdi mdi-thumb-up-outline me-1 fs-4"></span>
-                  <span>Like</span>
-                </div>
-                <div class="selectable rounded p-3 d-flex align-items-center">
-                  <span class="mdi mdi-comment-text-outline me-1 fs-4"></span>
-                  <span>Comment</span>
-                </div>
-              </div>
-              <div class="p-3">
-                <div class="d-flex shadow p-2 mb-3">
-                  <div class="ms-2">
-                    <img
-                      src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
-                      alt="" class="comment-creator-img me-2" />
+                <div class="bg-light d-flex justify-content-center">
+                  <div class="me-5 selectable rounded p-3 d-flex align-items-center">
+                    <span class="mdi mdi-thumb-up-outline me-1 fs-4"></span>
+                    <span>Like</span>
                   </div>
-                  <div>
-                    <span class="fw-bold">George Jones</span>
-                    <p>all dressed up and ready to hit town</p>
+                  <div class="selectable rounded p-3 d-flex align-items-center">
+                    <span class="mdi mdi-comment-text-outline me-1 fs-4"></span>
+                    <span>Comment</span>
                   </div>
                 </div>
-                <div class="d-flex shadow p-2 mb-3">
-                  <div class="ms-2">
-                    <img
-                      src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
-                      alt="" class="comment-creator-img me-2" />
+                <div class="p-3">
+                  <div class="d-flex shadow p-2 mb-3">
+                    <div class="ms-2">
+                      <img
+                        src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
+                        alt="" class="comment-creator-img me-2" />
+                    </div>
+                    <div>
+                      <span class="fw-bold">George Jones</span>
+                      <p>all dressed up and ready to hit town</p>
+                    </div>
                   </div>
-                  <div>
-                    <span class="fw-bold">George Jones</span>
-                    <p>all dressed up and ready to hit town</p>
+                  <div class="d-flex shadow p-2 mb-3">
+                    <div class="ms-2">
+                      <img
+                        src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
+                        alt="" class="comment-creator-img me-2" />
+                    </div>
+                    <div>
+                      <span class="fw-bold">George Jones</span>
+                      <p>all dressed up and ready to hit town</p>
+                    </div>
                   </div>
-                </div>
-                <div class="d-flex shadow p-2 mb-3">
-                  <div class="ms-2">
-                    <img
-                      src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
-                      alt="" class="comment-creator-img me-2" />
-                  </div>
-                  <div>
-                    <span class="fw-bold">George Jones</span>
-                    <p>all dressed up and ready to hit town</p>
+                  <div class="d-flex shadow p-2 mb-3">
+                    <div class="ms-2">
+                      <img
+                        src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
+                        alt="" class="comment-creator-img me-2" />
+                    </div>
+                    <div>
+                      <span class="fw-bold">George Jones</span>
+                      <p>all dressed up and ready to hit town</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-    </div>
-    <div class="col-md-4">
-      <div class="bg-info">
-        <div class="p-3">
-          <p class="fw-bold">About</p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima eum
-            delectus impedit nam repellendus! Debitis esse eaque nihil voluptate
-            dolore cumque, fugit ipsa, placeat vero corrupti exercitationem, sed
-            quas mollitia.
-          </p>
-          <p>
-            <span class="mdi mdi-map-marker"></span>
-            <span>Boise, ID</span>
-          </p>
-        </div>
-        <div class="bg-warning">
-          <p>Recent snapshots</p>
-          <section class="row">
-            <div class="col-md-6 mb-3">
-              <div class="text-center">
-                <img
-                  src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-6/471268927_976290107879435_1750261268380241935_n.jpg?stp=dst-jpg_s235x350_tt6&_nc_cat=104&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=HjbTRvkv5-gQ7kNvgHC_uOC&_nc_zt=23&_nc_ht=scontent-sea1-1.xx&_nc_gid=AoozWfcwUeUkcbjKESL7ksy&oh=00_AYA4fE6QLo0NINSRVo0DKvTkCYkZnAmdl5W0LEy-xOcYMQ&oe=676F832C"
-                  alt="" />
+        </section>
+
+        <!-- SECTION about/group description and pics -->
+      </div>
+      <div class="col-md-4">
+        <div class="bg-info">
+          <div class="p-3">
+            <p class="fw-bold">About</p>
+            <p>
+              {{ group.description }}
+            </p>
+            <p>
+              <span class="mdi mdi-map-marker"></span>
+              <span>Boise, ID</span>
+            </p>
+          </div>
+          <div class="bg-warning">
+            <p>Recent snapshots</p>
+            <section class="row">
+              <div class="col-md-6 mb-3">
+                <div class="text-center">
+                  <img
+                    src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-6/471268927_976290107879435_1750261268380241935_n.jpg?stp=dst-jpg_s235x350_tt6&_nc_cat=104&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=HjbTRvkv5-gQ7kNvgHC_uOC&_nc_zt=23&_nc_ht=scontent-sea1-1.xx&_nc_gid=AoozWfcwUeUkcbjKESL7ksy&oh=00_AYA4fE6QLo0NINSRVo0DKvTkCYkZnAmdl5W0LEy-xOcYMQ&oe=676F832C"
+                    alt="" />
+                </div>
               </div>
-            </div>
-            <div class="col-md-6 mb-3">
-              <div class="text-center">
-                <img
-                  src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-6/471268927_976290107879435_1750261268380241935_n.jpg?stp=dst-jpg_s235x350_tt6&_nc_cat=104&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=HjbTRvkv5-gQ7kNvgHC_uOC&_nc_zt=23&_nc_ht=scontent-sea1-1.xx&_nc_gid=AoozWfcwUeUkcbjKESL7ksy&oh=00_AYA4fE6QLo0NINSRVo0DKvTkCYkZnAmdl5W0LEy-xOcYMQ&oe=676F832C"
-                  alt="" />
+              <div class="col-md-6 mb-3">
+                <div class="text-center">
+                  <img
+                    src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-6/471268927_976290107879435_1750261268380241935_n.jpg?stp=dst-jpg_s235x350_tt6&_nc_cat=104&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=HjbTRvkv5-gQ7kNvgHC_uOC&_nc_zt=23&_nc_ht=scontent-sea1-1.xx&_nc_gid=AoozWfcwUeUkcbjKESL7ksy&oh=00_AYA4fE6QLo0NINSRVo0DKvTkCYkZnAmdl5W0LEy-xOcYMQ&oe=676F832C"
+                    alt="" />
+                </div>
               </div>
-            </div>
-            <div class="col-md-6 mb-3">
-              <div class="text-center">
-                <img
-                  src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-6/471268927_976290107879435_1750261268380241935_n.jpg?stp=dst-jpg_s235x350_tt6&_nc_cat=104&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=HjbTRvkv5-gQ7kNvgHC_uOC&_nc_zt=23&_nc_ht=scontent-sea1-1.xx&_nc_gid=AoozWfcwUeUkcbjKESL7ksy&oh=00_AYA4fE6QLo0NINSRVo0DKvTkCYkZnAmdl5W0LEy-xOcYMQ&oe=676F832C"
-                  alt="" />
+              <div class="col-md-6 mb-3">
+                <div class="text-center">
+                  <img
+                    src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-6/471268927_976290107879435_1750261268380241935_n.jpg?stp=dst-jpg_s235x350_tt6&_nc_cat=104&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=HjbTRvkv5-gQ7kNvgHC_uOC&_nc_zt=23&_nc_ht=scontent-sea1-1.xx&_nc_gid=AoozWfcwUeUkcbjKESL7ksy&oh=00_AYA4fE6QLo0NINSRVo0DKvTkCYkZnAmdl5W0LEy-xOcYMQ&oe=676F832C"
+                    alt="" />
+                </div>
               </div>
-            </div>
-            <div class="col-md-6 mb-3">
-              <div class="text-center">
-                <img
-                  src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-6/471268927_976290107879435_1750261268380241935_n.jpg?stp=dst-jpg_s235x350_tt6&_nc_cat=104&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=HjbTRvkv5-gQ7kNvgHC_uOC&_nc_zt=23&_nc_ht=scontent-sea1-1.xx&_nc_gid=AoozWfcwUeUkcbjKESL7ksy&oh=00_AYA4fE6QLo0NINSRVo0DKvTkCYkZnAmdl5W0LEy-xOcYMQ&oe=676F832C"
-                  alt="" />
+              <div class="col-md-6 mb-3">
+                <div class="text-center">
+                  <img
+                    src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-6/471268927_976290107879435_1750261268380241935_n.jpg?stp=dst-jpg_s235x350_tt6&_nc_cat=104&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=HjbTRvkv5-gQ7kNvgHC_uOC&_nc_zt=23&_nc_ht=scontent-sea1-1.xx&_nc_gid=AoozWfcwUeUkcbjKESL7ksy&oh=00_AYA4fE6QLo0NINSRVo0DKvTkCYkZnAmdl5W0LEy-xOcYMQ&oe=676F832C"
+                    alt="" />
+                </div>
               </div>
-            </div>
-          </section>
+            </section>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 </template>
 
 <style lang="scss" scoped>
 .cover-image {
-  height: 35dvh;
-  background-repeat: no-repeat;
-  background-size: cover;
+  height: 400px;
+  width: 100%;
+  border-radius: 15px;
+  object-position: center;
+  object-fit: cover;
 }
 
 .img-box {
@@ -204,7 +224,6 @@ async function getPosts() {
   height: 60dvh;
   width: 100%;
   object-fit: contain;
-  // object-position: center center;
 }
 
 .comment-creator-img {
