@@ -59,9 +59,13 @@ export class GroupsController extends BaseController {
   }
 
   async getPostByGroupId(request, response, next) {
-    const groupId = request.params.groupId
-    const posts = await postsService.getPostByGroupId(groupId)
-    response.send(posts)
+    try {
+      const groupId = request.params.groupId
+      const posts = await postsService.getPostByGroupId(groupId)
+      response.send(posts)
+    } catch (error) {
+      next(error)
+    }
   }
 
 }

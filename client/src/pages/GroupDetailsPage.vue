@@ -1,4 +1,36 @@
-<script setup></script>
+<script setup>
+import { AppState } from '@/AppState';
+import { postsService } from '@/services/PostsService';
+import { logger } from '@/utils/Logger';
+import Pop from '@/utils/Pop';
+import { computed, onMounted, watch } from 'vue';
+import { useRoute } from 'vue-router';
+
+const posts = computed(() => AppState.posts)
+const route = useRoute()
+
+// watch(route, () => {
+//   getPosts()
+// })
+
+onMounted(() => {
+  getPosts()
+})
+
+
+async function getPosts() {
+  try {
+    const groupId = route.params.groupId
+    logger.log(groupId)
+    await postsService.getPosts(groupId)
+  }
+  catch (error) {
+    Pop.error(error);
+  }
+}
+
+
+</script>
 
 <template>
   <section class="row img-box mb-4">
@@ -23,233 +55,74 @@
   </section>
   <section class="row justify-content-center">
     <div class="col-md-6">
-      <section class="row">
-        <div class="col-md-12 shadow mb-5">
-          <div>
-            <div class="d-flex justify-content-between p-3">
-              <div class="d-flex">
-                <div>
-                  <img
-                    src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
-                    alt="" class="creator-img me-2" />
+      <section v-for="post in posts" :key="post.id" class="row">
+        <div>
+          <div class="col-md-12 shadow mb-5">
+            <div>
+              <div class="d-flex justify-content-between p-3">
+                <div class="d-flex">
+                  <div>
+                    <img :src="post.imgUrl" alt="" class="creator-img me-2" />
+                  </div>
+                  <div>
+                    <p>{{ post.creatorId.name }}</p>
+                    <span>{{ post.createdAt.toLocaleDateString() }}</span>
+                  </div>
                 </div>
                 <div>
-                  <p>Sean Pursley</p>
-                  <span>2h</span>
+                  <button class="btn bg-warning me-2">Edit</button>
+                  <button class="btn bg-warning">Delete</button>
                 </div>
               </div>
-              <div>
-                <button class="btn bg-warning me-2">Edit</button>
-                <button class="btn bg-warning">Delete</button>
+              <p>
+                {{ post.body }}
+              </p>
+              <div class="mb-4">
+                <img :src="post.imgUrl" alt="" class="post-img" />
               </div>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat
-              hic illum necessitatibus aspernatur suscipit, voluptates dicta
-              quibusdam deserunt voluptatibus ipsam quae sed officiis odio
-              corporis, nihil optio molestiae, accusamus quo?
-            </p>
-            <div class="mb-4">
-              <img
-                src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-6/471268927_976290107879435_1750261268380241935_n.jpg?stp=dst-jpg_s1080x2048_tt6&_nc_cat=104&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=HjbTRvkv5-gQ7kNvgHC_uOC&_nc_zt=23&_nc_ht=scontent-sea1-1.xx&_nc_gid=AjxZyzWuOoSjMvxETA-Kuhw&oh=00_AYATdeg-lm4xvt0XycrHU-ZxpmULcyhIul37MI_Fo5WaCg&oe=676F832C"
-                alt="" class="post-img" />
-            </div>
-            <div class="bg-light d-flex justify-content-center">
-              <div class="me-5 selectable rounded p-3 d-flex align-items-center">
-                <span class="mdi mdi-thumb-up-outline me-1 fs-4"></span>
-                <span>Like</span>
-              </div>
-              <div class="selectable rounded p-3 d-flex align-items-center">
-                <span class="mdi mdi-comment-text-outline me-1 fs-4"></span>
-                <span>Comment</span>
-              </div>
-            </div>
-            <div class="p-3">
-              <div class="d-flex shadow p-2 mb-3">
-                <div class="ms-2">
-                  <img
-                    src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
-                    alt="" class="comment-creator-img me-2" />
+              <div class="bg-light d-flex justify-content-center">
+                <div class="me-5 selectable rounded p-3 d-flex align-items-center">
+                  <span class="mdi mdi-thumb-up-outline me-1 fs-4"></span>
+                  <span>Like</span>
                 </div>
-                <div>
-                  <span class="fw-bold">George Jones</span>
-                  <p>all dressed up and ready to hit town</p>
+                <div class="selectable rounded p-3 d-flex align-items-center">
+                  <span class="mdi mdi-comment-text-outline me-1 fs-4"></span>
+                  <span>Comment</span>
                 </div>
               </div>
-              <div class="d-flex shadow p-2 mb-3">
-                <div class="ms-2">
-                  <img
-                    src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
-                    alt="" class="comment-creator-img me-2" />
+              <div class="p-3">
+                <div class="d-flex shadow p-2 mb-3">
+                  <div class="ms-2">
+                    <img
+                      src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
+                      alt="" class="comment-creator-img me-2" />
+                  </div>
+                  <div>
+                    <span class="fw-bold">George Jones</span>
+                    <p>all dressed up and ready to hit town</p>
+                  </div>
                 </div>
-                <div>
-                  <span class="fw-bold">George Jones</span>
-                  <p>all dressed up and ready to hit town</p>
+                <div class="d-flex shadow p-2 mb-3">
+                  <div class="ms-2">
+                    <img
+                      src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
+                      alt="" class="comment-creator-img me-2" />
+                  </div>
+                  <div>
+                    <span class="fw-bold">George Jones</span>
+                    <p>all dressed up and ready to hit town</p>
+                  </div>
                 </div>
-              </div>
-              <div class="d-flex shadow p-2 mb-3">
-                <div class="ms-2">
-                  <img
-                    src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
-                    alt="" class="comment-creator-img me-2" />
-                </div>
-                <div>
-                  <span class="fw-bold">George Jones</span>
-                  <p>all dressed up and ready to hit town</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-12 shadow mb-5">
-          <div>
-            <div class="d-flex justify-content-between p-3">
-              <div class="d-flex">
-                <div>
-                  <img
-                    src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
-                    alt="" class="creator-img me-2" />
-                </div>
-                <div>
-                  <p>Sean Pursley</p>
-                  <span>2h</span>
-                </div>
-              </div>
-              <div>
-                <button class="btn bg-warning me-2">Edit</button>
-                <button class="btn bg-warning">Delete</button>
-              </div>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat
-              hic illum necessitatibus aspernatur suscipit, voluptates dicta
-              quibusdam deserunt voluptatibus ipsam quae sed officiis odio
-              corporis, nihil optio molestiae, accusamus quo?
-            </p>
-            <div class="mb-4">
-              <img
-                src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-6/471268927_976290107879435_1750261268380241935_n.jpg?stp=dst-jpg_s1080x2048_tt6&_nc_cat=104&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=HjbTRvkv5-gQ7kNvgHC_uOC&_nc_zt=23&_nc_ht=scontent-sea1-1.xx&_nc_gid=AjxZyzWuOoSjMvxETA-Kuhw&oh=00_AYATdeg-lm4xvt0XycrHU-ZxpmULcyhIul37MI_Fo5WaCg&oe=676F832C"
-                alt="" class="post-img" />
-            </div>
-            <div class="bg-light d-flex justify-content-center">
-              <div class="me-5 selectable rounded p-3 d-flex align-items-center">
-                <span class="mdi mdi-thumb-up-outline me-1 fs-4"></span>
-                <span>Like</span>
-              </div>
-              <div class="selectable rounded p-3 d-flex align-items-center">
-                <span class="mdi mdi-comment-text-outline me-1 fs-4"></span>
-                <span>Comment</span>
-              </div>
-            </div>
-            <div class="p-3">
-              <div class="d-flex shadow p-2 mb-3">
-                <div class="ms-2">
-                  <img
-                    src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
-                    alt="" class="comment-creator-img me-2" />
-                </div>
-                <div>
-                  <span class="fw-bold">George Jones</span>
-                  <p>all dressed up and ready to hit town</p>
-                </div>
-              </div>
-              <div class="d-flex shadow p-2 mb-3">
-                <div class="ms-2">
-                  <img
-                    src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
-                    alt="" class="comment-creator-img me-2" />
-                </div>
-                <div>
-                  <span class="fw-bold">George Jones</span>
-                  <p>all dressed up and ready to hit town</p>
-                </div>
-              </div>
-              <div class="d-flex shadow p-2 mb-3">
-                <div class="ms-2">
-                  <img
-                    src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
-                    alt="" class="comment-creator-img me-2" />
-                </div>
-                <div>
-                  <span class="fw-bold">George Jones</span>
-                  <p>all dressed up and ready to hit town</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-12 shadow mb-5">
-          <div>
-            <div class="d-flex justify-content-between p-3">
-              <div class="d-flex">
-                <div>
-                  <img
-                    src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
-                    alt="" class="creator-img me-2" />
-                </div>
-                <div>
-                  <p>Sean Pursley</p>
-                  <span>2h</span>
-                </div>
-              </div>
-              <div>
-                <button class="btn bg-warning me-2">Edit</button>
-                <button class="btn bg-warning">Delete</button>
-              </div>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat
-              hic illum necessitatibus aspernatur suscipit, voluptates dicta
-              quibusdam deserunt voluptatibus ipsam quae sed officiis odio
-              corporis, nihil optio molestiae, accusamus quo?
-            </p>
-            <div class="mb-4">
-              <img
-                src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-6/471268927_976290107879435_1750261268380241935_n.jpg?stp=dst-jpg_s1080x2048_tt6&_nc_cat=104&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=HjbTRvkv5-gQ7kNvgHC_uOC&_nc_zt=23&_nc_ht=scontent-sea1-1.xx&_nc_gid=AjxZyzWuOoSjMvxETA-Kuhw&oh=00_AYATdeg-lm4xvt0XycrHU-ZxpmULcyhIul37MI_Fo5WaCg&oe=676F832C"
-                alt="" class="post-img" />
-            </div>
-            <div class="bg-light d-flex justify-content-center">
-              <div class="me-5 selectable rounded p-3 d-flex align-items-center">
-                <span class="mdi mdi-thumb-up-outline me-1 fs-4"></span>
-                <span>Like</span>
-              </div>
-              <div class="selectable rounded p-3 d-flex align-items-center">
-                <span class="mdi mdi-comment-text-outline me-1 fs-4"></span>
-                <span>Comment</span>
-              </div>
-            </div>
-            <div class="p-3">
-              <div class="d-flex shadow p-2 mb-3">
-                <div class="ms-2">
-                  <img
-                    src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
-                    alt="" class="comment-creator-img me-2" />
-                </div>
-                <div>
-                  <span class="fw-bold">George Jones</span>
-                  <p>all dressed up and ready to hit town</p>
-                </div>
-              </div>
-              <div class="d-flex shadow p-2 mb-3">
-                <div class="ms-2">
-                  <img
-                    src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
-                    alt="" class="comment-creator-img me-2" />
-                </div>
-                <div>
-                  <span class="fw-bold">George Jones</span>
-                  <p>all dressed up and ready to hit town</p>
-                </div>
-              </div>
-              <div class="d-flex shadow p-2 mb-3">
-                <div class="ms-2">
-                  <img
-                    src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
-                    alt="" class="comment-creator-img me-2" />
-                </div>
-                <div>
-                  <span class="fw-bold">George Jones</span>
-                  <p>all dressed up and ready to hit town</p>
+                <div class="d-flex shadow p-2 mb-3">
+                  <div class="ms-2">
+                    <img
+                      src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
+                      alt="" class="comment-creator-img me-2" />
+                  </div>
+                  <div>
+                    <span class="fw-bold">George Jones</span>
+                    <p>all dressed up and ready to hit town</p>
+                  </div>
                 </div>
               </div>
             </div>

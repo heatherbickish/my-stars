@@ -1,6 +1,7 @@
 import { Auth0Provider } from "@bcwdev/auth0provider";
 import BaseController from "../utils/BaseController";
 import { postsService } from "../services/PostsService";
+import { groupsService } from "../services/GroupsService";
 
 export class PostsController extends BaseController {
   constructor() {

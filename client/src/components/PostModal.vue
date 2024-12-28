@@ -3,21 +3,22 @@ import { postsService } from '@/services/PostsService';
 import Pop from '@/utils/Pop';
 import { Modal } from 'bootstrap';
 import { ref } from 'vue';
+import { useRoute } from 'vue-router';
 
+const route = useRoute()
 
 const editablePostData = ref({
     body: '',
     imgUrl: '',
+    groupId: route.params.groupId
 
 })
 
 async function createPost() {
     try {
         await postsService.createPost(editablePostData.value)
-        editablePostData.value = {
-            body: '',
-            imgUrl: '',
-        }
+        editablePostData.value.body = ''
+        editablePostData.value.imgUrl = ''
         Modal.getInstance('#postModal').hide()
     }
     catch (error) {
