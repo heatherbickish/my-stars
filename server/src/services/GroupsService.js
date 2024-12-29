@@ -2,6 +2,19 @@ import { dbContext } from "../db/DbContext"
 import { Forbidden } from "../utils/Errors"
 
 class GroupsService {
+  async getGroupsByQuery(groupQuery) {
+    const sortBy = groupQuery.sortBy
+    const groups = await dbContext.Groups
+      .find(groupQuery)
+      .sort(sortBy)
+      .populate('creator', 'name picture')
+    delete groupQuery.sortBy
+    const groupCount = await dbContext.Groups.countDocuments(groupQuery)
+    const groupsResponse = {
+      count: groupCount,
+      results: groups
+    }
+  }
 
   async editGroup(groupId, updateData, userInfo) {
     const originalGroup = await dbContext.Groups.findById(groupId)

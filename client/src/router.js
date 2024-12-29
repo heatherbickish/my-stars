@@ -47,6 +47,11 @@ const routes = [
     name: 'News Feed',
     component: loadPage('NewsFeedPage'),
   },
+  {
+    path: '/search',
+    name: 'Search',
+    component: loadPage('SearchPage')
+  }
 
 ]
 

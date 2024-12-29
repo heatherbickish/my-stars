@@ -4,9 +4,11 @@ import GroupCard from "@/components/GroupCard.vue";
 import { groupsService } from "@/services/GroupsService";
 import { logger } from "@/utils/Logger";
 import Pop from "@/utils/Pop";
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 const groups = computed(() => AppState.groups);
+
+const editableSearchQuery = ref('')
 
 onMounted(() => {
   getAllGroups();
@@ -18,6 +20,16 @@ async function getAllGroups() {
   } catch (error) {
     Pop.meow(error);
     logger.error(error);
+  }
+}
+
+async function searchGroups() {
+  try {
+    await groupsService.searchGroups(editableSearchQuery.value)
+  }
+  catch (error) {
+    Pop.meow(error);
+    logger.error(error)
   }
 }
 </script>
@@ -39,8 +51,14 @@ async function getAllGroups() {
               <h2>Groups</h2>
             </div>
             <div class="mb-3">
-              <i class="mdi mdi-magnify"></i>
-              <input type="text" placeholder="Search groups" />
+              <form @submit.prevent="searchGroups()">
+                <div class="d-flex">
+                  <label for="searchQuery" class="form-label"></label>
+                  <input v-model="editableSearchQuery" type="text" placeholder="Search groups" id="searchQuery"
+                    class="form-control" style="width: 80%;">
+                  <button class="btn btn-outline-info" type="submit"><i class="mdi mdi-magnify"></i></button>
+                </div>
+              </form>
             </div>
             <div class="mb-3" role="button">
               <span class="mdi mdi-account-group-outline"></span>

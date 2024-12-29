@@ -11,12 +11,23 @@ export class GroupsController extends BaseController {
       .get('', this.getAllGroups)
       .get('/:groupId', this.getGroupById)
       .get('/:groupId/posts', this.getPostByGroupId)
-      .get('/:groupId/members',this.getMembersByGroupId)
+      .get('/:groupId/members', this.getMembersByGroupId)
+      .get('/search', this.getGroupsByQuery)
       .use(Auth0Provider.getAuthorizedUserInfo)
       .post('', this.createGroup)
       .put('/:groupId', this.editGroup)
   }
 
+
+  async getGroupsByQuery(request, response, next) {
+    try {
+      const groupQuery = request.query
+      const groups = await groupsService.getGroupsByQuery(groupQuery)
+      response.send(groups)
+    } catch (error) {
+
+    }
+  }
 
   async getAllGroups(request, response, next) {
     try {
