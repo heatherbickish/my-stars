@@ -8,23 +8,14 @@ defineProps({
 
 <template>
   <div class="card shadow" style="width: 18rem">
-    <img
-      class="card-img-top cover-img img-fluid"
-      :src="groupProp.coverImg"
-      alt="Card image cap"
-    />
+    <img class="card-img-top cover-img img-fluid" :src="groupProp.coverImg" alt="Card image cap" />
     <div class="card-body text-center">
       <h5>{{ groupProp.name }}</h5>
       <div>
         <span>245 members</span>
       </div>
-      <router-link
-        :to="{ name: 'Group Details Page', params: { groupId: groupProp.id } }"
-      >
-        <div
-          role="button"
-          class="join-btn d-flex justify-content-center align-items-center"
-        >
+      <router-link :to="{ name: 'Group Details Page', params: { groupId: groupProp.id } }">
+        <div role="button" class="join-btn d-flex justify-content-center align-items-center">
           <span>Visit Group</span>
         </div>
       </router-link>
@@ -38,6 +29,7 @@ defineProps({
   width: 100%;
   object-fit: cover;
 }
+
 .join-btn {
   width: 100%;
   height: 40px;
