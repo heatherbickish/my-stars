@@ -182,7 +182,7 @@ ul>li:hover {
 
 @media screen and (min-width: 576px) {
   nav {
-    height: 64px;
+    height: 6dvh;
   }
 }
 </style>

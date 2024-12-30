@@ -42,7 +42,7 @@ async function searchGroups() {
       </div>
     </div>
   </section>
-  <section class="row">
+  <section class="row justify-content-around py-4">
     <div class="col-md-2">
       <section class="row mb-4">
         <div class="col-md-12">
@@ -55,8 +55,8 @@ async function searchGroups() {
                 <div class="d-flex">
                   <label for="searchQuery" class="form-label"></label>
                   <input v-model="editableSearchQuery" type="text" placeholder="Search groups" id="searchQuery"
-                    class="form-control" style="width: 80%;">
-                  <button class="btn btn-outline-info" type="submit"><i class="mdi mdi-magnify"></i></button>
+                    class="form-control me-2" style="width: 80%;">
+                  <button class="btn btn-outline-info search-btn" type="submit"><i class="mdi mdi-magnify"></i></button>
                 </div>
               </form>
             </div>
@@ -71,7 +71,7 @@ async function searchGroups() {
             <router-link :to="{ name: 'Create' }">
               <div role="button" class="create-btn d-flex justify-content-center align-items-center">
                 <i class="mdi mdi-plus"></i>
-                <span>Create new group</span>
+                <span>Create New Group</span>
               </div>
             </router-link>
           </div>
@@ -79,8 +79,9 @@ async function searchGroups() {
       </section>
 
     </div>
-    <div class="col-md-10">
-      <section class="row">
+    <div class="col-md-9">
+      <section class="row groups-box p-3">
+        <h2>List of Groups</h2>
         <div v-for="group in groups" :key="group.id" class="col-md-3 mb-4">
           <GroupCard :groupProp="group" />
         </div>
@@ -91,13 +92,28 @@ async function searchGroups() {
 
 <style lang="scss" scoped>
 .top-box {
-  background-color: yellow;
+  background-color: rgba(100, 100, 100, 0.5);
+  border-radius: 20px;
+  color: white;
 }
-
+h2{
+  color: yellow;
+  font-family: "Island Moments", serif;
+}
+.search-btn{
+  color: white;
+  border: 1px solid white;
+}
 .create-btn {
   width: 100%;
   height: 40px;
-  background-color: lightblue;
-  color: blue;
+  background-color: #0E07D0;
+  color: white;
+  font-family: "Island Moments", serif;
+  font-size: 1.5em;
+}
+.groups-box{
+  background-color: rgba(100, 100, 100, 0.5);
+  border-radius: 20px;
 }
 </style>

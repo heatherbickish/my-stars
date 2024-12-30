@@ -18,9 +18,19 @@ class MembersService{
 
   async getMyJoinedGroups(){
     AppState.joinedGroups = [];
+    if(AppState.account == null) return;
     const response = await api.get('account/members');
     const members = response.data.map(member => new Member(member));
     AppState.joinedGroups = members;
+    console.log(AppState.joinedGroups)
+  }
+
+  async getMembersByGroupId(groupId) {
+    const response = await api.get(`api/groups/${groupId}/members`);
+    // console.log(response.data);
+    const members = response.data.map(member => new Member(member));
+    AppState.members = members;
+    console.log(AppState.members)
   }
 }
 export const membersService = new MembersService();

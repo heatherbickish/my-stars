@@ -6,7 +6,7 @@ import { AppState } from "@/AppState.js";
 class GroupsService {
   async searchGroups(searchQuery) {
     const response = await api.get(`api/groups?query=${searchQuery}`)
-    logger.log(response.data)
+    // logger.log(response.data)
     const groups = response.data.map(group => new Group(group))
     AppState.groups = groups
   }

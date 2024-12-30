@@ -40,8 +40,11 @@
 /* Form */
 #celestial-form {
   font: 12pt/1 'Arial Unicode MS', Arial, Helvetica, sans-serif;
+  color: red;
   display: inline-block;
   position: relative;
+  background-color: white;
+  left: 30%;
 }
 
 #error {
@@ -62,7 +65,7 @@
 }
 
 #celestial-form .col {
-  border-top: 1px dotted #000;
+  border-top: 1px dotted #000000;
   padding: 4px 6px;
   margin: 0 0 4px;
   clear: both;

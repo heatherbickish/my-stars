@@ -5,24 +5,31 @@ import { membersService } from '@/services/MembersService';
 import { postsService } from '@/services/PostsService';
 import { logger } from '@/utils/Logger';
 import Pop from '@/utils/Pop';
-import { computed, watch } from 'vue';
+import { computed,  watch } from 'vue';
 import { useRoute } from 'vue-router';
+
+const route = useRoute()
 
 const group = computed(() => AppState.activeGroup)
 const posts = computed(() => AppState.posts)
 const account = computed(() => AppState.account);
-// const hasJoined = computed(() => .value.some(ticketProfile => ticketProfile.accountId == account.value?.id))
-// const joinedGroups = computed(() => AppState.joinedGroups);
-const route = useRoute()
+const members = computed(() => AppState.members);
+const hasJoined = computed(() => members.value.some(member => member.accountId == account.value?.id));
+// const foundMember = members.value.find(member => member.accountId == account.value?.id)
+
+const joinedGroups = computed(() => AppState.joinedGroups);
+const foundMember = joinedGroups.value.find(member => member.groupId == route.params.groupId);
 
 watch(route, () => {
   getGroupById()
   getPostsByGroupId()
+  getMembersByGroupId()
 }, { immediate: true })
 
-// onMounted(() => {
-//   getPosts()
-// })
+watch(account, () => {
+  getMyJoinedGroups()
+
+}, { immediate: true })
 
 async function getGroupById() {
   try {
@@ -38,7 +45,6 @@ async function getGroupById() {
 async function getPostsByGroupId() {
   try {
     const groupId = route.params.groupId
-    logger.log(groupId)
     await postsService.getPostsByGroupId(groupId)
   }
   catch (error) {
@@ -80,6 +86,24 @@ async function deleteMember(memberId) {
   }
 }
 
+async function getMembersByGroupId(){
+  try{
+    const groupId = route.params.groupId;
+    await membersService.getMembersByGroupId(groupId);
+  }catch(error){
+    Pop.meow(error);
+    logger.error(error);
+  }
+}
+
+async function getMyJoinedGroups(){
+  try {
+    await membersService.getMyJoinedGroups();
+  } catch (error) {
+    Pop.meow(error);
+    logger.error(error);
+  }
+}
 </script>
 
 <template>
@@ -93,16 +117,15 @@ async function deleteMember(memberId) {
           <div class="d-flex justify-content-between align-items-center">
             <div>
               <h1>{{ group.name }}</h1>
-              <p>2100 members</p>
+              <p>{{group.memberCount}} members</p>
+              <!-- <p>{{ foundMember }}</p> -->
             </div>
             <div>
               <button type="button" class="btn btn-primary me-3" data-bs-toggle="modal" data-bs-target="#postModal">
                 Create Post
               </button>
-              <!-- <button v-if="account" @click="cancelEvent()" class="btn btn-danger"
-              title="Cancel Event"> {{ group.joined? 'Leave' : 'Join' }} Group</button> -->
-              <button v-if="group.joined" @click="deleteMember()">Leave Group</button>
-              <button v-else @click="createMember()">Join Group</button>
+              <button v-if="hasJoined" @click="deleteMember(foundMember.id)">Leave Group</button>
+              <button v-else @click="createMember" class="btn btn-outline-primary">Join Group</button>
             </div>
           </div>
         </div>
@@ -115,7 +138,7 @@ async function deleteMember(memberId) {
         <section v-for="post in posts" :key="post.id" class="row">
           <div>
             <div class="col-md-12 shadow mb-5">
-              <div>
+              <div class="bg-light post-box p-3">
                 <div class="d-flex justify-content-between p-3">
                   <div class="d-flex">
                     <div>
@@ -132,12 +155,12 @@ async function deleteMember(memberId) {
                       class="btn bg-warning">Delete</button>
                   </div>
                 </div>
-                <p>
+                <p class="ms-5 mt-3">
                   {{ post.body }}
                 </p>
 
                 <!-- SECTION comments -->
-                <div class="mb-4">
+                <div v-if="post.imgUrl" class="mb-4">
                   <img :src="post.imgUrl" alt="" class="post-img" />
                 </div>
                 <div class="bg-light d-flex justify-content-center">
@@ -193,9 +216,9 @@ async function deleteMember(memberId) {
         <!-- SECTION about/group description and pics -->
       </div>
       <div class="col-md-4">
-        <div class="bg-info">
-          <div class="p-3">
-            <p class="fw-bold">About</p>
+        <div >
+          <div class="p-3 about-box bg-light mb-3">
+            <p class="fw-bold fs-3">About</p>
             <p>
               {{ group.description }}
             </p>
@@ -204,8 +227,8 @@ async function deleteMember(memberId) {
               <span>Boise, ID</span>
             </p>
           </div>
-          <div class="bg-warning">
-            <p>Recent snapshots</p>
+          <div class="bg-light snapshot-box p-3">
+            <p class="fw-bold fs-3">Recent snapshots</p>
             <section class="row">
               <div class="col-md-6 mb-3">
                 <div class="text-center">
@@ -236,6 +259,11 @@ async function deleteMember(memberId) {
                 </div>
               </div>
             </section>
+            <router-link :to="{name: 'Group Gallery Page', params: {groupId: group.id}}">
+            <div>
+              <button>See all photos</button>
+            </div>
+          </router-link>
           </div>
         </div>
       </div>
@@ -271,5 +299,9 @@ async function deleteMember(memberId) {
   border-radius: 50%;
   aspect-ratio: 1/1;
   height: 3em;
+}
+.post-box,.about-box,.snapshot-box{
+  border-radius: 20px;
+  // opacity: 0.8;
 }
 </style>
