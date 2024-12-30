@@ -160,7 +160,7 @@ async function getMyJoinedGroups(){
                 </p>
 
                 <!-- SECTION comments -->
-                <div class="mb-4">
+                <div v-if="post.imgUrl" class="mb-4">
                   <img :src="post.imgUrl" alt="" class="post-img" />
                 </div>
                 <div class="bg-light d-flex justify-content-center">
@@ -217,7 +217,7 @@ async function getMyJoinedGroups(){
       </div>
       <div class="col-md-4">
         <div >
-          <div class="p-3 about-box mb-3">
+          <div class="p-3 about-box bg-light mb-3">
             <p class="fw-bold fs-3">About</p>
             <p>
               {{ group.description }}
@@ -227,7 +227,7 @@ async function getMyJoinedGroups(){
               <span>Boise, ID</span>
             </p>
           </div>
-          <div class="bg-warning snapshot-box p-3">
+          <div class="bg-light snapshot-box p-3">
             <p class="fw-bold fs-3">Recent snapshots</p>
             <section class="row">
               <div class="col-md-6 mb-3">
@@ -259,6 +259,11 @@ async function getMyJoinedGroups(){
                 </div>
               </div>
             </section>
+            <router-link :to="{name: 'Group Gallery Page', params: {groupId: group.id}}">
+            <div>
+              <button>See all photos</button>
+            </div>
+          </router-link>
           </div>
         </div>
       </div>

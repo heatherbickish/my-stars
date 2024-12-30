@@ -51,8 +51,12 @@ const routes = [
     path: '/search',
     name: 'Search',
     component: loadPage('SearchPage')
+  },
+  {
+    path: '/groups/:groupId/gallery',
+    name: 'Group Gallery Page',
+    component: loadPage('GroupGalleryPage')
   }
-
 ]
 
 export const router = createRouter({
