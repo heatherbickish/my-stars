@@ -44,7 +44,7 @@ async function getPostsByGroupId() {
 
 <template>
 <p class="text-light">group gallery page</p>
-
+<p>Added something</p>
 </template>
 
 
