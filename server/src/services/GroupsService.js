@@ -27,7 +27,7 @@ class GroupsService {
     return originalGroup
   }
   async getGroupById(groupId) {
-    const group = await dbContext.Groups.findById(groupId).populate('creator', 'name picture')
+    const group = await dbContext.Groups.findById(groupId).populate('creator', 'name picture').populate('memberCount');
     // if (group == null) { throw new Error(`Invalid group id${groupId}`) }
     return group
   }
@@ -37,7 +37,7 @@ class GroupsService {
     return group
   }
   async getAllGroups() {
-    const groups = await dbContext.Groups.find().populate('creator', 'name picture')
+    const groups = await dbContext.Groups.find().populate('creator', 'name picture').populate('memberCount');
     return groups
   }
 
