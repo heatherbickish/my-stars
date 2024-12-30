@@ -8,7 +8,7 @@ import ModalWrapper from "./components/ModalWrapper.vue";
   <header class="container-fluid p-0">
     <Navbar />
   </header>
-  <main class="container-fluid">
+  <main class="container-fluid p-0">
     <router-view />
   </main>
   <footer></footer>
