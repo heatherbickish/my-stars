@@ -3,11 +3,12 @@ import { api } from "./AxiosService.js";
 import { AppState } from "@/AppState.js";
 import { Member } from "@/models/Member.js";
 
-class MembersService{
+class MembersService {
   async createMember(memberData) {
     const response = await api.post('api/members', memberData);
     const member = new Member(response.data);
     AppState.members.push(member);
+    AppState.activeGroup.memberCount += 1
   }
 
   async deleteMember(memberId) {
@@ -16,9 +17,9 @@ class MembersService{
     AppState.joinedGroups.splice(memberIndex, 1);
   }
 
-  async getMyJoinedGroups(){
+  async getMyJoinedGroups() {
     AppState.joinedGroups = [];
-    if(AppState.account == null) return;
+    if (AppState.account == null) return;
     const response = await api.get('account/members');
     const members = response.data.map(member => new Member(member));
     AppState.joinedGroups = members;

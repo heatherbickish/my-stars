@@ -37,7 +37,8 @@ async function createPost() {
 <template>
   <form @submit.prevent="createPost()">
     <div class="mb-3">
-      <textarea v-model="editablePostData.body" maxlength="1000" class="form-control p-0" name="body" placeholder="Create a post..." rows="10" required></textarea>
+      <textarea v-model="editablePostData.body" maxlength="1000" class="form-control p-0" name="body"
+        placeholder="Create a post..." rows="10" required></textarea>
     </div>
     <!-- <div class="form-floating mb-3">
         <div>
@@ -46,15 +47,9 @@ async function createPost() {
         <div>
             <input @change="uploadFile($event)" type="file" name="file">
         </div> -->
-      <input
-        v-model="editablePostData.imgUrl"
-        type="url"
-        id="imgUrl"
-        name="img-url"
-        placeholder="Url"
-      />
+    <input v-model="editablePostData.imgUrl" type="url" id="imgUrl" name="img-url" placeholder="Url" />
     <div class="text-end">
-      <button type="submit">Submit</button>
+      <button class="btn btn-success" type="submit">Submit</button>
     </div>
   </form>
 </template>

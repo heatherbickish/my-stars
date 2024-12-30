@@ -5,7 +5,7 @@ import { membersService } from '@/services/MembersService';
 import { postsService } from '@/services/PostsService';
 import { logger } from '@/utils/Logger';
 import Pop from '@/utils/Pop';
-import { computed,  watch } from 'vue';
+import { computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute()
@@ -86,17 +86,17 @@ async function deleteMember(memberId) {
   }
 }
 
-async function getMembersByGroupId(){
-  try{
+async function getMembersByGroupId() {
+  try {
     const groupId = route.params.groupId;
     await membersService.getMembersByGroupId(groupId);
-  }catch(error){
+  } catch (error) {
     Pop.meow(error);
     logger.error(error);
   }
 }
 
-async function getMyJoinedGroups(){
+async function getMyJoinedGroups() {
   try {
     await membersService.getMyJoinedGroups();
   } catch (error) {
@@ -117,14 +117,15 @@ async function getMyJoinedGroups(){
           <div class="d-flex justify-content-between align-items-center">
             <div>
               <h1>{{ group.name }}</h1>
-              <p>{{group.memberCount}} members</p>
+              <p>{{ group.memberCount }} members</p>
               <!-- <p>{{ foundMember }}</p> -->
             </div>
             <div>
               <button type="button" class="btn btn-primary me-3" data-bs-toggle="modal" data-bs-target="#postModal">
                 Create Post
               </button>
-              <button v-if="hasJoined" @click="deleteMember(foundMember.id)">Leave Group</button>
+              <button v-if="hasJoined" @click="deleteMember(foundMember.id)" class="btn btn-outline-danger">Leave
+                Group</button>
               <button v-else @click="createMember" class="btn btn-outline-primary">Join Group</button>
             </div>
           </div>
@@ -216,7 +217,7 @@ async function getMyJoinedGroups(){
         <!-- SECTION about/group description and pics -->
       </div>
       <div class="col-md-4">
-        <div >
+        <div>
           <div class="p-3 about-box bg-light mb-3">
             <p class="fw-bold fs-3">About</p>
             <p>
@@ -232,38 +233,30 @@ async function getMyJoinedGroups(){
             <section class="row">
               <div class="col-md-6 mb-3">
                 <div class="text-center">
-                  <img
-                    src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-6/471268927_976290107879435_1750261268380241935_n.jpg?stp=dst-jpg_s235x350_tt6&_nc_cat=104&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=HjbTRvkv5-gQ7kNvgHC_uOC&_nc_zt=23&_nc_ht=scontent-sea1-1.xx&_nc_gid=AoozWfcwUeUkcbjKESL7ksy&oh=00_AYA4fE6QLo0NINSRVo0DKvTkCYkZnAmdl5W0LEy-xOcYMQ&oe=676F832C"
-                    alt="" />
+                  <img src="" alt="" />
                 </div>
               </div>
               <div class="col-md-6 mb-3">
                 <div class="text-center">
-                  <img
-                    src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-6/471268927_976290107879435_1750261268380241935_n.jpg?stp=dst-jpg_s235x350_tt6&_nc_cat=104&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=HjbTRvkv5-gQ7kNvgHC_uOC&_nc_zt=23&_nc_ht=scontent-sea1-1.xx&_nc_gid=AoozWfcwUeUkcbjKESL7ksy&oh=00_AYA4fE6QLo0NINSRVo0DKvTkCYkZnAmdl5W0LEy-xOcYMQ&oe=676F832C"
-                    alt="" />
+                  <img src="" alt="" />
                 </div>
               </div>
               <div class="col-md-6 mb-3">
                 <div class="text-center">
-                  <img
-                    src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-6/471268927_976290107879435_1750261268380241935_n.jpg?stp=dst-jpg_s235x350_tt6&_nc_cat=104&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=HjbTRvkv5-gQ7kNvgHC_uOC&_nc_zt=23&_nc_ht=scontent-sea1-1.xx&_nc_gid=AoozWfcwUeUkcbjKESL7ksy&oh=00_AYA4fE6QLo0NINSRVo0DKvTkCYkZnAmdl5W0LEy-xOcYMQ&oe=676F832C"
-                    alt="" />
+                  <img src="" alt="" />
                 </div>
               </div>
               <div class="col-md-6 mb-3">
                 <div class="text-center">
-                  <img
-                    src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-6/471268927_976290107879435_1750261268380241935_n.jpg?stp=dst-jpg_s235x350_tt6&_nc_cat=104&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=HjbTRvkv5-gQ7kNvgHC_uOC&_nc_zt=23&_nc_ht=scontent-sea1-1.xx&_nc_gid=AoozWfcwUeUkcbjKESL7ksy&oh=00_AYA4fE6QLo0NINSRVo0DKvTkCYkZnAmdl5W0LEy-xOcYMQ&oe=676F832C"
-                    alt="" />
+                  <img src="" alt="" />
                 </div>
               </div>
             </section>
-            <router-link :to="{name: 'Group Gallery Page', params: {groupId: group.id}}">
-            <div>
-              <button>See all photos</button>
-            </div>
-          </router-link>
+            <router-link :to="{ name: 'Group Gallery Page', params: { groupId: group.id } }">
+              <div class="text-end">
+                <button class="btn btn-success">See all photos</button>
+              </div>
+            </router-link>
           </div>
         </div>
       </div>
@@ -300,7 +293,10 @@ async function getMyJoinedGroups(){
   aspect-ratio: 1/1;
   height: 3em;
 }
-.post-box,.about-box,.snapshot-box{
+
+.post-box,
+.about-box,
+.snapshot-box {
   border-radius: 20px;
   // opacity: 0.8;
 }

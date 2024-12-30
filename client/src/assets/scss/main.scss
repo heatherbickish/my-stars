@@ -2,7 +2,7 @@
 @import "./_utilities.scss";
 @import "./loaders.scss";
 
-*{
+* {
   margin: 0;
   padding: 0;
 }
@@ -26,6 +26,8 @@ main {
 a {
   text-decoration: none;
 }
-ul,li{
+
+ul,
+li {
   list-style: none;
 }
