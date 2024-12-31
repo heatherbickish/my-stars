@@ -9,6 +9,7 @@ import { useRoute } from 'vue-router';
 
 const group = computed(() => AppState.groups)
 const account = computed(() => AppState.account);
+const profile = computed(() => AppState.activeProfile)
 const route = useRoute()
 
 watch(route, () => {
@@ -58,40 +59,40 @@ async function getProfileById() {
             </div>
         </div>
     </section> -->
-    <section>
-        <div class="col-md-12">
-            <div>
-                <img src="https://images.unsplash.com/photo-1684949824994-fd65ee0bce98?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8a2l0dGllc3xlbnwwfHwwfHx8Mg%3D%3D"
-                    alt="" class="cover-img" />
-            </div>
-            <div id="bio-box" class="p-4">
-                <div class="d-flex justify-content-end">
-                    <div style="height: 20px"></div>
+    <div v-if="profile">
+        <section>
+            <div class="col-md-12">
+                <div>
+                    <img :src="profile.coverImg" alt="" class="cover-img" />
                 </div>
-                <div id="creator-img-icon-box" class="d-inline-block position-absolute">
-                    <img src="https://images.unsplash.com/photo-1611200945005-403b70229452?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGVyc29ufGVufDB8fDB8fHwy"
-                        alt="" class="creator-img" />
-                </div>
-                <div class="m-3">
-                    <h2>Laurie</h2>
-                    <p>Bio</p>
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Similique vitae voluptatibus, eius sunt
-                        doloremque iste voluptates inventore sit ratione. Possimus iure cumque asperiores blanditiis
-                        numquam, alias corporis quod repellendus quaerat?</p>
-                    <div class="text-end">
-                        <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#editModal">
-                            Edit
-                        </button>
+                <div id="bio-box" class="p-4">
+                    <div class="d-flex justify-content-end">
+                        <div style="height: 20px"></div>
+                    </div>
+                    <div id="creator-img-icon-box" class="d-inline-block position-absolute">
+                        <img :src="profile.picture" alt="" class="creator-img" />
+                    </div>
+                    <div class="m-3">
+                        <h2>{{ profile.name }}</h2>
+                        <p>{{ profile.bio }}</p>
+                        <div class="text-end">
+                            <router-link :to="{ name: 'Account' }">
+                                <button v-if="account.id == profile.id" class="btn btn-outline-success"
+                                    data-bs-toggle="modal" data-bs-target="#editModal">
+                                    Edit
+                                </button>
+                            </router-link>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <section class="row">
-        <div class="col-md-4">
+        </section>
+        <section class="row">
+            <div class="col-md-4">
 
-        </div>
-    </section>
+            </div>
+        </section>
+    </div>
 </template>
 
 <style scoped lang="scss">
