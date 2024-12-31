@@ -143,7 +143,9 @@ async function getMyJoinedGroups() {
                 <div class="d-flex justify-content-between p-3">
                   <div class="d-flex">
                     <div>
-                      <img :src="post.creator.picture" alt="" class="creator-img me-2" />
+                      <router-link :to="{ name: 'Profile', params: { profileId: post.creatorId } }">
+                        <img :src="post.creator.picture" alt="" class="creator-img me-2" />
+                      </router-link>
                     </div>
                     <div>
                       <p>{{ post.creatorId.name }}</p>

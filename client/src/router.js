@@ -56,6 +56,11 @@ const routes = [
     path: '/groups/:groupId/gallery',
     name: 'Group Gallery Page',
     component: loadPage('GroupGalleryPage')
+  },
+  {
+    path: '/profiles/:profileId',
+    name: 'Profile',
+    component: loadPage('ProfilePage')
   }
 ]
 
