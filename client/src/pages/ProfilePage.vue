@@ -1,5 +1,7 @@
 <script setup>
 import { AppState } from '@/AppState';
+import GroupCard from '@/components/GroupCard.vue';
+import { membersService } from '@/services/MembersService';
 import { profilesService } from '@/services/ProfilesService';
 import { logger } from '@/utils/Logger';
 import Pop from '@/utils/Pop';
@@ -7,13 +9,14 @@ import { computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 
-const group = computed(() => AppState.groups)
+const groups = computed(() => AppState.groups)
 const account = computed(() => AppState.account);
 const profile = computed(() => AppState.activeProfile)
 const route = useRoute()
 
 watch(route, () => {
     getProfileById()
+    getGroupsByProfileId()
 
 }, { immediate: true })
 
@@ -27,7 +30,15 @@ async function getProfileById() {
     }
 }
 
-
+async function getGroupsByProfileId(){
+    try {
+        const profileId = route.params.profileId;
+        await membersService.getGroupsByProfileId(profileId);
+    } catch (error) {
+        Pop.meow(error)
+        logger.error(error)
+    }
+}
 
 </script>
 
@@ -72,12 +83,12 @@ async function getProfileById() {
                     <div id="creator-img-icon-box" class="d-inline-block position-absolute">
                         <img :src="profile.picture" alt="" class="creator-img" />
                     </div>
-                    <div class="m-3">
+                    <div class="m-3 name-bio-box">
                         <h2>{{ profile.name }}</h2>
                         <p>{{ profile.bio }}</p>
                         <div class="text-end">
                             <router-link :to="{ name: 'Account' }">
-                                <button v-if="account.id == profile.id" class="btn btn-outline-success"
+                                <button v-if="account?.id == profile?.id" class="btn btn-outline-success"
                                     data-bs-toggle="modal" data-bs-target="#editModal">
                                     Edit
                                 </button>
@@ -88,9 +99,9 @@ async function getProfileById() {
             </div>
         </section>
         <section class="row">
-            <div class="col-md-4">
-
-            </div>
+            <div v-for="group in groups" :key="group.id" class="col-md-3 mb-4">
+          <GroupCard :groupProp="group"/>
+        </div>
         </section>
     </div>
 </template>
@@ -137,5 +148,12 @@ async function getProfileById() {
     aspect-ratio: 1/1;
     border-radius: 50%;
     object-fit: cover;
+    position: relative;
+
+}
+.name-bio-box h2{
+    position: absolute;
+    left: 10%;
+    top: 15%;
 }
 </style>

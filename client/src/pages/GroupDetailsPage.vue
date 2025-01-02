@@ -18,7 +18,7 @@ const hasJoined = computed(() => members.value.some(member => member.accountId =
 // const foundMember = members.value.find(member => member.accountId == account.value?.id)
 
 const joinedGroups = computed(() => AppState.joinedGroups);
-const foundMember = joinedGroups.value.find(member => member.groupId == route.params.groupId);
+const foundMember = computed(() => joinedGroups.value.find(member => member.groupId == route.params.groupId));
 
 watch(route, () => {
   getGroupById()
@@ -66,8 +66,13 @@ async function deletePost(postId) {
 
 async function createMember() {
   try {
-    const memberData = { groupId: route.params.groupId };
-    await membersService.createMember(memberData);
+    if(!account.value){
+      Pop.confirm("Please log in to join this group");
+    }else{
+      const memberData = { groupId: route.params.groupId };
+      await membersService.createMember(memberData);
+    }
+
   } catch (error) {
     Pop.meow(error);
     logger.error(error);
@@ -77,6 +82,7 @@ async function createMember() {
 
 async function deleteMember(memberId) {
   try {
+    // hasJoined.value = !hasJoined.value;
     const confirmed = await Pop.confirm("Are you sure you want to leave this group?");
     if (!confirmed) return;
     await membersService.deleteMember(memberId);
@@ -121,12 +127,14 @@ async function getMyJoinedGroups() {
               <!-- <p>{{ foundMember }}</p> -->
             </div>
             <div>
-              <button type="button" class="btn btn-primary me-3" data-bs-toggle="modal" data-bs-target="#postModal">
+              <button v-if="hasJoined" type="button" class="btn btn-primary me-3" data-bs-toggle="modal" data-bs-target="#postModal">
                 Create Post
               </button>
+              <!-- <button v-if="hasJoined" @click="deleteMember(foundMember.id)" class="btn btn-outline-danger">Leave
+                Group</button> -->
               <button v-if="hasJoined" @click="deleteMember(foundMember.id)" class="btn btn-outline-danger">Leave
                 Group</button>
-              <button v-else @click="createMember" class="btn btn-outline-primary">Join Group</button>
+              <button v-if="!hasJoined" @click="createMember" class="btn btn-outline-primary">Join Group</button>
             </div>
           </div>
         </div>
