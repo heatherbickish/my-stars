@@ -72,7 +72,7 @@ async function getProfileById() {
                     <div id="creator-img-icon-box" class="d-inline-block position-absolute">
                         <img :src="profile.picture" alt="" class="creator-img" />
                     </div>
-                    <div class="m-3">
+                    <div class="m-3 name-bio-box">
                         <h2>{{ profile.name }}</h2>
                         <p>{{ profile.bio }}</p>
                         <div class="text-end">
@@ -137,5 +137,12 @@ async function getProfileById() {
     aspect-ratio: 1/1;
     border-radius: 50%;
     object-fit: cover;
+    position: relative;
+
+}
+.name-bio-box h2{
+    position: absolute;
+    left: 10%;
+    top: 15%;
 }
 </style>
