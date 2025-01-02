@@ -1,18 +1,14 @@
 <script setup>
-import { computed, ref } from 'vue';
-import { AppState } from '../AppState.js';
-import { logger } from '@/utils/Logger.js';
-import { accountService } from '@/services/AccountService.js';
-import Pop from '@/utils/Pop.js';
+import { computed, ref } from "vue";
+import { AppState } from "../AppState.js";
+import { logger } from "@/utils/Logger.js";
+import { accountService } from "@/services/AccountService.js";
+import Pop from "@/utils/Pop.js";
 
-const account = computed(() => AppState.account)
+const account = computed(() => AppState.account);
 const editableAccountData = ref({
+  name: "",
   picture: "",
-  class: "",
-  graduated: false,
-  github: "",
-  linkedin: "",
-  resume: "",
   bio: "",
   coverImg: "",
 });
@@ -29,11 +25,10 @@ async function updateAccount() {
 </script>
 
 <template>
-  <div class="about text-center">
-    <section v-if="account" class="row justify-content-center mt-4">
-      <div class="col-md-3">
-        <form @submit.prevent="updateAccount" class="w-100" id="edit-form">
-          <!-- <div>
+  <section v-if="account" class="row justify-content-center my-4 mx-0">
+    <div class="col-md-3">
+      <form @submit.prevent="updateAccount" class="w-100" id="edit-form">
+        <!-- <div>
             <div class="position-relative">
               <img :src="account.coverImg" alt="" class="cover-img" />
               <div>
@@ -113,97 +108,117 @@ async function updateAccount() {
             </section>
           </div> -->
 
-
-
-
-          <div class="mb-3">
-            <input type="text" id="name" name="name" class="form-control" placeholder="Name..." required>
-          </div>
-          <div class="mb-3">
-            <input type="url" id="picture" name="picture" class="form-control" placeholder="Profile picture...">
-          </div>
-          <div class="mb-3">
-            <input type="url" id="coverImg" name="coverImg" class="form-control" placeholder="Cover Image url..." required>
-          </div>
-          <div>
-            <textarea name="" id="bio" class="form-control" rows="10" maxlength="1000" placeholder="Bio..."></textarea>
-          </div>
-        </form>
-      </div>
-      <div class="col-md-8">
-        <section class="mb-5 row">
-            <div class="col-md-12">
-                <!-- <div>
-                    <img src="https://images.unsplash.com/photo-1460411794035-42aac080490a?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8c2t5fGVufDB8fDB8fHww" alt="" class="cover-img" />
-                </div> -->
-                <!-- <div id="bio-box" class="p-4">
+        <div class="mb-3">
+          <input
+            type="text"
+            id="name"
+            name="name"
+            class="form-control"
+            placeholder="Name..."
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <input
+            type="url"
+            id="picture"
+            name="picture"
+            class="form-control"
+            placeholder="Profile picture..."
+          />
+        </div>
+        <div class="mb-3">
+          <input
+            type="url"
+            id="coverImg"
+            name="coverImg"
+            class="form-control"
+            placeholder="Cover Image url..."
+            required
+          />
+        </div>
+        <div>
+          <textarea
+            name=""
+            id="bio"
+            class="form-control"
+            rows="10"
+            maxlength="1000"
+            placeholder="Bio..."
+          ></textarea>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-8">
+      <div>
+        <h5>Profile Preview</h5>
+        <div>
+          <img
+            src="https://images.unsplash.com/photo-1460411794035-42aac080490a?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8c2t5fGVufDB8fDB8fHww"
+            class="cover-img"
+            alt=""
+          />
+        </div>
+        <div id="bio-box" class="p-4">
                     <div class="d-flex justify-content-end">
                         <div style="height: 20px"></div>
                     </div>
                     <div id="creator-img-icon-box" class="d-inline-block position-absolute">
-                        <img src="https://plus.unsplash.com/premium_vector-1732315777936-1135f699b5ff?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8NHxuZ2ZSQnd0OWY5WXx8ZW58MHx8fHx8" alt="" class="creator-img" />
+                        <img src="https://images.unsplash.com/photo-1662062935123-354626e8a7ad?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y293JTIwY2F0fGVufDB8fDB8fHww" alt="" class="creator-img" />
                     </div>
                     <div class="m-3 name-bio-box">
                         <h2>Nameeeee</h2>
-                        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Deleniti dicta voluptates inventore, magni explicabo cumque, ipsa ex nulla libero at ea rem eos tenetur recusandae quo, ipsum alias facilis modi.</p>
+                        <p class="bio-text">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Deleniti dicta voluptates inventore, magni explicabo cumque, ipsa ex nulla libero at ea rem eos tenetur recusandae quo, ipsum alias facilis modi.</p>
                     </div>
-                </div> -->
-
-                <div style="width: 100%;">
-                  <img src="https://images.unsplash.com/photo-1460411794035-42aac080490a?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8c2t5fGVufDB8fDB8fHww" style="width: 100%" alt="">
                 </div>
-
-            </div>
-        </section>
       </div>
-      </section>
-    <div v-else>
-      <h1>Loading... <i class="mdi mdi-loading mdi-spin"></i></h1>
     </div>
+  </section>
+  <div v-else>
+    <h1>Loading... <i class="mdi mdi-loading mdi-spin"></i></h1>
   </div>
 </template>
 
 <style scoped lang="scss">
-img {
-  max-width: 100px;
-}
-.bio-box{
+.bio-box {
   resize: none;
   min-height: 300px;
 }
-textarea{
+textarea {
   resize: none;
 }
 
 #bio-box {
-    background-color: white;
-    position: relative;
+  background-color: white;
+  position: relative;
 }
 
 .cover-img {
-    width: 100%;
-    // height: 50dvh;
-    // object-fit: cover;
-    // object-position: center;
+  width: 100%;
+  height: 30dvh;
+  object-fit: cover;
+  object-position: center;
 }
 
 #creator-img-icon-box {
-    position: absolute;
-    left: 18px;
-    top: -100px;
+  position: absolute;
+  left: 18px;
+  top: -100px;
 }
 
 .creator-img {
-    height: 10em;
-    aspect-ratio: 1/1;
-    border-radius: 50%;
-    object-fit: cover;
-    position: relative;
-
+  height: 10em;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  object-fit: cover;
+  position: relative;
 }
-.name-bio-box h2{
-    position: absolute;
-    left: 10%;
-    top: 15%;
+.name-bio-box h2 {
+  position: absolute;
+  left: 16%;
+  top: 10%;
+}
+.bio-text{
+  margin-top: 3em;
 }
 </style>

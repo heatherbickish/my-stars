@@ -89,14 +89,14 @@ async function getGroupsByProfileId(){
                         <h2>{{ profile.name }}</h2>
                         <p>{{ profile.bio }}</p>
                         <div class="text-end">
-                            <router-link :to="{ name: 'Account' }">
+
                                 <button v-if="account?.id == profile?.id" class="btn btn-outline-success">
                                     Edit
                                 </button>
                                 <button v-else class="btn btn-outline-success">
                                     <span class="mdi mdi-account-multiple-plus-outline me-1"></span>Add Friend
                                 </button>
-                            </router-link>
+
                         </div>
                     </div>
                 </div>
@@ -111,23 +111,9 @@ async function getGroupsByProfileId(){
 </template>
 
 <style scoped lang="scss">
-// .cover-image {
-//     height: 400px;
-//     width: 100%;
-//     border-radius: 15px;
-//     object-position: center;
-//     object-fit: cover;
-// }
-
 .img-box {
     background-color: #fff;
 }
-
-// .creator-img {
-//     border-radius: 50%;
-//     aspect-ratio: 1/1;
-//     height: 3em;
-// }
 
 #bio-box {
     background-color: white;
