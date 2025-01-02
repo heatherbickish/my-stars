@@ -1,11 +1,12 @@
 <script setup>
 import { AppState } from '@/AppState';
+import { commentsService } from "@/services/CommentsService";
 import { groupsService } from "@/services/GroupsService";
 import { membersService } from '@/services/MembersService';
 import { postsService } from '@/services/PostsService';
 import { logger } from '@/utils/Logger';
 import Pop from '@/utils/Pop';
-import { computed, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute()
@@ -15,10 +16,14 @@ const posts = computed(() => AppState.posts)
 const account = computed(() => AppState.account);
 const members = computed(() => AppState.members);
 const hasJoined = computed(() => members.value.some(member => member.accountId == account.value?.id));
-// const foundMember = members.value.find(member => member.accountId == account.value?.id)
 
 const joinedGroups = computed(() => AppState.joinedGroups);
 const foundMember = computed(() => joinedGroups.value.find(member => member.groupId == route.params.groupId));
+
+const editableCommentData = ref({
+  body: '',
+  postId: route.params.postId
+})
 
 watch(route, () => {
   getGroupById()
@@ -30,6 +35,32 @@ watch(account, () => {
   getMyJoinedGroups()
 
 }, { immediate: true })
+
+// async function getCommentsByPostId(){
+//   try {
+
+//   }
+//   catch (error){
+//     Pop.meow(error);
+//     logger.error(error)
+//   }
+// }
+
+async function createComment(postId) {
+  try {
+    console.log(postId)
+    editableCommentData.value.postId = postId
+    await commentsService.createComment(editableCommentData.value)
+    editableCommentData.value = {
+      body: '',
+      postId: ''
+    }
+  }
+  catch (error) {
+    Pop.meow(error);
+    logger.error(error)
+  }
+}
 
 async function getGroupById() {
   try {
@@ -66,12 +97,14 @@ async function deletePost(postId) {
 
 async function createMember() {
   try {
-    if(!account.value){
+    if (!account.value) {
       Pop.confirm("Please log in to join this group");
-    }else{
+    } else {
       const memberData = { groupId: route.params.groupId };
       await membersService.createMember(memberData);
     }
+
+
 
   } catch (error) {
     Pop.meow(error);
@@ -127,7 +160,8 @@ async function getMyJoinedGroups() {
               <!-- <p>{{ foundMember }}</p> -->
             </div>
             <div>
-              <button v-if="hasJoined" type="button" class="btn btn-primary me-3" data-bs-toggle="modal" data-bs-target="#postModal">
+              <button v-if="hasJoined" type="button" class="btn btn-primary me-3" data-bs-toggle="modal"
+                data-bs-target="#postModal">
                 Create Post
               </button>
               <!-- <button v-if="hasJoined" @click="deleteMember(foundMember.id)" class="btn btn-outline-danger">Leave
@@ -144,6 +178,7 @@ async function getMyJoinedGroups() {
     <!-- SECTION posts -->
     <section class="row justify-content-center">
       <div class="col-md-6">
+
         <section v-for="post in posts" :key="post.id" class="row">
           <div>
             <div class="col-md-12 shadow mb-5">
@@ -183,6 +218,17 @@ async function getMyJoinedGroups() {
                     <span class="mdi mdi-comment-text-outline me-1 fs-4"></span>
                     <span>Comment</span>
                   </div>
+                </div>
+                <div class="p-3">
+                  <form @submit.prevent="createComment(post.id)">
+                    <div class="mb-3">
+                      <textarea class="form-control" id="body" rows="3" maxlength="1000"
+                        placeholder="What's on your mind?" required></textarea>
+                    </div>
+                    <div class="text-end mt-3 mb-3">
+                      <button class="btn btn-success" title="Post comment" type="submit">Post Comment</button>
+                    </div>
+                  </form>
                 </div>
                 <div class="p-3">
                   <div class="d-flex shadow p-2 mb-3">
@@ -288,6 +334,7 @@ async function getMyJoinedGroups() {
 }
 
 .creator-img {
+  height: 5rem;
   border-radius: 50%;
   aspect-ratio: 1/1;
 }

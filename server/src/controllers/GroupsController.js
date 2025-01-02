@@ -3,6 +3,7 @@ import { groupsService } from "../services/GroupsService";
 import BaseController from "../utils/BaseController";
 import { postsService } from "../services/PostsService";
 import { membersService } from "../services/MembersService";
+import { commentsService } from "../services/CommentsService";
 
 export class GroupsController extends BaseController {
   constructor() {
@@ -12,12 +13,22 @@ export class GroupsController extends BaseController {
       .get('/:groupId', this.getGroupById)
       .get('/:groupId/posts', this.getPostByGroupId)
       .get('/:groupId/members', this.getMembersByGroupId)
+      .get('/:groupId/comments', this.getCommentsByGroupId)
       .get('/search', this.getGroupsByQuery)
       .use(Auth0Provider.getAuthorizedUserInfo)
       .post('', this.createGroup)
       .put('/:groupId', this.editGroup)
   }
 
+  async getCommentsByGroupId(request, response, next) {
+    try {
+      const groupId = request.params.groupId
+      const comment = await commentsService.getCommentsByGroupId(groupId)
+      response.send(comment)
+    } catch (error) {
+      next(error)
+    }
+  }
 
   async getGroupsByQuery(request, response, next) {
     try {
