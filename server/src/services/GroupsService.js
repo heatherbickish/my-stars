@@ -41,5 +41,8 @@ class GroupsService {
     return groups
   }
 
+  async getGroupsByProfileId(profileId) {
+    
+  }
 }
 export const groupsService = new GroupsService()

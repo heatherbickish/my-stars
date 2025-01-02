@@ -36,5 +36,10 @@ class MembersService{
     const members = await dbContext.Members.find({groupId: groupId}).populate('profile', 'name picture');
     return members;
   }
+
+  async getMembersByProfileId(profileId) {
+    const members = await dbContext.Members.find({accountId: profileId}).populate('group');
+    return members;
+  }
 }
 export const membersService = new MembersService();

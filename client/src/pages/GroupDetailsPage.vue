@@ -82,7 +82,7 @@ async function createMember() {
 
 async function deleteMember(memberId) {
   try {
-    hasJoined.value = !hasJoined.value;
+    // hasJoined.value = !hasJoined.value;
     const confirmed = await Pop.confirm("Are you sure you want to leave this group?");
     if (!confirmed) return;
     await membersService.deleteMember(memberId);

@@ -2,6 +2,7 @@ import { logger } from "@/utils/Logger.js";
 import { api } from "./AxiosService.js";
 import { AppState } from "@/AppState.js";
 import { Member } from "@/models/Member.js";
+import { Group } from "@/models/Group.js";
 
 class MembersService {
   async createMember(memberData) {
@@ -17,6 +18,7 @@ class MembersService {
     AppState.joinedGroups.splice(memberIndex, 1);
     const memberIndex1 = AppState.members.findIndex(member => member.id == memberId);
     AppState.members.splice(memberIndex1, 1);
+    AppState.activeGroup.memberCount -= 1;
   }
 
   async getMyJoinedGroups() {
@@ -35,5 +37,11 @@ class MembersService {
     AppState.members = members;
     console.log(AppState.members)
   }
+
+  async getGroupsByProfileId(profileId) {
+    const response = await api.get(`api/profiles/${profileId}/members`);
+    const groups = response.data.map(member => new Group(member.group));
+    AppState.groups = groups;
+}
 }
 export const membersService = new MembersService();
