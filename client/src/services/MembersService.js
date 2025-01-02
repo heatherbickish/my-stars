@@ -15,6 +15,8 @@ class MembersService {
     await api.delete(`api/members/${memberId}`);
     const memberIndex = AppState.joinedGroups.findIndex(joinedGroup => joinedGroup.id == memberId);
     AppState.joinedGroups.splice(memberIndex, 1);
+    const memberIndex1 = AppState.members.findIndex(member => member.id == memberId);
+    AppState.members.splice(memberIndex1, 1);
   }
 
   async getMyJoinedGroups() {

@@ -77,7 +77,7 @@ async function getProfileById() {
                         <p>{{ profile.bio }}</p>
                         <div class="text-end">
                             <router-link :to="{ name: 'Account' }">
-                                <button v-if="account.id == profile.id" class="btn btn-outline-success"
+                                <button v-if="account?.id == profile?.id" class="btn btn-outline-success"
                                     data-bs-toggle="modal" data-bs-target="#editModal">
                                     Edit
                                 </button>
