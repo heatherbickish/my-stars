@@ -40,9 +40,5 @@ class GroupsService {
     const groups = await dbContext.Groups.find().populate('creator', 'name picture').populate('memberCount');
     return groups
   }
-
-  async getGroupsByProfileId(profileId) {
-    
-  }
 }
 export const groupsService = new GroupsService()
