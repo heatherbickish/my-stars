@@ -16,9 +16,10 @@ export class CommentsController extends BaseController {
     try {
       const commentData = request.body
       commentData.creatorId = request.userInfo.id
-      const comment = await commentsService.createComment(commentData)
-      const post = await postsService.findPost(commentData.postId)
-      response.send(post)
+      // const comment = await commentsService.createComment(commentData)
+      // const post = await postsService.updatePost(comment, commentData.postId)
+      // response.send(post)
+      // response.send(comment)
     } catch (error) {
       next(error)
     }

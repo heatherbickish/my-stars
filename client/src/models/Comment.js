@@ -6,6 +6,6 @@ export class Comment {
     this.postId = data.postId
     this.body = data.body
     this.createdAt = new Date(data.createdAt)
-
+    this.groupId = data.groupId;
   }
 }

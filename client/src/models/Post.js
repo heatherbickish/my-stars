@@ -7,5 +7,6 @@ export class Post {
         this.body = data.body
         this.createdAt = new Date(data.createdAt)
         this.creator = data.creator;
+        this.commentsArr = data.commentsArr || [];
     }
 }

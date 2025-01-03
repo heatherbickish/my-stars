@@ -2,12 +2,14 @@ import { dbContext } from "../db/DbContext"
 import { Forbidden } from "../utils/Errors"
 
 class PostsService {
-  async findPost(postId) {
-    const post = await dbContext.Posts.findById(postId)
+  async getPostById(postId) {
+    // const post = await dbContext.Posts.findById(postId).populate('creator', 'name picture').populate('comment')
+    const post = await dbContext.Posts.findById(postId).populate('creator', 'name picture')
     return post
   }
   async getPostByGroupId(groupId) {
-    const posts = await dbContext.Posts.find({ groupId: groupId }).populate('creator', 'name picture').populate('comment')
+    // const posts = await dbContext.Posts.find({ groupId: groupId }).populate('creator', 'name picture').populate('comment')
+    const posts = await dbContext.Posts.find({ groupId: groupId }).populate('creator', 'name picture')
     return posts
   }
   async deletePost(postId, userId) {
@@ -20,9 +22,16 @@ class PostsService {
   async createPost(postData) {
     const post = await dbContext.Posts.create(postData)
     await post.populate('creator', 'name picture')
-    await post.populate('comment')
+    // await post.populate('comment')
     return post
   }
+
+  // async updatePost(comment, postId){
+  //   const postToUpdate = await this.getPostById(postId);
+  //   postToUpdate.comments.push(comment);
+  //   await postToUpdate.save();
+  //   return postToUpdate;
+  // }
 
 }
 export const postsService = new PostsService()

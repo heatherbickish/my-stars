@@ -1,92 +1,106 @@
 <script setup>
-import { AppState } from '@/AppState';
+import { AppState } from "@/AppState";
 import { commentsService } from "@/services/CommentsService";
 import { groupsService } from "@/services/GroupsService";
-import { membersService } from '@/services/MembersService';
-import { postsService } from '@/services/PostsService';
-import { logger } from '@/utils/Logger';
-import Pop from '@/utils/Pop';
-import { computed, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { membersService } from "@/services/MembersService";
+import { postsService } from "@/services/PostsService";
+import { logger } from "@/utils/Logger";
+import Pop from "@/utils/Pop";
+import { computed, ref, watch } from "vue";
+import { useRoute } from "vue-router";
 
-const route = useRoute()
 
-const group = computed(() => AppState.activeGroup)
-const posts = computed(() => AppState.posts)
+
+const route = useRoute();
+
+const group = computed(() => AppState.activeGroup);
+const posts = computed(() => AppState.posts);
+const comments = computed(() => AppState.comments);
 const account = computed(() => AppState.account);
 const members = computed(() => AppState.members);
-const hasJoined = computed(() => members.value.some(member => member.accountId == account.value?.id));
+const hasJoined = computed(() =>
+  members.value.some((member) => member.accountId == account.value?.id)
+);
 
 const joinedGroups = computed(() => AppState.joinedGroups);
-const foundMember = computed(() => joinedGroups.value.find(member => member.groupId == route.params.groupId));
+const foundMember = computed(() =>
+  joinedGroups.value.find((member) => member.groupId == route.params.groupId)
+);
 
 const editableCommentData = ref({
-  body: '',
-  postId: route.params.postId
-})
+  body: "",
+  // postId: route.params.postId
+  postId: "",
+  groupId: route.params.groupId
+});
 
-watch(route, () => {
-  getGroupById()
-  getPostsByGroupId()
-  getMembersByGroupId()
-}, { immediate: true })
+watch(
+  route,
+  () => {
+    getGroupById();
+    getPostsByGroupId();
+    getMembersByGroupId();
+    getCommentsByGroupId();
+  },
+  { immediate: true }
+);
 
-watch(account, () => {
-  getMyJoinedGroups()
-
-}, { immediate: true })
-
-// async function getCommentsByPostId(){
-//   try {
-
-//   }
-//   catch (error){
-//     Pop.meow(error);
-//     logger.error(error)
-//   }
-// }
+watch(
+  account,
+  () => {
+    getMyJoinedGroups();
+  },
+  { immediate: true }
+);
 
 async function createComment(postId) {
   try {
-    console.log(postId)
-    editableCommentData.value.postId = postId
-    await commentsService.createComment(editableCommentData.value)
-    editableCommentData.value = {
-      body: '',
-      postId: ''
+    editableCommentData.value.postId = postId;
+    const commentResult = await commentsService.createComment(editableCommentData.value);
+    console.log("POSTS VALUE", posts.value)
+    let foundPost = posts.value.find((post) => postId == post.id)
+    // console.log("foundPost: ",foundPost)
+    if(foundPost){
+      foundPost.commentsArr.push(commentResult)
     }
-  }
-  catch (error) {
+
+    editableCommentData.value = {
+      body: "",
+      postId: "",
+      groupId: ""
+    };
+  } catch (error) {
     Pop.meow(error);
-    logger.error(error)
+    logger.error(error);
   }
 }
 
 async function getGroupById() {
   try {
-    const groupId = route.params.groupId
-    await groupsService.getGroupById(groupId)
-  }
-  catch (error) {
+    console.log("will this log in the console")
+    const groupId = route.params.groupId;
+    await groupsService.getGroupById(groupId);
+  } catch (error) {
     Pop.meow(error);
-    logger.error('[GETTING GROUP BY ID]', error)
+    logger.error("[GETTING GROUP BY ID]", error);
   }
 }
 
 async function getPostsByGroupId() {
   try {
-    const groupId = route.params.groupId
-    await postsService.getPostsByGroupId(groupId)
-  }
-  catch (error) {
+    const groupId = route.params.groupId;
+    await postsService.getPostsByGroupId(groupId);
+  } catch (error) {
     Pop.meow(error);
-    logger.error('[GETTING POST BY GROUP ID]', error)
+    logger.error("[GETTING POST BY GROUP ID]", error);
   }
 }
 
 async function deletePost(postId) {
   try {
-    const confirmed = await Pop.confirm("Are you sure you want to delete this post?");
+    const confirmed = await Pop.confirm(
+      "Are you sure you want to delete this post?"
+    );
     if (!confirmed) return;
     await postsService.deletePost(postId);
   } catch (error) {
@@ -103,20 +117,18 @@ async function createMember() {
       const memberData = { groupId: route.params.groupId };
       await membersService.createMember(memberData);
     }
-
-
-
   } catch (error) {
     Pop.meow(error);
     logger.error(error);
-
   }
 }
 
 async function deleteMember(memberId) {
   try {
     // hasJoined.value = !hasJoined.value;
-    const confirmed = await Pop.confirm("Are you sure you want to leave this group?");
+    const confirmed = await Pop.confirm(
+      "Are you sure you want to leave this group?"
+    );
     if (!confirmed) return;
     await membersService.deleteMember(memberId);
   } catch (error) {
@@ -143,6 +155,20 @@ async function getMyJoinedGroups() {
     logger.error(error);
   }
 }
+
+async function getCommentsByGroupId(){
+  try {
+    const groupId = route.params.groupId;
+    await commentsService.getCommentsByGroupId(groupId);
+    comments.value.forEach((comment) => {
+    let foundPost = posts.value.find((post) => comment.postId == post.id)
+    foundPost.commentsArr.push(comment)
+  });
+  } catch (error) {
+    Pop.meow(error);
+    logger.error(error);
+  }
+}
 </script>
 
 <template>
@@ -151,7 +177,7 @@ async function getMyJoinedGroups() {
       <div class="col-md-12 px-5">
         <div>
           <div class="mt-3">
-            <img :src="group.coverImg" alt="" class="cover-image">
+            <img :src="group.coverImg" alt="" class="cover-image" />
           </div>
           <div class="d-flex justify-content-between align-items-center">
             <div>
@@ -160,15 +186,31 @@ async function getMyJoinedGroups() {
               <!-- <p>{{ foundMember }}</p> -->
             </div>
             <div>
-              <button v-if="hasJoined" type="button" class="btn btn-primary me-3" data-bs-toggle="modal"
-                data-bs-target="#postModal">
+              <button
+                v-if="hasJoined"
+                type="button"
+                class="btn btn-primary me-3"
+                data-bs-toggle="modal"
+                data-bs-target="#postModal"
+              >
                 Create Post
               </button>
               <!-- <button v-if="hasJoined" @click="deleteMember(foundMember.id)" class="btn btn-outline-danger">Leave
                 Group</button> -->
-              <button v-if="hasJoined" @click="deleteMember(foundMember.id)" class="btn btn-outline-danger">Leave
-                Group</button>
-              <button v-if="!hasJoined" @click="createMember" class="btn btn-outline-primary">Join Group</button>
+              <button
+                v-if="hasJoined"
+                @click="deleteMember(foundMember.id)"
+                class="btn btn-outline-danger"
+              >
+                Leave Group
+              </button>
+              <button
+                v-if="!hasJoined"
+                @click="createMember"
+                class="btn btn-outline-primary"
+              >
+                Join Group
+              </button>
             </div>
           </div>
         </div>
@@ -176,9 +218,11 @@ async function getMyJoinedGroups() {
     </section>
 
     <!-- SECTION posts -->
+    <div class="bg-warning">
+      {{ comments }}
+    </div>
     <section class="row justify-content-center">
       <div class="col-md-6">
-
         <section v-for="post in posts" :key="post.id" class="row">
           <div>
             <div class="col-md-12 shadow mb-5">
@@ -186,8 +230,17 @@ async function getMyJoinedGroups() {
                 <div class="d-flex justify-content-between p-3">
                   <div class="d-flex">
                     <div>
-                      <router-link :to="{ name: 'Profile', params: { profileId: post.creatorId } }">
-                        <img :src="post.creator.picture" alt="" class="creator-img me-2" />
+                      <router-link
+                        :to="{
+                          name: 'Profile',
+                          params: { profileId: post.creatorId },
+                        }"
+                      >
+                        <img
+                          :src="post.creator.picture"
+                          alt=""
+                          class="creator-img me-2"
+                        />
                       </router-link>
                     </div>
                     <div>
@@ -196,9 +249,19 @@ async function getMyJoinedGroups() {
                     </div>
                   </div>
                   <div>
-                    <button v-if="post.creatorId == account?.id" class="btn bg-warning me-2">Edit</button>
-                    <button v-if="post.creatorId == account?.id" @click="deletePost(post.id)"
-                      class="btn bg-warning">Delete</button>
+                    <button
+                      v-if="post.creatorId == account?.id"
+                      class="btn bg-warning me-2"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      v-if="post.creatorId == account?.id"
+                      @click="deletePost(post.id)"
+                      class="btn bg-warning"
+                    >
+                      Delete
+                    </button>
                   </div>
                 </div>
                 <p class="ms-5 mt-3">
@@ -209,62 +272,72 @@ async function getMyJoinedGroups() {
                 <div v-if="post.imgUrl" class="mb-4">
                   <img :src="post.imgUrl" alt="" class="post-img" />
                 </div>
-                <div class="bg-light d-flex justify-content-center">
-                  <div class="me-5 selectable rounded p-3 d-flex align-items-center">
-                    <span class="mdi mdi-thumb-up-outline me-1 fs-4"></span>
-                    <span>Like</span>
-                  </div>
-                  <div class="selectable rounded p-3 d-flex align-items-center">
-                    <span class="mdi mdi-comment-text-outline me-1 fs-4"></span>
-                    <span>Comment</span>
-                  </div>
-                </div>
-                <div class="p-3">
-                  <form @submit.prevent="createComment(post.id)">
-                    <div class="mb-3">
-                      <textarea class="form-control" id="body" rows="3" maxlength="1000"
-                        placeholder="What's on your mind?" required></textarea>
+                <div v-if="hasJoined">
+                  <div class="bg-light d-flex justify-content-center">
+                    <div
+                      class="me-5 selectable rounded p-3 d-flex align-items-center"
+                    >
+                      <span class="mdi mdi-thumb-up-outline me-1 fs-4"></span>
+                      <span>Like</span>
                     </div>
-                    <div class="text-end mt-3 mb-3">
-                      <button class="btn btn-success" title="Post comment" type="submit">Post Comment</button>
-                    </div>
-                  </form>
-                </div>
-                <div class="p-3">
-                  <div class="d-flex shadow p-2 mb-3">
-                    <div class="ms-2">
-                      <img
-                        src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
-                        alt="" class="comment-creator-img me-2" />
-                    </div>
-                    <div>
-                      <span class="fw-bold">George Jones</span>
-                      <p>all dressed up and ready to hit town</p>
+                    <div
+                      class="selectable rounded p-3 d-flex align-items-center"
+                    >
+                      <span
+                        class="mdi mdi-comment-text-outline me-1 fs-4"
+                      ></span>
+                      <span>Comment</span>
                     </div>
                   </div>
-                  <div class="d-flex shadow p-2 mb-3">
-                    <div class="ms-2">
-                      <img
-                        src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
-                        alt="" class="comment-creator-img me-2" />
-                    </div>
-                    <div>
-                      <span class="fw-bold">George Jones</span>
-                      <p>all dressed up and ready to hit town</p>
-                    </div>
-                  </div>
-                  <div class="d-flex shadow p-2 mb-3">
-                    <div class="ms-2">
-                      <img
-                        src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-1/470201962_971788934996219_3257728217146353019_n.jpg?stp=cp0_dst-jpg_s80x80_tt6&_nc_cat=105&ccb=1-7&_nc_sid=e99d92&_nc_ohc=MtBZFTn_WRMQ7kNvgGaG3zt&_nc_zt=24&_nc_ht=scontent-sea1-1.xx&_nc_gid=ALPhz4ffIZAT-Q6roooPK0w&oh=00_AYAzu8N0SrTC_frYxuXKpimhjKUWgBb3vSpNTqlR46dv2A&oe=676F5AC0"
-                        alt="" class="comment-creator-img me-2" />
-                    </div>
-                    <div>
-                      <span class="fw-bold">George Jones</span>
-                      <p>all dressed up and ready to hit town</p>
-                    </div>
+                  <div class="p-3">
+                    <form @submit.prevent="createComment(post.id)">
+                      <div class="mb-3">
+                        <textarea
+                          v-model="editableCommentData.body"
+                          class="form-control"
+                          id="body"
+                          rows="3"
+                          maxlength="1000"
+                          placeholder="What's on your mind?"
+                          required
+                        ></textarea>
+                      </div>
+                      <div class="text-end mt-3 mb-3">
+                        <button
+                          class="btn btn-success"
+                          title="Post comment"
+                          type="submit"
+                        >
+                          Post Comment
+                        </button>
+                      </div>
+                    </form>
                   </div>
                 </div>
+                <div v-for="comment in post?.commentsArr" :key="comment.id" class="d-flex">
+                  <div class="ms-2">
+                      <img
+                        :src="comment.creator.picture" class="comment-creator-img me-2" />
+
+                    </div>
+                    <div>
+                      <span class="fw-bold">{{comment.creator.name}}</span>
+                      <p>{{comment.body}}</p>
+                    </div>
+                </div>
+                <!-- <div class="p-3">
+                  <div v-for="comment in post.comments" :key="comment.id" class="d-flex shadow p-2 mb-3">
+                    <div v-if="comment" class="ms-2">
+                      <img
+                        :src="comment.creator.picture" class="comment-creator-img me-2" />
+
+                    </div>
+                    <div>
+                      <span class="fw-bold">{{comment.creator.name}}</span>
+                      <p>{{comment.body}}</p>
+                    </div>
+                  </div>
+                </div> -->
               </div>
             </div>
           </div>
@@ -308,7 +381,12 @@ async function getMyJoinedGroups() {
                 </div>
               </div>
             </section>
-            <router-link :to="{ name: 'Group Gallery Page', params: { groupId: group.id } }">
+            <router-link
+              :to="{
+                name: 'Group Gallery Page',
+                params: { groupId: group.id },
+              }"
+            >
               <div class="text-end">
                 <button class="btn btn-success">See all photos</button>
               </div>

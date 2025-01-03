@@ -9,14 +9,14 @@ class PostsService {
         // logger.log('Got Posts by Group Id', response.data)
         const posts = response.data.map(post => new Post(post))
         AppState.posts = posts
-        console.log(response.data)
+        console.log("from get posts by groupId in service:", response.data)
+        return posts;
     }
 
     async createPost(postData) {
         const response = await api.post('api/posts', postData)
         const post = new Post(response.data)
         AppState.posts.push(post)
-
     }
 
     async deletePost(postId) {

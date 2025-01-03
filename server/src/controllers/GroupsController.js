@@ -18,13 +18,28 @@ export class GroupsController extends BaseController {
       .use(Auth0Provider.getAuthorizedUserInfo)
       .post('', this.createGroup)
       .put('/:groupId', this.editGroup)
+      .post('/:groupId/posts/:postId/comments', this.createComment)
+  }
+
+  async createComment(request, response, next){
+    try{
+      const groupId = request.params.groupId;
+      const commentData = request.body;
+      const postId = commentData.postId;
+      commentData.creatorId = request.userInfo.id;
+      const foundGroup = await groupsService.getGroupById(groupId);
+      const comment = await commentsService.createComment(commentData);
+      response.send(comment);
+    }catch (error) {
+      next(error)
+    }
   }
 
   async getCommentsByGroupId(request, response, next) {
     try {
-      const groupId = request.params.groupId
-      const comment = await commentsService.getCommentsByGroupId(groupId)
-      response.send(comment)
+      const groupId = request.params.groupId;
+      const comments = await commentsService.getCommentsByGroupId(groupId);
+      response.send(comments);
     } catch (error) {
       next(error)
     }
