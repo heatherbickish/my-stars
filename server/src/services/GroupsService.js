@@ -2,6 +2,13 @@ import { dbContext } from "../db/DbContext"
 import { Forbidden } from "../utils/Errors"
 
 class GroupsService {
+  async voidGroup(groupId, userId) {
+    const groupToVoid = await this.getGroupById(groupId)
+    if (groupToVoid.creatorId != userId) { throw new Forbidden("YOU ARE NOT ALLOWED TO VOID SOMEONE ELSE'S GROUP") }
+    groupToVoid.isVoided = !groupToVoid.isVoided
+    await groupToVoid.save()
+    return groupToVoid
+  }
   async getGroupsByQuery(groupQuery) {
     const sortBy = groupQuery.sortBy
     const groups = await dbContext.Groups
@@ -28,12 +35,12 @@ class GroupsService {
   }
   async getGroupById(groupId) {
     const group = await dbContext.Groups.findById(groupId).populate('creator', 'name picture').populate('memberCount');
-    // if (group == null) { throw new Error(`Invalid group id${groupId}`) }
     return group
   }
   async createGroup(groupData) {
     const group = await dbContext.Groups.create(groupData)
     await group.populate('creator', 'name picture')
+    await group.populate('memberCount')
     return group
   }
   async getAllGroups() {

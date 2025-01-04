@@ -21,7 +21,8 @@ const members = computed(() => AppState.members);
 const hasJoined = computed(() =>
   members.value.some((member) => member.accountId == account.value?.id)
 );
-
+const foundPosts = computed(() => AppState.posts.filter(post => post.imgUrl != ''))
+const firstFourPosts = computed(() => foundPosts.value.slice(0, 4))
 const joinedGroups = computed(() => AppState.joinedGroups);
 const foundMember = computed(() =>
   joinedGroups.value.find((member) => member.groupId == route.params.groupId)
@@ -36,6 +37,7 @@ const editableCommentData = ref({
 watch(
   route,
   () => {
+    postsService.clearPosts()
     getGroupById();
     getPostsByGroupId();
     getMembersByGroupId();
@@ -51,6 +53,19 @@ watch(
   },
   { immediate: true }
 );
+
+async function voidGroup() {
+  try {
+    const yes = await Pop.confirm(`Are you sure you want ${group.value.isVoided ? 'unvoid' : 'void'} the ${group.value.name} group?`, "Yes i am sure!")
+    if (!yes) return
+    const groupId = route.params.groupId
+    await groupsService.voidGroup(groupId)
+  }
+  catch (error) {
+    Pop.meow(error);
+    logger.error(error)
+  }
+}
 
 async function deleteComment(commentId, comment) {
   try {
@@ -79,8 +94,6 @@ async function createComment(postId) {
   try {
     editableCommentData.value.postId = postId;
     const commentResult = await commentsService.createComment(editableCommentData.value);
-    // console.log("CommentResult:", commentResult)
-    // console.log("POSTS VALUE", posts.value)
     let foundPost = posts.value.find((post) => postId == post.id)
     if (foundPost) {
       foundPost.commentsArr.push(commentResult)
@@ -147,7 +160,6 @@ async function createMember() {
 
 async function deleteMember(memberId) {
   try {
-    // hasJoined.value = !hasJoined.value;
     const confirmed = await Pop.confirm(
       "Are you sure you want to leave this group?"
     );
@@ -204,23 +216,40 @@ async function getCommentsByGroupId() {
           </div>
           <div class="d-flex justify-content-between align-items-center">
             <div>
-              <h1>{{ group.name }}</h1>
+              <div class="d-flex align-items-center">
+                <h1>{{ group.name }}</h1>
+                <span v-if="group.creatorId == account?.id"
+                  class="fs-5 fw-bold bg-success text-light ms-4 span-pill px-2">Creator</span>
+              </div>
               <p>{{ group.memberCount }} members</p>
-              <!-- <p>{{ foundMember }}</p> -->
+            </div>
+            <div v-if="group.isVoided" class="text-warning">
+              <h3>THIS GROUP HAS BEEN VOIDED</h3>
+              <p class="text-center">No longer accepting members</p>
             </div>
             <div>
-              <button v-if="hasJoined" type="button" class="btn btn-primary me-3" data-bs-toggle="modal"
-                data-bs-target="#postModal">
-                Create Post
-              </button>
-              <!-- <button v-if="hasJoined" @click="deleteMember(foundMember.id)" class="btn btn-outline-danger">Leave
-                Group</button> -->
-              <button v-if="hasJoined" @click="deleteMember(foundMember.id)" class="btn btn-outline-danger">
-                Leave Group
-              </button>
-              <button v-if="!hasJoined" @click="createMember" class="btn btn-outline-primary">
-                Join Group
-              </button>
+              <div v-if="group.creatorId == account?.id">
+                <button :disabled="group.isVoided" type="button" class="btn btn-primary me-3" data-bs-toggle="modal"
+                  data-bs-target="#postModal">
+                  Create Post
+                </button>
+                <button v-if="group.creatorId == account?.id" @click="voidGroup()"
+                  class=" btn btn-outline-warning me-3">
+                  {{ group.isVoided ? 'Unvoid' : 'Void' }}
+                </button>
+              </div>
+              <div v-else>
+                <button v-if="hasJoined && (group.isVoided == false)" class="btn btn-primary me-3"
+                  data-bs-toggle="modal" data-bs-target="#postModal">Create
+                  Post</button>
+                <button v-if="hasJoined" @click="deleteMember(foundMember.id)" class="btn btn-outline-danger">
+                  Leave Group
+                </button>
+                <button v-if="(hasJoined == false) && (group.isVoided == false)" @click="createMember"
+                  class="btn btn-outline-primary">
+                  Join Group
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -330,24 +359,9 @@ async function getCommentsByGroupId() {
           <div class="bg-light snapshot-box p-3">
             <p class="fw-bold fs-3">Recent snapshots</p>
             <section class="row">
-              <div class="col-md-6 mb-3">
+              <div v-for="post in firstFourPosts" :key="post.id" class="col-md-6 mb-3">
                 <div class="text-center">
-                  <img src="" alt="" />
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <div class="text-center">
-                  <img src="" alt="" />
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <div class="text-center">
-                  <img src="" alt="" />
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <div class="text-center">
-                  <img src="" alt="" />
+                  <img :src="post.imgUrl" alt="" class="snapshot-img" />
                 </div>
               </div>
             </section>
@@ -402,5 +416,16 @@ async function getCommentsByGroupId() {
 .snapshot-box {
   border-radius: 20px;
   // opacity: 0.8;
+}
+
+.snapshot-img {
+  height: 30dvh;
+  width: 100%;
+  object-fit: cover;
+}
+
+.span-pill {
+  height: 2rem;
+  border-radius: 10px;
 }
 </style>

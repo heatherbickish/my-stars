@@ -4,9 +4,14 @@ import { Group } from "@/models/Group.js";
 import { AppState } from "@/AppState.js";
 
 class GroupsService {
+  async voidGroup(groupId) {
+    const response = await api.delete(`api/groups/${groupId}`)
+    const group = new Group(response.data)
+    AppState.activeGroup = group
+    logger.log(response.data)
+  }
   async searchGroups(searchQuery) {
     const response = await api.get(`api/groups?query=${searchQuery}`)
-    // logger.log(response.data)
     const groups = response.data.map(group => new Group(group))
     AppState.groups = groups
   }
@@ -17,6 +22,7 @@ class GroupsService {
     return group
   }
   async getGroupById(groupId) {
+    AppState.activeGroup = null
     const response = await api.get(`api/groups/${groupId}`)
     const group = new Group(response.data)
     AppState.activeGroup = group

@@ -19,10 +19,22 @@ export class GroupsController extends BaseController {
       .post('', this.createGroup)
       .put('/:groupId', this.editGroup)
       .post('/:groupId/posts/:postId/comments', this.createComment)
+      .delete('/:groupId', this.voidGroup)
   }
 
-  async createComment(request, response, next){
-    try{
+  async voidGroup(request, response, next) {
+    try {
+      const groupId = request.params.groupId;
+      const userId = request.userInfo.id
+      const group = await groupsService.voidGroup(groupId, userId)
+      response.send(group)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async createComment(request, response, next) {
+    try {
       const groupId = request.params.groupId;
       const commentData = request.body;
       const postId = commentData.postId;
@@ -30,7 +42,7 @@ export class GroupsController extends BaseController {
       const foundGroup = await groupsService.getGroupById(groupId);
       const comment = await commentsService.createComment(commentData);
       response.send(comment);
-    }catch (error) {
+    } catch (error) {
       next(error)
     }
   }

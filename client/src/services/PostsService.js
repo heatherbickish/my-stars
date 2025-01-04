@@ -6,7 +6,6 @@ import { AppState } from "@/AppState.js";
 class PostsService {
     async getPostsByGroupId(groupId) {
         const response = await api.get(`api/groups/${groupId}/posts`)
-        // logger.log('Got Posts by Group Id', response.data)
         const posts = response.data.map(post => new Post(post))
         AppState.posts = posts
         console.log("from get posts by groupId in service:", response.data)
@@ -16,7 +15,7 @@ class PostsService {
     async createPost(postData) {
         const response = await api.post('api/posts', postData)
         const post = new Post(response.data)
-        AppState.posts.push(post)
+        AppState.posts.unshift(post)
     }
 
     async deletePost(postId) {
@@ -25,9 +24,13 @@ class PostsService {
         AppState.posts.splice(postIndex, 1);
     }
 
-    async getPostById(postId){
+    async getPostById(postId) {
         const response = await api.get(`api/posts/${postId}`);
         console.log(response.data)
+    }
+
+    clearPosts() {
+        AppState.posts = []
     }
 
 }
