@@ -1,6 +1,7 @@
 <script setup>
 import { AppState } from '@/AppState';
 import GroupCard from '@/components/GroupCard.vue';
+import GroupCardInProfilePage from '@/components/GroupCardInProfilePage.vue';
 import { membersService } from '@/services/MembersService';
 import { profilesService } from '@/services/ProfilesService';
 import { logger } from '@/utils/Logger';
@@ -33,6 +34,7 @@ async function getProfileById() {
 async function getGroupsByProfileId(){
     try {
         const profileId = route.params.profileId;
+        console.log("received profileId: ",profileId )
         await membersService.getGroupsByProfileId(profileId);
     } catch (error) {
         Pop.meow(error)
@@ -71,7 +73,7 @@ async function getGroupsByProfileId(){
         </div>
     </section> -->
     <div v-if="profile">
-        <section>
+        <section class="mb-5">
             <div class="col-md-12">
                 <div>
                     <img :src="profile.coverImg" alt="" class="cover-img" />
@@ -87,43 +89,31 @@ async function getGroupsByProfileId(){
                         <h2>{{ profile.name }}</h2>
                         <p>{{ profile.bio }}</p>
                         <div class="text-end">
-                            <router-link :to="{ name: 'Account' }">
-                                <button v-if="account?.id == profile?.id" class="btn btn-outline-success"
-                                    data-bs-toggle="modal" data-bs-target="#editModal">
+
+                                <button v-if="account?.id == profile?.id" class="btn btn-outline-success">
                                     Edit
                                 </button>
-                            </router-link>
+                                <button v-else class="btn btn-outline-success">
+                                    <span class="mdi mdi-account-multiple-plus-outline me-1"></span>Add Friend
+                                </button>
+
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-        <section class="row">
-            <div v-for="group in groups" :key="group.id" class="col-md-3 mb-4">
-          <GroupCard :groupProp="group"/>
+        <section v-if="profile" class="row justify-content-around">
+            <div v-for="group in groups" :key="group.id" class="col-md-4 mb-4 d-flex justify-content-center">
+          <GroupCardInProfilePage :groupProp="group"/>
         </div>
         </section>
     </div>
 </template>
 
 <style scoped lang="scss">
-// .cover-image {
-//     height: 400px;
-//     width: 100%;
-//     border-radius: 15px;
-//     object-position: center;
-//     object-fit: cover;
-// }
-
 .img-box {
     background-color: #fff;
 }
-
-// .creator-img {
-//     border-radius: 50%;
-//     aspect-ratio: 1/1;
-//     height: 3em;
-// }
 
 #bio-box {
     background-color: white;

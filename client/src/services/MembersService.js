@@ -27,7 +27,7 @@ class MembersService {
     const response = await api.get('account/members');
     const members = response.data.map(member => new Member(member));
     AppState.joinedGroups = members;
-    console.log(AppState.joinedGroups)
+    // console.log(AppState.joinedGroups)
   }
 
   async getMembersByGroupId(groupId) {
@@ -35,7 +35,7 @@ class MembersService {
     // console.log(response.data);
     const members = response.data.map(member => new Member(member));
     AppState.members = members;
-    console.log(AppState.members)
+    // console.log(AppState.members)
   }
 
   async getGroupsByProfileId(profileId) {

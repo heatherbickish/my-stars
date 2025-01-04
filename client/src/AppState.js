@@ -17,5 +17,7 @@ export const AppState = reactive({
   /**@type {import('./models/Member.js').Member[]} */
   joinedGroups: [],
   /**@type {import('./models/Account.js').Account} */
-  activeProfile: null
+  activeProfile: null,
+  /**@type {import('./models/Comment.js').Comment[]} */
+  comments: []
 })
