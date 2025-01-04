@@ -52,14 +52,37 @@ watch(
   { immediate: true }
 );
 
+async function deleteComment(commentId, comment) {
+  try {
+    const yes = await Pop.confirm('Are you sure you want to delete this comment?')
+    if (!yes) return
+    await commentsService.deleteComment(commentId)
+    console.log('posts value', posts.value)
+    const foundPost = posts.value.find((post) => {
+      if (post.commentsArr.length != 0)
+        for (let i = 0; i < post.commentsArr.length; i++) {
+          if (post.commentsArr[i] == comment) return true
+        }
+    })
+    console.log('foundpost', foundPost)
+    const commentIndex = foundPost.commentsArr.findIndex((comment) => comment.id == commentId)
+    console.log('comment index', commentIndex)
+    foundPost.commentsArr.splice(commentIndex, 1)
+  }
+  catch (error) {
+    Pop.meow(error);
+    logger.error(error)
+  }
+}
+
 async function createComment(postId) {
   try {
     editableCommentData.value.postId = postId;
     const commentResult = await commentsService.createComment(editableCommentData.value);
-    console.log("CommentResult:", commentResult)
+    // console.log("CommentResult:", commentResult)
     // console.log("POSTS VALUE", posts.value)
     let foundPost = posts.value.find((post) => postId == post.id)
-    if(foundPost){
+    if (foundPost) {
       foundPost.commentsArr.push(commentResult)
     }
 
@@ -155,15 +178,15 @@ async function getMyJoinedGroups() {
   }
 }
 
-async function getCommentsByGroupId(){
+async function getCommentsByGroupId() {
   try {
     const groupId = route.params.groupId;
     await commentsService.getCommentsByGroupId(groupId);
 
     comments.value.forEach((comment) => {
-    let foundPost = posts.value.find((post) => comment.postId == post.id)
-    foundPost?.commentsArr.push(comment)
-  });
+      let foundPost = posts.value.find((post) => comment.postId == post.id)
+      foundPost?.commentsArr.push(comment)
+    });
   } catch (error) {
     Pop.meow(error);
     logger.error(error);
@@ -186,29 +209,16 @@ async function getCommentsByGroupId(){
               <!-- <p>{{ foundMember }}</p> -->
             </div>
             <div>
-              <button
-                v-if="hasJoined"
-                type="button"
-                class="btn btn-primary me-3"
-                data-bs-toggle="modal"
-                data-bs-target="#postModal"
-              >
+              <button v-if="hasJoined" type="button" class="btn btn-primary me-3" data-bs-toggle="modal"
+                data-bs-target="#postModal">
                 Create Post
               </button>
               <!-- <button v-if="hasJoined" @click="deleteMember(foundMember.id)" class="btn btn-outline-danger">Leave
                 Group</button> -->
-              <button
-                v-if="hasJoined"
-                @click="deleteMember(foundMember.id)"
-                class="btn btn-outline-danger"
-              >
+              <button v-if="hasJoined" @click="deleteMember(foundMember.id)" class="btn btn-outline-danger">
                 Leave Group
               </button>
-              <button
-                v-if="!hasJoined"
-                @click="createMember"
-                class="btn btn-outline-primary"
-              >
+              <button v-if="!hasJoined" @click="createMember" class="btn btn-outline-primary">
                 Join Group
               </button>
             </div>
@@ -227,17 +237,11 @@ async function getCommentsByGroupId(){
                 <div class="d-flex justify-content-between p-3">
                   <div class="d-flex">
                     <div>
-                      <router-link
-                        :to="{
-                          name: 'Profile',
-                          params: { profileId: post.creatorId },
-                        }"
-                      >
-                        <img
-                          :src="post.creator.picture"
-                          alt=""
-                          class="creator-img me-2"
-                        />
+                      <router-link :to="{
+                        name: 'Profile',
+                        params: { profileId: post.creatorId },
+                      }">
+                        <img :src="post.creator.picture" alt="" class="creator-img me-2" />
                       </router-link>
                     </div>
                     <div>
@@ -246,17 +250,10 @@ async function getCommentsByGroupId(){
                     </div>
                   </div>
                   <div>
-                    <button
-                      v-if="post.creatorId == account?.id"
-                      class="btn bg-warning me-2"
-                    >
+                    <button v-if="post.creatorId == account?.id" class="btn bg-warning me-2">
                       Edit
                     </button>
-                    <button
-                      v-if="post.creatorId == account?.id"
-                      @click="deletePost(post.id)"
-                      class="btn bg-warning"
-                    >
+                    <button v-if="post.creatorId == account?.id" @click="deletePost(post.id)" class="btn bg-warning">
                       Delete
                     </button>
                   </div>
@@ -271,40 +268,23 @@ async function getCommentsByGroupId(){
                 </div>
                 <div v-if="hasJoined">
                   <div class="bg-light d-flex justify-content-center">
-                    <div
-                      class="me-5 selectable rounded p-3 d-flex align-items-center"
-                    >
+                    <div class="me-5 selectable rounded p-3 d-flex align-items-center">
                       <span class="mdi mdi-thumb-up-outline me-1 fs-4"></span>
                       <span>Like</span>
                     </div>
-                    <div
-                      class="selectable rounded p-3 d-flex align-items-center"
-                    >
-                      <span
-                        class="mdi mdi-comment-text-outline me-1 fs-4"
-                      ></span>
+                    <div class="selectable rounded p-3 d-flex align-items-center">
+                      <span class="mdi mdi-comment-text-outline me-1 fs-4"></span>
                       <span>Comment</span>
                     </div>
                   </div>
                   <div class="p-3">
                     <form @submit.prevent="createComment(post.id)">
                       <div class="mb-3">
-                        <textarea
-                          v-model="editableCommentData.body"
-                          class="form-control"
-                          id="body"
-                          rows="3"
-                          maxlength="1000"
-                          placeholder="What's on your mind?"
-                          required
-                        ></textarea>
+                        <textarea v-model="editableCommentData.body" class="form-control" id="body" rows="3"
+                          maxlength="1000" placeholder="What's on your mind?" required></textarea>
                       </div>
                       <div class="text-end mt-3 mb-3">
-                        <button
-                          class="btn btn-success"
-                          title="Post comment"
-                          type="submit"
-                        >
+                        <button class="btn btn-success" title="Post comment" type="submit">
                           Post Comment
                         </button>
                       </div>
@@ -312,31 +292,22 @@ async function getCommentsByGroupId(){
                   </div>
                 </div>
                 <div>
-                  <div v-for="comment in post?.commentsArr" :key="comment.id" class="d-flex">
-                  <div class="ms-2">
-                      <img
-                        :src="comment.creator.picture" class="comment-creator-img me-2" />
-
+                  <div v-for="comment in post?.commentsArr" :key="comment.id" class="d-flex justify-content-between">
+                    <div class="d-flex">
+                      <div class="ms-2">
+                        <img :src="comment.creator.picture" class="comment-creator-img me-2" />
+                      </div>
+                      <div>
+                        <span class="fw-bold">{{ comment.creator.name }}</span>
+                        <p>{{ comment.body }}</p>
+                      </div>
                     </div>
                     <div>
-                      <span class="fw-bold">{{comment.creator.name}}</span>
-                      <p>{{comment.body}}</p>
-                    </div>
-                </div>
-                </div>
-                <!-- <div class="p-3">
-                  <div v-for="comment in post.comments" :key="comment.id" class="d-flex shadow p-2 mb-3">
-                    <div v-if="comment" class="ms-2">
-                      <img
-                        :src="comment.creator.picture" class="comment-creator-img me-2" />
-
-                    </div>
-                    <div>
-                      <span class="fw-bold">{{comment.creator.name}}</span>
-                      <p>{{comment.body}}</p>
+                      <button @click="deleteComment(comment.id, comment)" class="btn btn"><i
+                          class="mdi mdi-delete-empty-outline fs-5 text-danger"></i></button>
                     </div>
                   </div>
-                </div> -->
+                </div>
               </div>
             </div>
           </div>
@@ -380,12 +351,10 @@ async function getCommentsByGroupId(){
                 </div>
               </div>
             </section>
-            <router-link
-              :to="{
-                name: 'Group Gallery Page',
-                params: { groupId: group.id },
-              }"
-            >
+            <router-link :to="{
+              name: 'Group Gallery Page',
+              params: { groupId: group.id },
+            }">
               <div class="text-end">
                 <button class="btn btn-success">See all photos</button>
               </div>
