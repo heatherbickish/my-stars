@@ -2,6 +2,7 @@
 import { api } from "./AxiosService.js"
 import { AppState } from "@/AppState.js"
 import { Comment } from "@/models/Comment.js"
+import { postsService } from "./PostsService.js";
 
 class CommentsService {
   async createComment(commentData) {
@@ -10,6 +11,8 @@ class CommentsService {
     console.log(response.data);
     const comment = new Comment(response.data);
     AppState.comments.unshift(comment);
+    // const post = await postsService.getPostById(commentData.postId)
+    // console.log("Post in create comment func",post)
     return comment;
   }
 

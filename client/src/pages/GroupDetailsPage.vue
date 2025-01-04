@@ -29,7 +29,6 @@ const foundMember = computed(() =>
 
 const editableCommentData = ref({
   body: "",
-  // postId: route.params.postId
   postId: "",
   groupId: route.params.groupId
 });
@@ -57,9 +56,9 @@ async function createComment(postId) {
   try {
     editableCommentData.value.postId = postId;
     const commentResult = await commentsService.createComment(editableCommentData.value);
-    console.log("POSTS VALUE", posts.value)
+    console.log("CommentResult:", commentResult)
+    // console.log("POSTS VALUE", posts.value)
     let foundPost = posts.value.find((post) => postId == post.id)
-    // console.log("foundPost: ",foundPost)
     if(foundPost){
       foundPost.commentsArr.push(commentResult)
     }
@@ -160,9 +159,10 @@ async function getCommentsByGroupId(){
   try {
     const groupId = route.params.groupId;
     await commentsService.getCommentsByGroupId(groupId);
+
     comments.value.forEach((comment) => {
     let foundPost = posts.value.find((post) => comment.postId == post.id)
-    foundPost.commentsArr.push(comment)
+    foundPost?.commentsArr.push(comment)
   });
   } catch (error) {
     Pop.meow(error);
@@ -218,9 +218,6 @@ async function getCommentsByGroupId(){
     </section>
 
     <!-- SECTION posts -->
-    <div class="bg-warning">
-      {{ comments }}
-    </div>
     <section class="row justify-content-center">
       <div class="col-md-6">
         <section v-for="post in posts" :key="post.id" class="row">
@@ -314,7 +311,8 @@ async function getCommentsByGroupId(){
                     </form>
                   </div>
                 </div>
-                <div v-for="comment in post?.commentsArr" :key="comment.id" class="d-flex">
+                <div>
+                  <div v-for="comment in post?.commentsArr" :key="comment.id" class="d-flex">
                   <div class="ms-2">
                       <img
                         :src="comment.creator.picture" class="comment-creator-img me-2" />
@@ -324,6 +322,7 @@ async function getCommentsByGroupId(){
                       <span class="fw-bold">{{comment.creator.name}}</span>
                       <p>{{comment.body}}</p>
                     </div>
+                </div>
                 </div>
                 <!-- <div class="p-3">
                   <div v-for="comment in post.comments" :key="comment.id" class="d-flex shadow p-2 mb-3">

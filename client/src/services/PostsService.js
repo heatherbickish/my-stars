@@ -25,6 +25,10 @@ class PostsService {
         AppState.posts.splice(postIndex, 1);
     }
 
+    async getPostById(postId){
+        const response = await api.get(`api/posts/${postId}`);
+        console.log(response.data)
+    }
 
 }
 export const postsService = new PostsService()
