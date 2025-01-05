@@ -10,6 +10,7 @@ import { friendRequestsService } from "@/services/FriendRequestsService.js";
 
 const account = computed(() => AppState.account);
 const joinedGroups = computed(() => AppState.joinedGroups);
+const receivedRequests = computed(() => AppState.receivedRequests);
 
 onMounted(() => {
   editableAccountData.value = { ...account.value };
@@ -100,49 +101,16 @@ async function getMyJoinedGroups() {
     </div>
   </section>
   <section v-if="account" class="row justify-content-center my-5 mx-0">
-    <div class="col-md-9 border border-primary p-3">
+    <div class="col-md-10 border border-primary p-3">
       <div class="text-center">
         <h4 class="mb-3">Pending Friend Requests</h4>
         <section class="row justify-content-center">
-          <div class="col-md-3 col-11 mb-3">
-            <div class="d-flex justify-content-between align-items-center bg-warning p-2">
-              <p class="sender-name">Shirley temple</p>
+          <div v-for="friendRequest in receivedRequests" :key="friendRequest.id" class="col-md-4 col-11 mb-3">
+            <div class="d-flex justify-content-between align-items-center bg-info p-2">
               <div>
-                <button class="btn btn-success me-1">Accept</button>
-                <button class="btn btn-danger">Reject</button>
+                <img :src="friendRequest.profile.picture" alt="" class="sender-pic me-2">
+                <span class="sender-name">{{friendRequest.profile.name}}</span>
               </div>
-            </div>
-          </div>
-          <div class="col-md-3 col-11 mb-3">
-            <div class="d-flex justify-content-between align-items-center bg-warning p-2">
-              <p class="sender-name">Shirley temple</p>
-              <div>
-                <button class="btn btn-success me-1">Accept</button>
-                <button class="btn btn-danger">Reject</button>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 col-11 mb-3">
-            <div class="d-flex justify-content-between align-items-center bg-warning p-2">
-              <p class="sender-name">Shirley temple</p>
-              <div>
-                <button class="btn btn-success me-1">Accept</button>
-                <button class="btn btn-danger">Reject</button>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 col-11 mb-3">
-            <div class="d-flex justify-content-between align-items-center bg-warning p-2">
-              <p class="sender-name">Shirley temple</p>
-              <div>
-                <button class="btn btn-success me-1">Accept</button>
-                <button class="btn btn-danger">Reject</button>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 col-11 mb-3">
-            <div class="d-flex justify-content-between align-items-center bg-warning p-2">
-              <p class="sender-name">Shirley temple</p>
               <div>
                 <button class="btn btn-success me-1">Accept</button>
                 <button class="btn btn-danger">Reject</button>
@@ -154,7 +122,7 @@ async function getMyJoinedGroups() {
     </div>
   </section>
   <section v-if="account" class="row justify-content-center my-5 mx-0">
-    <div class="col-md-9 border border-primary p-3">
+    <div class="col-md-10 border border-primary p-3">
       <div class="text-center">
         <h4 class="mb-3">Friends</h4>
         <section class="row justify-content-center">
@@ -270,5 +238,10 @@ textarea {
 
 .sender-name {
   margin: 0 auto;
+}
+.sender-pic{
+  border-radius: 50%;
+  aspect-ratio: 1/1;
+  height: 3em;
 }
 </style>

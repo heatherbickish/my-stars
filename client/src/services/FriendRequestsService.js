@@ -5,8 +5,11 @@ import { AppState } from "@/AppState.js"
 
 class FriendRequestsService {
   async getMyReceivedRequests() {
-    const response = await api.get('account/friendrequests')
+    AppState.receivedRequests = [];
+    const response = await api.get('account/receivedfriendrequests')
     logger.log(response.data)
+    const receivedRequests = response.data.map(receivedRequest => new FriendRequest(receivedRequest));
+    AppState.receivedRequests = receivedRequests;
   }
   async createFriendRequest(requestData) {
     const response = await api.post('api/friendrequests', requestData)

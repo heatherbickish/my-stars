@@ -13,7 +13,7 @@ export class AccountController extends BaseController {
       .put('', this.editUserAccount)
       .get('/members', this.getMyMembers)
       // .get('/friendrequest', this.getMySentRequests)
-      .get('/friendrequest', this.getMyReceivedRequests)
+      .get('/receivedfriendrequests', this.getMyReceivedRequests)
   }
 
   async getUserAccount(req, res, next) {
