@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { AppState } from "../AppState.js";
 import { logger } from "@/utils/Logger.js";
 import { accountService } from "@/services/AccountService.js";
@@ -11,18 +11,25 @@ import { friendRequestsService } from "@/services/FriendRequestsService.js";
 const account = computed(() => AppState.account);
 const joinedGroups = computed(() => AppState.joinedGroups);
 const receivedRequests = computed(() => AppState.receivedRequests);
-
-onMounted(() => {
-  editableAccountData.value = { ...account.value };
-  getMyJoinedGroups();
-  getMyReceivedRequests()
-});
 const editableAccountData = ref({
   name: "",
   picture: "",
   bio: "",
   coverImg: "",
 });
+
+onMounted(() => {
+  getMyJoinedGroups();
+  getMyReceivedRequests()
+});
+
+watch(
+  account,
+  () => {
+    editableAccountData.value = { ...account.value };
+  },
+  { immediate: true }
+);
 
 async function getMyReceivedRequests() {
   try {
@@ -48,6 +55,15 @@ async function getMyJoinedGroups() {
   try {
     await membersService.getMyJoinedGroups();
   } catch (error) {
+    Pop.meow(error);
+    logger.error(error);
+  }
+}
+
+async function rejectRequest(friendRequestId){
+  try{
+    await friendRequestsService.rejectRequest(friendRequestId);
+  }catch (error) {
     Pop.meow(error);
     logger.error(error);
   }
@@ -113,7 +129,7 @@ async function getMyJoinedGroups() {
               </div>
               <div>
                 <button class="btn btn-success me-1">Accept</button>
-                <button class="btn btn-danger">Reject</button>
+                <button @click="rejectRequest(friendRequest.id)" class="btn btn-danger">Reject</button>
               </div>
             </div>
           </div>

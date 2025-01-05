@@ -8,6 +8,7 @@ export class FriendRequestsController extends BaseController {
     this.router
       .use(Auth0Provider.getAuthorizedUserInfo)
       .post('', this.createFriendRequest)
+      .delete('/:friendRequestId', this.deleteFriendRequest);
   }
 
   async createFriendRequest(request, response, next) {
@@ -21,4 +22,14 @@ export class FriendRequestsController extends BaseController {
     }
   }
 
+  async deleteFriendRequest(request, response, next){
+    try{
+      const friendRequestId = request.params.friendRequestId;
+      const userId = request.userInfo.id;
+      const message = await friendRequestsService.deleteFriendRequest(friendRequestId, userId);
+      response.send(message);
+    }catch (error) {
+      next(error)
+    }
+  }
 }
