@@ -2,6 +2,7 @@ import { Auth0Provider } from '@bcwdev/auth0provider'
 import { accountService } from '../services/AccountService'
 import BaseController from '../utils/BaseController'
 import { membersService } from '../services/MembersService'
+import { friendRequestsService } from "../services/FriendRequestsService"
 
 export class AccountController extends BaseController {
   constructor() {
@@ -11,6 +12,8 @@ export class AccountController extends BaseController {
       .get('', this.getUserAccount)
       .put('', this.editUserAccount)
       .get('/members', this.getMyMembers)
+      // .get('/friendrequest', this.getMySentRequests)
+      .get('/friendrequest', this.getMyReceivedRequests)
   }
 
   async getUserAccount(req, res, next) {
@@ -40,6 +43,26 @@ export class AccountController extends BaseController {
       res.send(members);
     } catch (error) {
       next(error);
+    }
+  }
+
+  // async getMySentRequests(request, response, next) {
+  //   try {
+  //     const userId = request.userInfo.id
+  //     const friendRequest = await friendRequestsService.getMySentRequests(userId)
+  //     response.send(friendRequest)
+  //   } catch (error) {
+  //     next(error)
+  //   }
+  // }
+
+  async getMyReceivedRequests(request, response, next) {
+    try {
+      const userId = request.userInfo.id
+      const friendRequests = await friendRequestsService.getMyReceivedRequests(userId)
+      response.send(friendRequests)
+    } catch (error) {
+      next(error)
     }
   }
 

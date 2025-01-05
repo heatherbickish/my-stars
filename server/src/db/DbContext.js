@@ -4,6 +4,7 @@ import { GroupSchema } from "../models/Group";
 import { MemberSchema } from "../models/Member";
 import { PostSchema } from "../models/Post";
 import { CommentSchema } from "../models/Comment";
+import { FriendRequestSchema } from "../models/FriendRequest";
 
 class DbContext {
   Account = mongoose.model('Account', AccountSchema);
@@ -11,6 +12,7 @@ class DbContext {
   Members = mongoose.model('Member', MemberSchema);
   Posts = mongoose.model('Post', PostSchema);
   Comments = mongoose.model('Comment', CommentSchema);
+  FriendRequests = mongoose.model('FriendRequest', FriendRequestSchema);
 
 }
 

@@ -19,5 +19,7 @@ export const AppState = reactive({
   /**@type {import('./models/Account.js').Account} */
   activeProfile: null,
   /**@type {import('./models/Comment.js').Comment[]} */
-  comments: []
+  comments: [],
+  /**@type {import('./models/FriendRequest.js').FriendRequest[]} */
+  friendRequests: []
 })
