@@ -60,10 +60,12 @@ async function searchGroups() {
                 </div>
               </form>
             </div>
-            <div class="mb-3" role="button">
-              <span class="mdi mdi-account-group-outline"></span>
-              Your Groups
-            </div>
+            <router-link :to="{ name: 'Account' }">
+              <div class="mb-3" role="button">
+                <span class="mdi mdi-account-group-outline"></span>
+                Your Groups
+              </div>
+            </router-link>
             <div class="mb-3" role="button">
               <span class="mdi mdi-compass-rose"></span>
               Discover
@@ -96,14 +98,17 @@ async function searchGroups() {
   border-radius: 20px;
   color: white;
 }
-h2{
+
+h2 {
   color: yellow;
   font-family: "Island Moments", serif;
 }
-.search-btn{
+
+.search-btn {
   color: white;
   border: 1px solid white;
 }
+
 .create-btn {
   width: 100%;
   height: 40px;
@@ -112,7 +117,8 @@ h2{
   font-family: "Island Moments", serif;
   font-size: 1.5em;
 }
-.groups-box{
+
+.groups-box {
   background-color: rgba(100, 100, 100, 0.5);
   border-radius: 20px;
 }

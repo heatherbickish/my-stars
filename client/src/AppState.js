@@ -19,5 +19,17 @@ export const AppState = reactive({
   /**@type {import('./models/Account.js').Account} */
   activeProfile: null,
   /**@type {import('./models/Comment.js').Comment[]} */
-  comments: []
+  comments: [],
+  /**@type {import('./models/FriendRequest.js').FriendRequest[]} */
+  friendRequests: [],
+  /**@type {import('./models/FriendRequest.js').FriendRequest[]} */
+  receivedRequests: [],
+  /**@type {import('./models/Friendship.js').Friendship[]} */
+  friendships: [],
+  /**@type {import('./models/Friendship.js').Friendship[]} */
+  myFriends: [],
+  /**@type {import('./models/FriendRequest.js').FriendRequest} */
+  activeFriendRequest: null,
+  /**@type {import('./models/FriendRequest.js').FriendRequest[]} */
+  mySentOutRequest: []
 })

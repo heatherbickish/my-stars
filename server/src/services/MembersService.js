@@ -25,8 +25,7 @@ class MembersService{
     const members = await dbContext.Members.find({accountId: userId}).populate({
       path: 'group',
       populate: [{
-        path: 'creator',
-        select: 'name picture'
+        path: 'memberCount',
       }]
     });
     return members;

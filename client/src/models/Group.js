@@ -7,5 +7,6 @@ export class Group {
     this.coverImg = data.coverImg;
     this.memberCount = data.memberCount;
     this.joined = data.joined;
+    this.isVoided = data.isVoided
   }
 }

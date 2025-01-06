@@ -2,6 +2,8 @@ import { Auth0Provider } from '@bcwdev/auth0provider'
 import { accountService } from '../services/AccountService'
 import BaseController from '../utils/BaseController'
 import { membersService } from '../services/MembersService'
+import { friendRequestsService } from "../services/FriendRequestsService"
+import { friendshipsService } from '../services/FriendshipsService'
 
 export class AccountController extends BaseController {
   constructor() {
@@ -11,8 +13,10 @@ export class AccountController extends BaseController {
       .get('', this.getUserAccount)
       .put('', this.editUserAccount)
       .get('/members', this.getMyMembers)
+      .get('/receivedfriendrequests', this.getMyReceivedRequests)
+      .get('/friends', this.getMyFriends)
+      .get('/sentoutrequests', this.getSentOutRequests)
   }
-
   async getUserAccount(req, res, next) {
     try {
       const account = await accountService.getAccount(req.userInfo)
@@ -22,7 +26,7 @@ export class AccountController extends BaseController {
     }
   }
 
-   async editUserAccount(req, res, next) {
+  async editUserAccount(req, res, next) {
     try {
       const accountId = req.userInfo.id
       req.body.id = accountId
@@ -40,6 +44,36 @@ export class AccountController extends BaseController {
       res.send(members);
     } catch (error) {
       next(error);
+    }
+  }
+
+  async getMyReceivedRequests(request, response, next) {
+    try {
+      const userId = request.userInfo.id
+      const friendRequests = await friendRequestsService.getMyReceivedRequests(userId)
+      response.send(friendRequests)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async getMyFriends(request, response, next) {
+    try {
+      const userId = request.userInfo.id;
+      const friends = await friendshipsService.getMyFriends(userId);
+      response.send(friends);
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async getSentOutRequests(request, response, next) {
+    try {
+      const userId = request.userInfo.id;
+      const friendrequests = await friendRequestsService.getSentOutRequests(userId)
+      response.send(friendrequests)
+    } catch (error) {
+      next(error)
     }
   }
 

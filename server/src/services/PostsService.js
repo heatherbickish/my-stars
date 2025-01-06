@@ -8,8 +8,9 @@ class PostsService {
     return post
   }
   async getPostByGroupId(groupId) {
-    // const posts = await dbContext.Posts.find({ groupId: groupId }).populate('creator', 'name picture').populate('comment')
-    const posts = await dbContext.Posts.find({ groupId: groupId }).populate('creator', 'name picture')
+    const posts = await dbContext.Posts.find({ groupId: groupId })
+      .populate('creator', 'name picture')
+      .sort('-createdAt')
     return posts
   }
   async deletePost(postId, userId) {
@@ -22,7 +23,6 @@ class PostsService {
   async createPost(postData) {
     const post = await dbContext.Posts.create(postData)
     await post.populate('creator', 'name picture')
-    // await post.populate('comment')
     return post
   }
 

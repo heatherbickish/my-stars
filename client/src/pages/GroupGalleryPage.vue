@@ -48,7 +48,7 @@ async function getPostsByGroupId() {
     <div class="col-md-12">
       <div class="ms-3 mt-3">
         <span>Snapshots from</span>
-        <h1>{{ group.name }}</h1>
+        <h1 v-if="group">{{ group.name }}</h1>
         <div class="row">
           <div v-for="foundPost in foundPosts" :key="foundPost.id" class="col-md-3">
             <div class="m-3 picture-box d-flex flex-column justify-content-end"

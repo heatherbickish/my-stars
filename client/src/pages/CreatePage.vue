@@ -73,7 +73,6 @@ async function createGroup() {
         <div class="d-flex justify-content-between align-items-center">
           <div>
             <h1>{{ editableGroupFormData.name }}</h1>
-            <p>2100 members</p>
           </div>
         </div>
       </div>
