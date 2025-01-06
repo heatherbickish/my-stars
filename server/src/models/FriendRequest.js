@@ -16,3 +16,10 @@ FriendRequestSchema.virtual('profile', {
   foreignField: '_id',
   justOne: true
 })
+
+FriendRequestSchema.virtual('profile1', {
+  localField: 'receiverId',
+  ref: 'Account',
+  foreignField: '_id',
+  justOne: true
+})

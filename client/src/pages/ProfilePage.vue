@@ -3,6 +3,7 @@ import { AppState } from '@/AppState';
 import GroupCard from '@/components/GroupCard.vue';
 import GroupCardInProfilePage from '@/components/GroupCardInProfilePage.vue';
 import { friendRequestsService } from "@/services/FriendRequestsService";
+import { friendshipsService } from '@/services/FriendshipsService';
 import { membersService } from '@/services/MembersService';
 import { profilesService } from '@/services/ProfilesService';
 import { logger } from '@/utils/Logger';
@@ -20,11 +21,18 @@ const friendWithUser = computed(() => friendRequests.value.find((friendRequest) 
 }))
 let added = ref(false)
 const route = useRoute()
+const activeFriendRequest = computed(() => AppState.activeFriendRequest)
+const sentOutRequests = computed(() => AppState.mySentOutRequest)
+const myFriends = computed(() => AppState.myFriends)
 
 watch(route, () => {
     getProfileById()
     getGroupsByProfileId()
+    // getMySentOutRequests()
+}, { immediate: true })
 
+watch(account, () => {
+    getMySentOutRequests()
 }, { immediate: true })
 
 async function createFriendRequest() {
@@ -33,8 +41,9 @@ async function createFriendRequest() {
             senderId: account.value.id,
             receiverId: profile.value.id
         }
-        await friendRequestsService.createFriendRequest(requestData)
+        const friendRequest = await friendRequestsService.createFriendRequest(requestData)
         added.value = !added.value
+        return friendRequest
     }
     catch (error) {
         Pop.meow(error);
@@ -63,6 +72,27 @@ async function getGroupsByProfileId() {
     }
 }
 
+async function getMySentOutRequests() {
+    try {
+        await friendRequestsService.getMySentOutRequests();
+    }
+    catch (error) {
+        Pop.meow(error);
+        logger.error(error)
+    }
+}
+
+async function getMyFriends() {
+    try {
+        await friendshipsService.getMyFriends();
+    } catch (error) {
+        Pop.meow(error);
+        logger.error(error);
+    }
+}
+
+
+
 </script>
 
 <template>
@@ -86,17 +116,25 @@ async function getGroupsByProfileId() {
                             <button v-if="account?.id == profile?.id" class="btn btn-outline-success">
                                 Edit
                             </button>
+                            <div class="bg-info d-inline-block p-3">
+                                <span>{{ profile.name }} has accepted your friend request</span>
+                                <button class="btn btn-warning ms-2">Okay</button>
+                            </div>
                             <button v-if="added" class="btn btn-outline-primary">
                                 Pending
                             </button>
                             <button @click="createFriendRequest()" v-else class="btn btn-outline-primary">
                                 <span class="mdi mdi-account-multiple-plus-outline me-1"></span>Add Friend
                             </button>
+                            <button class="btn btn-outline-primary">Send Message</button>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+        <!-- <div v-if="account">
+            {{ sentOutRequests }}
+        </div> -->
         <section v-if="profile" class="row justify-content-around">
             <div v-for="group in groups" :key="group.id" class="col-md-4 mb-4 d-flex justify-content-center">
                 <GroupCardInProfilePage :groupProp="group" />

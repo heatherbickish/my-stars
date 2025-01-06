@@ -15,6 +15,7 @@ export class AccountController extends BaseController {
       .get('/members', this.getMyMembers)
       .get('/receivedfriendrequests', this.getMyReceivedRequests)
       .get('/friends', this.getMyFriends)
+      .get('/sentoutrequests', this.getSentOutRequests)
   }
   async getUserAccount(req, res, next) {
     try {
@@ -57,11 +58,21 @@ export class AccountController extends BaseController {
   }
 
   async getMyFriends(request, response, next) {
-    try{
+    try {
       const userId = request.userInfo.id;
       const friends = await friendshipsService.getMyFriends(userId);
       response.send(friends);
-    }catch (error) {
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async getSentOutRequests(request, response, next) {
+    try {
+      const userId = request.userInfo.id;
+      const friendrequests = await friendRequestsService.getSentOutRequests(userId)
+      response.send(friendrequests)
+    } catch (error) {
       next(error)
     }
   }

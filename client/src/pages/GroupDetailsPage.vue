@@ -102,7 +102,7 @@ async function createComment(postId) {
     editableCommentData.value = {
       body: "",
       postId: "",
-      groupId: ""
+      groupId: route.params.groupId
     };
   } catch (error) {
     Pop.meow(error);

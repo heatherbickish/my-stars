@@ -27,5 +27,9 @@ export const AppState = reactive({
   /**@type {import('./models/Friendship.js').Friendship[]} */
   friendships: [],
   /**@type {import('./models/Friendship.js').Friendship[]} */
-  myFriends: []
+  myFriends: [],
+  /**@type {import('./models/FriendRequest.js').FriendRequest} */
+  activeFriendRequest: null,
+  /**@type {import('./models/FriendRequest.js').FriendRequest[]} */
+  mySentOutRequest: []
 })

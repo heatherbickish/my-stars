@@ -22,24 +22,24 @@ export class FriendRequestsController extends BaseController {
     }
   }
 
-  async deleteFriendRequest(request, response, next){
-    try{
+  async deleteFriendRequest(request, response, next) {
+    try {
       const friendRequestId = request.params.friendRequestId;
       const userId = request.userInfo.id;
       const message = await friendRequestsService.deleteFriendRequest(friendRequestId, userId);
       response.send(message);
-    }catch (error) {
+    } catch (error) {
       next(error)
     }
   }
 
-  async updateFriendRequest(request, response, next){
-    try{
+  async updateFriendRequest(request, response, next) {
+    try {
       const friendRequestId = request.params.friendRequestId;
       const userId = request.userInfo.id;
-      const updatedRequest= await friendRequestsService.updateFriendRequest(friendRequestId, userId);
+      const updatedRequest = await friendRequestsService.updateFriendRequest(friendRequestId, userId);
       response.send(updatedRequest);
-    }catch (error) {
+    } catch (error) {
       next(error)
     }
   }
