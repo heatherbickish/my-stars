@@ -112,7 +112,6 @@ async function createComment(postId) {
 
 async function getGroupById() {
   try {
-    console.log("will this log in the console")
     const groupId = route.params.groupId;
     await groupsService.getGroupById(groupId);
   } catch (error) {

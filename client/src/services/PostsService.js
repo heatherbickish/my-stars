@@ -8,7 +8,6 @@ class PostsService {
         const response = await api.get(`api/groups/${groupId}/posts`)
         const posts = response.data.map(post => new Post(post))
         AppState.posts = posts
-        console.log("from get posts by groupId in service:", response.data)
         return posts;
     }
 

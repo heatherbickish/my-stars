@@ -2,6 +2,7 @@ import { logger } from "@/utils/Logger.js"
 import { api } from "./AxiosService.js"
 import { FriendRequest } from "@/models/FriendRequest.js"
 import { AppState } from "@/AppState.js"
+import { Friendship } from "@/models/Friendship.js";
 
 class FriendRequestsService {
   async getMyReceivedRequests() {
@@ -29,6 +30,8 @@ class FriendRequestsService {
     console.log("client service output updated friendrequest:",response.data)
     const foundIndex = AppState.friendRequests.findIndex(friendRequest => friendRequest.id = friendRequestId);
     AppState.friendRequests.splice(foundIndex, 1, new FriendRequest(response.data));
+    const foundIndex1 = AppState.myFriends.findIndex(myFriend => myFriend.id == friendRequestId);
+    AppState.myFriends.splice(foundIndex1, 1);
   }
 }
 export const friendRequestsService = new FriendRequestsService()

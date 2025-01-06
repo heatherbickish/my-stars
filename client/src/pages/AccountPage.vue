@@ -94,6 +94,18 @@ async function acceptRequest(friendRequest){
     logger.error(error);
   }
 }
+
+async function deleteFriend(friendshipId){
+  try{
+    const message = "Are you sure you want to delete this friend?";
+    const confirmed = await Pop.confirm(message);
+    if(!confirmed) return;
+    await friendshipsService.deleteFriendship(friendshipId);
+  }catch (error) {
+    Pop.meow(error);
+    logger.error(error);
+  }
+}
 </script>
 
 <template>
@@ -171,14 +183,14 @@ async function acceptRequest(friendRequest){
           <div v-for="myFriend in myFriends" :key="myFriend.id" class="col-md-4 col-11 mb-3">
             <div class="d-flex justify-content-between align-items-center bg-warning p-2">
               <div>
-                <img v-if="myFriend.userAId = account?.id" :src="myFriend.profileB.picture" alt="" class="friend-pic me-2">
-                <img v-else :src="myFriend.profileA.picture" alt="" class="friend-pic me-2">
-                <span v-if="myFriend.userAId = account?.id" class="sender-name">{{ myFriend.profileB.name}}</span>
-                <span v-else class="sender-name">{{ myFriend.profileA.name }}</span>
+                <img v-if="myFriend.userAId == account?.id" :src="myFriend.profileB?.picture" alt="" class="friend-pic me-2">
+                <img v-else :src="myFriend.profileA?.picture" alt="" class="friend-pic me-2">
+                <span v-if="myFriend.userAId == account?.id" class="sender-name">{{ myFriend.profileB?.name}}</span>
+                <span v-else class="sender-name">{{ myFriend.profileA?.name }}</span>
               </div>
               <div>
                 <button class="btn btn-primary me-1">Send Message</button>
-                <button class="btn btn-danger">Delete</button>
+                <button @click="deleteFriend(myFriend.id)" class="btn btn-danger">Delete</button>
               </div>
             </div>
           </div>

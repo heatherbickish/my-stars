@@ -18,5 +18,13 @@ class FriendshipsService{
     AppState.myFriends = myFriends;
   }
 
+  async deleteFriendship(friendshipId) {
+    await api.delete(`api/friendships/${friendshipId}`);
+    const friendshipIndex = AppState.friendships.findIndex(friendship => friendship.id == friendshipId);
+    AppState.friendships.splice(friendshipIndex, 1);
+    const friendshipIndex1 = AppState.myFriends.findIndex(myFriend => myFriend.id == friendshipId);
+    AppState.myFriends.splice(friendshipIndex1, 1);
+  }
+
 }
 export const friendshipsService = new FriendshipsService();
