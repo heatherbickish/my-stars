@@ -19,7 +19,7 @@ const friendRequests = computed(() => AppState.friendRequests)
 const friendWithUser = computed(() => friendRequests.value.find((friendRequest) => {
     friendRequest.senderId == account.value.id && friendRequest.receiverId == profile.value.id
 }))
-let added = ref(false)
+// let added = ref(false)
 const route = useRoute()
 const activeFriendRequest = computed(() => AppState.activeFriendRequest)
 const sentOutRequests = computed(() => AppState.mySentOutRequest)
@@ -33,6 +33,8 @@ watch(route, () => {
 
 watch(account, () => {
     getMySentOutRequests()
+    getMyFriends()
+    // checkRelationship()
 }, { immediate: true })
 
 async function createFriendRequest() {
@@ -42,7 +44,7 @@ async function createFriendRequest() {
             receiverId: profile.value.id
         }
         const friendRequest = await friendRequestsService.createFriendRequest(requestData)
-        added.value = !added.value
+        // added.value = !added.value
         return friendRequest
     }
     catch (error) {
@@ -91,6 +93,25 @@ async function getMyFriends() {
     }
 }
 
+function checkRelationship() {
+    try {
+        const profileId = route.params.profileId
+        const foundIndex = myFriends.value.findIndex((myFriend) => {
+            if ((myFriend.userAId == account.value.id) && (myFriend.userBId == profileId)) {
+                return true
+            } else if ((myFriend.userAId == profileId) && (myFriend.userBId == account.value.id)) {
+                return true
+            } else return false
+        })
+        console.log('found index', foundIndex)
+        if (foundIndex != -1) return 'friends'
+    }
+    catch (error) {
+        Pop.meow(error);
+        logger.error(error)
+    }
+}
+
 
 
 </script>
@@ -120,13 +141,14 @@ async function getMyFriends() {
                                 <span>{{ profile.name }} has accepted your friend request</span>
                                 <button class="btn btn-warning ms-2">Okay</button>
                             </div>
-                            <button v-if="added" class="btn btn-outline-primary">
+                            <button class="btn btn-outline-primary">
                                 Pending
                             </button>
-                            <button @click="createFriendRequest()" v-else class="btn btn-outline-primary">
+                            <button @click="createFriendRequest()" class="btn btn-outline-primary">
                                 <span class="mdi mdi-account-multiple-plus-outline me-1"></span>Add Friend
                             </button>
-                            <button class="btn btn-outline-primary">Send Message</button>
+                            <button v-if="checkRelationship() == 'friends'" class="btn btn-outline-primary">Send
+                                Message</button>
                         </div>
                     </div>
                 </div>

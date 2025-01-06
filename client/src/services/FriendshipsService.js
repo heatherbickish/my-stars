@@ -3,7 +3,7 @@ import { api } from "./AxiosService.js";
 import { AppState } from "@/AppState.js";
 import { logger } from "@/utils/Logger.js";
 
-class FriendshipsService{
+class FriendshipsService {
   async createFriendship(requestData) {
     const response = await api.post('api/friendships', requestData);
     const friendship = new Friendship(response.data);
@@ -12,10 +12,12 @@ class FriendshipsService{
 
   async getMyFriends() {
     AppState.myFriends = [];
+    if (AppState.account == null) return
     const response = await api.get('account/friends');
     logger.log(response.data);
     const myFriends = response.data.map(myFriend => new Friendship(myFriend));
     AppState.myFriends = myFriends;
+    console.log('my friends', AppState.myFriends)
   }
 
   async deleteFriendship(friendshipId) {
