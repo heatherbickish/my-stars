@@ -22,5 +22,14 @@ class FriendRequestsService {
     await requestToDelete.deleteOne();
     return 'Friend request deleted';
   }
+
+  async updateFriendRequest(friendRequestId, userId) {
+    const originalRequest = await dbContext.FriendRequests.findById(friendRequestId);
+    if(!originalRequest) throw new Error('No friend request to update at this Id');
+    if(originalRequest.receiverId != userId) throw new Forbidden("You are not allowed to update this friend request");
+    originalRequest.reqStatus = "accepted";
+    await originalRequest.save();
+    return originalRequest;
+  }
 }
 export const friendRequestsService = new FriendRequestsService()

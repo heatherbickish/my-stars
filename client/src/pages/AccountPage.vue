@@ -7,10 +7,12 @@ import Pop from "@/utils/Pop.js";
 import { membersService } from "@/services/MembersService.js";
 import GroupCardInProfilePage from "@/components/GroupCardInProfilePage.vue";
 import { friendRequestsService } from "@/services/FriendRequestsService.js";
+import { friendshipsService } from "@/services/FriendshipsService.js";
 
 const account = computed(() => AppState.account);
 const joinedGroups = computed(() => AppState.joinedGroups);
 const receivedRequests = computed(() => AppState.receivedRequests);
+const myFriends = computed(() => AppState.myFriends);
 const editableAccountData = ref({
   name: "",
   picture: "",
@@ -20,7 +22,8 @@ const editableAccountData = ref({
 
 onMounted(() => {
   getMyJoinedGroups();
-  getMyReceivedRequests()
+  getMyReceivedRequests();
+  getMyFriends();
 });
 
 watch(
@@ -60,9 +63,32 @@ async function getMyJoinedGroups() {
   }
 }
 
+async function getMyFriends(){
+  try{
+    await friendshipsService.getMyFriends();
+  }catch (error) {
+    Pop.meow(error);
+    logger.error(error);
+  }
+}
+
 async function rejectRequest(friendRequestId){
   try{
     await friendRequestsService.rejectRequest(friendRequestId);
+  }catch (error) {
+    Pop.meow(error);
+    logger.error(error);
+  }
+}
+
+async function acceptRequest(friendRequest){
+  try{
+    await friendRequestsService.updateRequest(friendRequest.id);
+    const requestData = {
+      userAId: account.value.id,
+      userBId: friendRequest.senderId
+    };
+    await friendshipsService.createFriendship(requestData);
   }catch (error) {
     Pop.meow(error);
     logger.error(error);
@@ -128,7 +154,7 @@ async function rejectRequest(friendRequestId){
                 <span class="sender-name">{{friendRequest.profile.name}}</span>
               </div>
               <div>
-                <button class="btn btn-success me-1">Accept</button>
+                <button @click="acceptRequest(friendRequest)" class="btn btn-success me-1">Accept</button>
                 <button @click="rejectRequest(friendRequest.id)" class="btn btn-danger">Reject</button>
               </div>
             </div>
@@ -142,45 +168,14 @@ async function rejectRequest(friendRequestId){
       <div class="text-center">
         <h4 class="mb-3">Friends</h4>
         <section class="row justify-content-center">
-          <div class="col-md-4 col-11 mb-3">
+          <div v-for="myFriend in myFriends" :key="myFriend.id" class="col-md-4 col-11 mb-3">
             <div class="d-flex justify-content-between align-items-center bg-warning p-2">
-              <p class="sender-name">Emma Smith</p>
               <div>
-                <button class="btn btn-primary me-1">Send Message</button>
-                <button class="btn btn-danger">Delete</button>
+                <img v-if="myFriend.userAId = account?.id" :src="myFriend.profileB.picture" alt="" class="friend-pic me-2">
+                <img v-else :src="myFriend.profileA.picture" alt="" class="friend-pic me-2">
+                <span v-if="myFriend.userAId = account?.id" class="sender-name">{{ myFriend.profileB.name}}</span>
+                <span v-else class="sender-name">{{ myFriend.profileA.name }}</span>
               </div>
-            </div>
-          </div>
-          <div class="col-md-4 col-11 mb-3">
-            <div class="d-flex justify-content-between align-items-center bg-warning p-2">
-              <p class="sender-name">Emma Smith</p>
-              <div>
-                <button class="btn btn-primary me-1">Send Message</button>
-                <button class="btn btn-danger">Delete</button>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 col-11 mb-3">
-            <div class="d-flex justify-content-between align-items-center bg-warning p-2">
-              <p class="sender-name">Emma Smith</p>
-              <div>
-                <button class="btn btn-primary me-1">Send Message</button>
-                <button class="btn btn-danger">Delete</button>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 col-11 mb-3">
-            <div class="d-flex justify-content-between align-items-center bg-warning p-2">
-              <p class="sender-name">Emma Smith</p>
-              <div>
-                <button class="btn btn-primary me-1">Send Message</button>
-                <button class="btn btn-danger">Delete</button>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 col-11 mb-3">
-            <div class="d-flex justify-content-between align-items-center bg-warning p-2">
-              <p class="sender-name">Emma Smith</p>
               <div>
                 <button class="btn btn-primary me-1">Send Message</button>
                 <button class="btn btn-danger">Delete</button>
@@ -256,6 +251,11 @@ textarea {
   margin: 0 auto;
 }
 .sender-pic{
+  border-radius: 50%;
+  aspect-ratio: 1/1;
+  height: 3em;
+}
+.friend-pic{
   border-radius: 50%;
   aspect-ratio: 1/1;
   height: 3em;

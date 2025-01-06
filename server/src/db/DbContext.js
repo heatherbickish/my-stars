@@ -5,6 +5,7 @@ import { MemberSchema } from "../models/Member";
 import { PostSchema } from "../models/Post";
 import { CommentSchema } from "../models/Comment";
 import { FriendRequestSchema } from "../models/FriendRequest";
+import { FriendshipSchema } from '../models/Friendship';
 
 class DbContext {
   Account = mongoose.model('Account', AccountSchema);
@@ -13,7 +14,7 @@ class DbContext {
   Posts = mongoose.model('Post', PostSchema);
   Comments = mongoose.model('Comment', CommentSchema);
   FriendRequests = mongoose.model('FriendRequest', FriendRequestSchema);
-
+  Friendships = mongoose.model('Friendship', FriendshipSchema);
 }
 
 export const dbContext = new DbContext()

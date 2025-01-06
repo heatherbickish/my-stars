@@ -3,6 +3,7 @@ import { accountService } from '../services/AccountService'
 import BaseController from '../utils/BaseController'
 import { membersService } from '../services/MembersService'
 import { friendRequestsService } from "../services/FriendRequestsService"
+import { friendshipsService } from '../services/FriendshipsService'
 
 export class AccountController extends BaseController {
   constructor() {
@@ -12,10 +13,9 @@ export class AccountController extends BaseController {
       .get('', this.getUserAccount)
       .put('', this.editUserAccount)
       .get('/members', this.getMyMembers)
-      // .get('/friendrequest', this.getMySentRequests)
       .get('/receivedfriendrequests', this.getMyReceivedRequests)
+      .get('/friends', this.getMyFriends)
   }
-
   async getUserAccount(req, res, next) {
     try {
       const account = await accountService.getAccount(req.userInfo)
@@ -46,22 +46,22 @@ export class AccountController extends BaseController {
     }
   }
 
-  // async getMySentRequests(request, response, next) {
-  //   try {
-  //     const userId = request.userInfo.id
-  //     const friendRequest = await friendRequestsService.getMySentRequests(userId)
-  //     response.send(friendRequest)
-  //   } catch (error) {
-  //     next(error)
-  //   }
-  // }
-
   async getMyReceivedRequests(request, response, next) {
     try {
       const userId = request.userInfo.id
       const friendRequests = await friendRequestsService.getMyReceivedRequests(userId)
       response.send(friendRequests)
     } catch (error) {
+      next(error)
+    }
+  }
+
+  async getMyFriends(request, response, next) {
+    try{
+      const userId = request.userInfo.id;
+      const friends = await friendshipsService.getMyFriends(userId);
+      response.send(friends);
+    }catch (error) {
       next(error)
     }
   }
