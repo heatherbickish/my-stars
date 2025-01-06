@@ -4,11 +4,11 @@ import { Forbidden } from "../utils/Errors"
 class FriendRequestsService {
 
   async getSentOutRequests(userId) {
-    const friendrequests = await dbContext.FriendRequests.find({ senderId: userId }).populate('profile1').populate('profile')
+    const friendrequests = await dbContext.FriendRequests.find({ senderId: userId }).populate('profile1', 'name picture').populate('profile', 'name picture')
     return friendrequests
   }
   async getMyReceivedRequests(userId) {
-    const friendRequests = await dbContext.FriendRequests.find({ receiverId: userId, reqStatus: "pending" }).populate('profile')
+    const friendRequests = await dbContext.FriendRequests.find({ receiverId: userId, reqStatus: "pending" }).populate('profile', 'name picture')
     return friendRequests
   }
   async createFriendRequest(requestData) {
