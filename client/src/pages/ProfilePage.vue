@@ -28,13 +28,11 @@ const myFriends = computed(() => AppState.myFriends)
 watch(route, () => {
     getProfileById()
     getGroupsByProfileId()
-    // getMySentOutRequests()
 }, { immediate: true })
 
 watch(account, () => {
     getMySentOutRequests()
     getMyFriends()
-    // checkRelationship()
 }, { immediate: true })
 
 async function createFriendRequest() {
@@ -44,7 +42,6 @@ async function createFriendRequest() {
             receiverId: profile.value.id
         }
         const friendRequest = await friendRequestsService.createFriendRequest(requestData)
-        // added.value = !added.value
         return friendRequest
     }
     catch (error) {
@@ -106,13 +103,14 @@ function checkRelationship() {
             } else return false
         })
         console.log('found index', foundIndex)
-        if (foundIndex != -1) { return 'friends' }
+        if (foundIndex != -1) {
+            if (foundRequest == undefined) { return 'friends' }
+            else { return 'show the blue box' }
+        }
         else if (foundRequest == undefined) { return 'Show add friend' }
         else if (foundRequest.reqStatus == 'pending') { return 'pending' }
         else {
-            const confirmed = Pop.confirm(`${profile.value.name} has accepted your request`)
-            if (confirmed)
-                return 'accepted'
+            return 'accepted'
         }
     }
     catch (error) {
@@ -147,19 +145,21 @@ function checkRelationship() {
                             <button v-if="account?.id == profile?.id" class="btn btn-outline-success">
                                 Edit
                             </button>
+                            <div v-if="checkRelationship() == 'show the blue box'" class="bg-info d-inline-block p-3">
+                                <span>{{ profile.name }} has accepted your friend request</span>
+                                <button class="btn btn-warning ms-2">Okay</button>
+                            </div>
                             <button v-if="checkRelationship() == 'Show add friend'" @click="createFriendRequest()"
                                 class="btn btn-outline-primary">
                                 <span class="mdi mdi-account-multiple-plus-outline me-1"></span>Add Friend
                             </button>
-                            <button v-if="checkRelationship() == 'friends'" class="btn btn-outline-primary">Send
+                            <button
+                                v-if="(checkRelationship() == 'friends') || (checkRelationship() == 'show the blue box')"
+                                class="btn btn-outline-primary">Send
                                 Message</button>
                             <button v-if="checkRelationship() == 'pending'" class="btn btn-outline-primary">
                                 Pending
                             </button>
-                            <div v-if="checkRelationship() == 'accepted'" class="bg-info d-inline-block p-3">
-                                <span>{{ profile.name }} has accepted your friend request</span>
-                                <button class="btn btn-warning ms-2">Okay</button>
-                            </div>
                         </div>
                     </div>
                 </div>
