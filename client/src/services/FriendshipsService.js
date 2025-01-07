@@ -8,6 +8,7 @@ class FriendshipsService {
     const response = await api.post('api/friendships', requestData);
     const friendship = new Friendship(response.data);
     AppState.friendships.push(friendship);
+    AppState.myFriends.push(friendship);
   }
 
   async getMyFriends() {

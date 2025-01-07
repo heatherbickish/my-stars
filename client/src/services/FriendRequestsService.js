@@ -44,8 +44,8 @@ class FriendRequestsService {
     console.log("client service output updated friendrequest:", response.data)
     const foundIndex = AppState.friendRequests.findIndex(friendRequest => friendRequest.id = friendRequestId);
     AppState.friendRequests.splice(foundIndex, 1, new FriendRequest(response.data));
-    const foundIndex1 = AppState.myFriends.findIndex(myFriend => myFriend.id == friendRequestId);
-    AppState.myFriends.splice(foundIndex1, 1);
+    const foundIndex1 = AppState.receivedRequests.findIndex(receivedRequest => receivedRequest.id == friendRequestId);
+    AppState.receivedRequests.splice(foundIndex1, 1);
   }
 }
 export const friendRequestsService = new FriendRequestsService()
