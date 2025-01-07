@@ -12,8 +12,10 @@ class FriendshipsService {
   }
 
   async getMyFriends() {
+    // console.log("getting friends")
+
     AppState.myFriends = [];
-    if (AppState.account == null) return
+    // if (AppState.account == null) return
     const response = await api.get('account/friends');
     logger.log(response.data);
     const myFriends = response.data.map(myFriend => new Friendship(myFriend));

@@ -45,10 +45,12 @@ watch(route, () => {
     getGroupsByProfileId()
 }, { immediate: true })
 
-watch(account, () => {
-    getMySentOutRequests()
-    getMyFriends()
-}, { immediate: true })
+watch(account, () => {//account contains more info details about this person
+    if(AppState.identity !== null){//who's logged into Auth 0;(if you're logged in) identity is always there before account is there
+        getMySentOutRequests()
+        getMyFriends()
+    }
+}, { immediate: true }) //runs on load
 
 
 async function createFriendRequest() {

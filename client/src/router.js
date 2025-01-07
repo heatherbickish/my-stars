@@ -21,10 +21,16 @@ const routes = [
     name: 'Groups',
     component: loadPage('GroupsPage')
   },
+
   {
     path: '/groups/:groupId',
     name: 'Group Details Page',
     component: loadPage('GroupDetailsPage')
+  },
+  {
+    path: '/starmap',
+    name: 'Star Map Page',
+    component: loadPage('StarMapPage')
   },
   {
     path: '/account',

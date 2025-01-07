@@ -272,8 +272,8 @@ async function getCommentsByGroupId() {
                         <img :src="post.creator.picture" alt="" class="creator-img me-2" />
                       </router-link>
                     </div>
-                    <div>
-                      <p>{{ post.creatorId.name }}</p>
+                    <div class="p-2">
+                      <p>{{ post.creator.name }}</p>
                       <span>{{ post.createdAt.toLocaleDateString() }}</span>
                     </div>
                   </div>

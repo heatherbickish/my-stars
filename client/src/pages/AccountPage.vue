@@ -21,15 +21,17 @@ const editableAccountData = ref({
 });
 
 onMounted(() => {
+  getMyFriends();
   getMyJoinedGroups();
   getMyReceivedRequests();
-  getMyFriends();
 });
 
 watch(
   account,
   () => {
-    editableAccountData.value = { ...account.value };
+    if(account.value){
+      editableAccountData.value = { ...account.value };
+    }
   },
   { immediate: true }
 );
@@ -122,10 +124,10 @@ async function deleteFriend(friendshipId){
         </div>
         <div class="mb-3">
           <input v-model="editableAccountData.coverImg" type="url" id="coverImg" name="coverImg" class="form-control"
-            placeholder="Cover Image url..." required />
+            placeholder="Cover Image url..." />
         </div>
         <div>
-          <textarea v-model="editableAccountData.bio" name="" id="bio" class="form-control" rows="10" maxlength="1000"
+          <textarea v-model="editableAccountData.bio" name="bio" id="bio" class="form-control" rows="10" maxlength="1000"
             placeholder="Bio..."></textarea>
         </div>
         <div class="mt-3 text-end">
