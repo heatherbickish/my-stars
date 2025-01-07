@@ -16,7 +16,7 @@ class CommentsService {
   }
 
   async getCommentsByGroupId(groupId) {
-    const comments = await dbContext.Comments.find({ groupId: groupId }).populate('creator', 'name picture');
+    const comments = await dbContext.Comments.find({ groupId: groupId }).populate('creator', 'name picture').sort('-createdAt')
     return comments;
   }
 

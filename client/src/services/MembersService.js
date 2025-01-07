@@ -31,16 +31,14 @@ class MembersService {
 
   async getMembersByGroupId(groupId) {
     const response = await api.get(`api/groups/${groupId}/members`);
-    // console.log(response.data);
     const members = response.data.map(member => new Member(member));
     AppState.members = members;
-    // console.log(AppState.members)
   }
 
   async getGroupsByProfileId(profileId) {
     const response = await api.get(`api/profiles/${profileId}/members`);
     const groups = response.data.map(member => new Group(member.group));
     AppState.groups = groups;
-}
+  }
 }
 export const membersService = new MembersService();

@@ -1,16 +1,16 @@
 <script setup>
 import { AppState } from "@/AppState";
 import { groupsService } from "@/services/GroupsService";
+import { membersService } from "@/services/MembersService";
 import { logger } from "@/utils/Logger";
 import Pop from "@/utils/Pop";
 import { Modal } from "bootstrap";
 import { computed, ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 
 const router = useRouter()
-// const group = computed(() => AppState.groups)
-
+const route = useRoute()
 const editableGroupFormData = ref({
   name: '',
   description: '',
@@ -20,6 +20,8 @@ const editableGroupFormData = ref({
 async function createGroup() {
   try {
     const group = await groupsService.createGroup(editableGroupFormData.value)
+    const memberData = { groupId: group.id };
+    await membersService.createMember(memberData)
     editableGroupFormData.value = {
       name: '',
       description: '',

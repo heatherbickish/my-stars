@@ -3,7 +3,6 @@ import { Forbidden } from "../utils/Errors"
 
 class PostsService {
   async getPostById(postId) {
-    // const post = await dbContext.Posts.findById(postId).populate('creator', 'name picture').populate('comment')
     const post = await dbContext.Posts.findById(postId).populate('creator', 'name picture')
     return post
   }
@@ -26,12 +25,6 @@ class PostsService {
     return post
   }
 
-  // async updatePost(comment, postId){
-  //   const postToUpdate = await this.getPostById(postId);
-  //   postToUpdate.comments.push(comment);
-  //   await postToUpdate.save();
-  //   return postToUpdate;
-  // }
 
 }
 export const postsService = new PostsService()

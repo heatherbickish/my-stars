@@ -23,6 +23,7 @@ const hasJoined = computed(() =>
 );
 const foundPosts = computed(() => AppState.posts.filter(post => post.imgUrl != ''))
 const firstFourPosts = computed(() => foundPosts.value.slice(0, 4))
+// const firstTwoComments = computed(()=> comments.value.slice(0,2))
 const joinedGroups = computed(() => AppState.joinedGroups);
 const foundMember = computed(() =>
   joinedGroups.value.find((member) => member.groupId == route.params.groupId)
@@ -207,7 +208,7 @@ async function getCommentsByGroupId() {
 
 <template>
   <div v-if="group">
-    <section class="row img-box mb-4">
+    <section class="row img-box mb-4 pb-3">
       <div class="col-md-12 px-5">
         <div>
           <div class="mt-3">
@@ -220,7 +221,16 @@ async function getCommentsByGroupId() {
                 <span v-if="group.creatorId == account?.id"
                   class="fs-5 fw-bold bg-success text-light ms-4 span-pill px-2">Creator</span>
               </div>
-              <p>{{ group.memberCount }} members</p>
+              <div class="d-flex ">
+                <p class="me-3">{{ group.memberCount }} members</p>
+                <div v-for="member in members" :key="member.id" class="text-start">
+                  <span>
+                    <router-link :to="{ name: 'Profile', params: { profileId: member.profile.id } }">
+                      <img :src="member.profile.picture" alt="" class="member-img">
+                    </router-link>
+                  </span>
+                </div>
+              </div>
             </div>
             <div v-if="group.isVoided" class="text-warning">
               <h3>THIS GROUP HAS BEEN VOIDED</h3>
@@ -250,6 +260,7 @@ async function getCommentsByGroupId() {
                 </button>
               </div>
             </div>
+
           </div>
         </div>
       </div>
@@ -278,9 +289,6 @@ async function getCommentsByGroupId() {
                     </div>
                   </div>
                   <div>
-                    <button v-if="post.creatorId == account?.id" class="btn bg-warning me-2">
-                      Edit
-                    </button>
                     <button v-if="post.creatorId == account?.id" @click="deletePost(post.id)" class="btn bg-warning">
                       Delete
                     </button>
@@ -323,7 +331,9 @@ async function getCommentsByGroupId() {
                   <div v-for="comment in post?.commentsArr" :key="comment.id" class="d-flex justify-content-between">
                     <div class="d-flex">
                       <div class="ms-2">
-                        <img :src="comment.creator.picture" class="comment-creator-img me-2" />
+                        <router-link :to="{ name: 'Profile', params: { profileId: post.creator.id } }">
+                          <img :src="comment.creator.picture" class="comment-creator-img me-2" />
+                        </router-link>
                       </div>
                       <div>
                         <span class="fw-bold">{{ comment.creator.name }}</span>
@@ -394,6 +404,12 @@ async function getCommentsByGroupId() {
 
 .creator-img {
   height: 5rem;
+  border-radius: 50%;
+  aspect-ratio: 1/1;
+}
+
+.member-img {
+  height: 2rem;
   border-radius: 50%;
   aspect-ratio: 1/1;
 }
