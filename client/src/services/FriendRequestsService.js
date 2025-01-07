@@ -5,14 +5,17 @@ import { AppState } from "@/AppState.js"
 import { Friendship } from "@/models/Friendship.js";
 
 class FriendRequestsService {
+  async confirmStatus(friendRequestId) {
+
+  }
   async getMySentOutRequests() {
-    AppState.mySentOutRequest = [];
+    AppState.mySentOutRequests = [];
     if (AppState.account == null)
       return
     const response = await api.get('account/sentoutrequests')
     logger.log(response.data)
     const sentOutRequests = response.data.map(sentOutRequest => new FriendRequest(sentOutRequest));
-    AppState.mySentOutRequest = sentOutRequests;
+    AppState.mySentOutRequests = sentOutRequests;
   }
   async getMyReceivedRequests() {
     AppState.receivedRequests = [];
@@ -24,7 +27,7 @@ class FriendRequestsService {
   async createFriendRequest(requestData) {
     const response = await api.post('api/friendrequests', requestData)
     const friendRequest = new FriendRequest(response.data)
-    AppState.friendRequests.push(friendRequest)
+    AppState.mySentOutRequests.push(friendRequest)
     console.log(response.data)
     AppState.activeFriendRequest = friendRequest
     return friendRequest

@@ -33,6 +33,7 @@ export class FriendRequestsController extends BaseController {
     }
   }
 
+
   async updateFriendRequest(request, response, next) {
     try {
       const friendRequestId = request.params.friendRequestId;
@@ -43,4 +44,6 @@ export class FriendRequestsController extends BaseController {
       next(error)
     }
   }
+
+
 }

@@ -1,6 +1,5 @@
 <script setup>
 import { AppState } from '@/AppState';
-import GroupCard from '@/components/GroupCard.vue';
 import GroupCardInProfilePage from '@/components/GroupCardInProfilePage.vue';
 import { friendRequestsService } from "@/services/FriendRequestsService";
 import { friendshipsService } from '@/services/FriendshipsService';
@@ -8,22 +7,38 @@ import { membersService } from '@/services/MembersService';
 import { profilesService } from '@/services/ProfilesService';
 import { logger } from '@/utils/Logger';
 import Pop from '@/utils/Pop';
-import { computed, ref, watch } from 'vue';
+import { computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 
 const groups = computed(() => AppState.groups)
 const account = computed(() => AppState.account);
 const profile = computed(() => AppState.activeProfile)
-const friendRequests = computed(() => AppState.friendRequests)
-const friendWithUser = computed(() => friendRequests.value.find((friendRequest) => {
-    friendRequest.senderId == account.value.id && friendRequest.receiverId == profile.value.id
-}))
-// let added = ref(false)
+const friendStatus = computed(() => {
+    const profileId = route.params.profileId
+    const foundRequest = sentOutRequests.value.find((sentOutRequest) => sentOutRequest.receiverId == profileId)
+    const foundIndex = AppState.myFriends.findIndex((myFriend) => {
+        if ((myFriend.userAId == account.value.id) && (myFriend.userBId == profileId)) {
+            return true
+        } else if ((myFriend.userAId == profileId) && (myFriend.userBId == account.value.id)) {
+            return true
+        } else return false
+    })
+    if (foundIndex != -1) {
+        if (foundRequest == undefined) { return 'friends' }
+        else { return { 'show the blue box': foundRequest } }
+    }
+    else if (foundRequest == undefined) { return 'Show add friend' }
+    else if (foundRequest.reqStatus == 'pending') { return 'pending' }
+    else if (foundRequest.reqStatus == 'accepted') { return 'accepted' }
+    else {
+        return 'confirmed'
+    }
+})
+
 const route = useRoute()
-const activeFriendRequest = computed(() => AppState.activeFriendRequest)
-const sentOutRequests = computed(() => AppState.mySentOutRequest)
-const myFriends = computed(() => AppState.myFriends)
+const sentOutRequests = computed(() => AppState.mySentOutRequests)
+// const myFriends = computed(() => AppState.myFriends)
 
 watch(route, () => {
     getProfileById()
@@ -34,6 +49,7 @@ watch(account, () => {
     getMySentOutRequests()
     getMyFriends()
 }, { immediate: true })
+
 
 async function createFriendRequest() {
     try {
@@ -63,7 +79,6 @@ async function getProfileById() {
 async function getGroupsByProfileId() {
     try {
         const profileId = route.params.profileId;
-        console.log("received profileId: ", profileId)
         await membersService.getGroupsByProfileId(profileId);
     } catch (error) {
         Pop.meow(error)
@@ -90,32 +105,14 @@ async function getMyFriends() {
     }
 }
 
-function checkRelationship() {
-    try {
-        const profileId = route.params.profileId
+async function confirmStatus(friendRequestId) {
 
-        const foundRequest = sentOutRequests.value.find((sentOutRequest) => sentOutRequest.receiverId == profileId)
-        const foundIndex = myFriends.value.findIndex((myFriend) => {
-            if ((myFriend.userAId == account.value.id) && (myFriend.userBId == profileId)) {
-                return true
-            } else if ((myFriend.userAId == profileId) && (myFriend.userBId == account.value.id)) {
-                return true
-            } else return false
-        })
-        console.log('found index', foundIndex)
-        if (foundIndex != -1) {
-            if (foundRequest == undefined) { return 'friends' }
-            else { return 'show the blue box' }
-        }
-        else if (foundRequest == undefined) { return 'Show add friend' }
-        else if (foundRequest.reqStatus == 'pending') { return 'pending' }
-        else {
-            return 'accepted'
-        }
+    try {
+        await friendRequestsService.updateRequest(friendRequestId)
+
     }
     catch (error) {
-        Pop.meow(error);
-        logger.error(error)
+        Pop.error(error);
     }
 }
 
@@ -145,21 +142,21 @@ function checkRelationship() {
                             <button v-if="account?.id == profile?.id" class="btn btn-outline-success">
                                 Edit
                             </button>
-                            <div v-if="checkRelationship() == 'show the blue box'" class="bg-info d-inline-block p-3">
-                                <span>{{ profile.name }} has accepted your friend request</span>
-                                <button class="btn btn-warning ms-2">Okay</button>
-                            </div>
-                            <button v-if="checkRelationship() == 'Show add friend'" @click="createFriendRequest()"
+                            <button v-if="(friendStatus == 'friends') || (friendStatus['show the blue box'])"
+                                class="btn btn-outline-primary">Send
+                                Message</button>
+                            <button v-if="friendStatus == 'Show add friend'" @click="createFriendRequest()"
                                 class="btn btn-outline-primary">
                                 <span class="mdi mdi-account-multiple-plus-outline me-1"></span>Add Friend
                             </button>
-                            <button
-                                v-if="(checkRelationship() == 'friends') || (checkRelationship() == 'show the blue box')"
-                                class="btn btn-outline-primary">Send
-                                Message</button>
-                            <button v-if="checkRelationship() == 'pending'" class="btn btn-outline-primary">
+                            <button v-if="friendStatus == 'pending'" class="btn btn-outline-primary">
                                 Pending
                             </button>
+                            <div v-if="friendStatus == 'accepted'" class="bg-info d-inline-block p-3">
+                                <span>{{ profile.name }} has accepted your friend request</span>
+                                <button @click="confirmStatus(friendStatus['show the blue box'].id)"
+                                    class="btn btn-warning ms-2">Okay</button>
+                            </div>
                         </div>
                     </div>
                 </div>
