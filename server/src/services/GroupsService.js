@@ -48,7 +48,7 @@ class GroupsService {
     return group
   }
   async getAllGroups() {
-    const groups = await dbContext.Groups.find().populate('creator', 'name picture').populate('memberCount')
+    const groups = await dbContext.Groups.find().populate('creator', 'name picture').sort('-createdAt').populate('memberCount')
     return groups
   }
 }
