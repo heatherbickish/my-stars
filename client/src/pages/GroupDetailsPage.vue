@@ -397,6 +397,16 @@ async function likeUnlikePost(postId) {
               </div>
             </router-link>
           </div>
+          <div class="bg-light snapshot-box p-3 mt-3">
+            <p class="fw-bold fs-3">Map</p>
+            <section class="row">
+              <div class="col-md-6 mb-3">
+                <div class="text-center">
+                </div>
+              </div>
+            </section>
+
+          </div>
         </div>
       </div>
     </section>

@@ -38,21 +38,13 @@ const routes = [
     component: loadPage('AccountPage'),
     beforeEnter: authGuard
   },
-  {
-    path: '/gallery',
-    name: 'Gallery',
-    component: loadPage('GalleryPage'),
-  },
+
   {
     path: '/create',
     name: 'Create',
     component: loadPage('CreatePage')
   },
-  {
-    path: '/newsfeed',
-    name: 'News Feed',
-    component: loadPage('NewsFeedPage'),
-  },
+
   {
     path: '/search',
     name: 'Search',
