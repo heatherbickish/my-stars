@@ -18,6 +18,7 @@ class CommentsService {
     const response = await api.post(`api/groups/${commentData.groupId}/posts/${commentData.postId}/comments`, commentData)
     const comment = new Comment(response.data);
     AppState.comments.unshift(comment);
+    console.log("postId in service: ", comment.postId)
     return comment;
   }
 

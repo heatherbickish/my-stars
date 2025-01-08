@@ -12,6 +12,7 @@ export class PostsController extends BaseController {
       .use(Auth0Provider.getAuthorizedUserInfo)
       .post('', this.createPost)
       .delete('/:postId', this.deletePost)
+      .post('/:postId/like', this.likeUnlikePost)
   }
 
 
@@ -41,6 +42,17 @@ export class PostsController extends BaseController {
     try{
       const postId = request.params.postId;
       const post = await postsService.getPostById(postId);
+      response.send(post);
+    }catch (error) {
+      next(error)
+    }
+  }
+
+  async likeUnlikePost(request, response, next){
+    try{
+      const postId = request.params.postId;
+      const userId = request.userInfo.id;
+      const post = await postsService.likeUnlikePost(postId, userId);
       response.send(post);
     }catch (error) {
       next(error)

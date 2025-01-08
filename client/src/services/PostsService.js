@@ -28,6 +28,12 @@ class PostsService {
         console.log(response.data)
     }
 
+    async likeUnlikePost(postId) {
+        const response = await api.post(`api/posts/${postId}/like`);
+        const foundIndex = AppState.posts.findIndex(post => post.id == postId);
+        AppState.posts.splice(foundIndex, 1, new Post(response.data));
+    }
+
     clearPosts() {
         AppState.posts = []
     }
