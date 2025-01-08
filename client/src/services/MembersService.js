@@ -10,6 +10,7 @@ class MembersService {
     const member = new Member(response.data);
     AppState.members.push(member);
     AppState.activeGroup.memberCount += 1
+    AppState.joinedGroups.push(member)
   }
 
   async deleteMember(memberId) {

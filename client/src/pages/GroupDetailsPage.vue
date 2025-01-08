@@ -23,7 +23,6 @@ const hasJoined = computed(() =>
 );
 const foundPosts = computed(() => AppState.posts.filter(post => post.imgUrl != ''))
 const firstFourPosts = computed(() => foundPosts.value.slice(0, 4))
-// const firstTwoComments = computed(()=> comments.value.slice(0,2))
 const joinedGroups = computed(() => AppState.joinedGroups);
 const foundMember = computed(() =>
   joinedGroups.value.find((member) => member.groupId == route.params.groupId)
@@ -205,10 +204,10 @@ async function getCommentsByGroupId() {
   }
 }
 
-async function likeUnlikePost(postId){
-  try{
+async function likeUnlikePost(postId) {
+  try {
     await postsService.likeUnlikePost(postId);
-  }catch (error) {
+  } catch (error) {
     Pop.meow(error);
     logger.error(error);
   }
@@ -313,11 +312,13 @@ async function likeUnlikePost(postId){
                 </div>
                 <div v-if="hasJoined">
                   <div class="bg-light d-flex justify-content-center">
-                    <div v-if="post.likes.findIndex((like) => like.id == account.id) !== -1" @click="likeUnlikePost(post.id)" class="me-5 selectable rounded p-3 d-flex align-items-center">
+                    <div v-if="post.likes.findIndex((like) => like.id == account.id) !== -1"
+                      @click="likeUnlikePost(post.id)" class="me-5 selectable rounded p-3 d-flex align-items-center">
                       <span class="mdi mdi-thumb-up me-1 fs-4"></span>
                       <span>Unlike</span>
                     </div>
-                    <div v-else @click="likeUnlikePost(post.id)" class="me-5 selectable rounded p-3 d-flex align-items-center">
+                    <div v-else @click="likeUnlikePost(post.id)"
+                      class="me-5 selectable rounded p-3 d-flex align-items-center">
                       <span class="mdi mdi-thumb-up-outline me-1 fs-4"></span>
                       <span>Like</span>
                     </div>

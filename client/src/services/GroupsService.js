@@ -19,6 +19,7 @@ class GroupsService {
     const response = await api.post('api/groups', groupData)
     const group = new Group(response.data)
     AppState.groups.push(group)
+    AppState.activeGroup = group
     return group
   }
   async getGroupById(groupId) {
