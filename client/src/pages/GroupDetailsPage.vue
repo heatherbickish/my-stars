@@ -1,5 +1,6 @@
 <script setup>
 import { AppState } from "@/AppState";
+import { groupHandler } from "@/handlers/GroupHandler";
 import { commentsService } from "@/services/CommentsService";
 import { groupsService } from "@/services/GroupsService";
 import { membersService } from "@/services/MembersService";
@@ -7,7 +8,7 @@ import { postsService } from "@/services/PostsService";
 import { logger } from "@/utils/Logger";
 import Pop from "@/utils/Pop";
 import { computed, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { onBeforeRouteLeave, useRoute } from "vue-router";
 
 
 
@@ -42,6 +43,7 @@ watch(
     getPostsByGroupId();
     getMembersByGroupId();
     getCommentsByGroupId();
+    joinGroupRoom();
   },
   { immediate: true }
 );
@@ -53,6 +55,10 @@ watch(
   },
   { immediate: true }
 );
+
+onBeforeRouteLeave(() => {
+  leaveGroupRoom();
+});
 
 async function voidGroup() {
   try {
@@ -211,6 +217,14 @@ async function likeUnlikePost(postId) {
     Pop.meow(error);
     logger.error(error);
   }
+}
+
+function joinGroupRoom(){
+  groupHandler.emit('JOIN_ROOM', route.params.groupId);
+}
+
+function leaveGroupRoom(){
+  groupHandler.emit('LEAVE_ROOM', route.params.groupId);
 }
 </script>
 

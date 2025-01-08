@@ -13,8 +13,8 @@ class PostsService {
 
     async createPost(postData) {
         const response = await api.post('api/posts', postData)
-        const post = new Post(response.data)
-        AppState.posts.unshift(post)
+        // const post = new Post(response.data)
+        // AppState.posts.unshift(post)
     }
 
     async deletePost(postId) {

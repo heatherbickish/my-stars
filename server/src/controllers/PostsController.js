@@ -2,6 +2,7 @@ import { Auth0Provider } from "@bcwdev/auth0provider";
 import BaseController from "../utils/BaseController";
 import { postsService } from "../services/PostsService";
 import { groupsService } from "../services/GroupsService";
+import { socketProvider } from "../SocketProvider";
 
 export class PostsController extends BaseController {
   constructor() {
@@ -22,6 +23,7 @@ export class PostsController extends BaseController {
       postData.creatorId = request.userInfo.id
       const post = await postsService.createPost(postData)
       response.send(post)
+      socketProvider.messageRoom(post.groupId.toString(), 'CREATED_POST', post);
     } catch (error) {
       next(error)
     }

@@ -5,6 +5,7 @@ import { postsService } from "../services/PostsService";
 import { membersService } from "../services/MembersService";
 import { commentsService } from "../services/CommentsService";
 import { creatorEventsService } from "../services/CreatorEventsService";
+import { socketProvider } from "../SocketProvider";
 
 export class GroupsController extends BaseController {
   constructor() {
@@ -54,6 +55,7 @@ export class GroupsController extends BaseController {
       const foundGroup = await groupsService.getGroupById(groupId);
       const comment = await commentsService.createComment(commentData);
       response.send(comment);
+      socketProvider.messageRoom(groupId, 'CREATED_COMMENT', comment);
     } catch (error) {
       next(error)
     }
@@ -94,6 +96,7 @@ export class GroupsController extends BaseController {
       groupData.creatorId = request.userInfo.id
       const group = await groupsService.createGroup(groupData)
       response.send(group)
+      socketProvider.messageAll('CREATED_GROUP', group);
     } catch (error) {
       next(error)
     }
