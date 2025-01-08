@@ -10,7 +10,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="card shadow" style="width: 18rem">
+  <div class="card shadow">
     <img class="card-img-top cover-img img-fluid" :src="groupProp.coverImg" alt="Card image cap" />
     <div class="card-body text-center">
       <h5>{{ groupProp.name }}</h5>

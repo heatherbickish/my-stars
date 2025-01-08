@@ -38,7 +38,11 @@ const routes = [
     component: loadPage('AccountPage'),
     beforeEnter: authGuard
   },
-
+  {
+    path: '/gallery',
+    name: 'Gallery',
+    component: loadPage('GalleryPage'),
+  },
   {
     path: '/create',
     name: 'Create',
@@ -48,6 +52,11 @@ const routes = [
     path: '/search',
     name: 'Search',
     component: loadPage('SearchPage')
+  },
+  {
+    path: '/groups/:groupId/gallery',
+    name: 'Group Gallery Page',
+    component: loadPage('GroupGalleryPage')
   },
   {
     path: '/profiles/:profileId',
