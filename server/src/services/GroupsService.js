@@ -34,7 +34,7 @@ class GroupsService {
     return originalGroup
   }
   async getGroupById(groupId) {
-    const group = await dbContext.Groups.findById(groupId).populate('creator', 'name picture').populate('memberCount');
+    const group = await dbContext.Groups.findById(groupId).populate('creator', 'name picture').populate('memberCount')
     return group
   }
   async createGroup(groupData) {
@@ -44,7 +44,7 @@ class GroupsService {
     return group
   }
   async getAllGroups() {
-    const groups = await dbContext.Groups.find().populate('creator', 'name picture').populate('memberCount');
+    const groups = await dbContext.Groups.find().populate('creator', 'name picture').populate('memberCount')
     return groups
   }
 }
