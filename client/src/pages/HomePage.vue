@@ -7,6 +7,7 @@ import Pop from "@/utils/Pop";
 import { computed, onMounted, ref } from "vue";
 
 const groups = computed(() => AppState.groups);
+const account = computed(() => AppState.account)
 
 const editableSearchQuery = ref('')
 
@@ -70,7 +71,7 @@ async function searchGroups() {
               <span class="mdi mdi-compass-rose"></span>
               Discover
             </div>
-            <router-link :to="{ name: 'Create' }">
+            <router-link :to="{ name: 'Create' }" v-if="account">
               <div role="button" class="create-btn d-flex justify-content-center align-items-center">
                 <i class="mdi mdi-plus"></i>
                 <span>Create New Group</span>

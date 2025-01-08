@@ -4,21 +4,23 @@ import { groupsService } from "@/services/GroupsService";
 import { membersService } from "@/services/MembersService";
 import { logger } from "@/utils/Logger";
 import Pop from "@/utils/Pop";
-import { Modal } from "bootstrap";
-import { computed, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { computed, ref, watch } from "vue";
+import { useRouter } from "vue-router";
 
 
 const router = useRouter()
-const route = useRoute()
+// const account = computed(() => AppState.account)
 const editableGroupFormData = ref({
   name: '',
   description: '',
   coverImg: ''
 })
 
+
+
 async function createGroup() {
   try {
+
     const group = await groupsService.createGroup(editableGroupFormData.value)
     const memberData = { groupId: group.id };
     await membersService.createMember(memberData)
@@ -28,6 +30,7 @@ async function createGroup() {
       coverImg: ''
     }
     router.push({ name: 'Group Details Page', params: { groupId: group.id } })
+
   }
   catch (error) {
     Pop.meow(error);

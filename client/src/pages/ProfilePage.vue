@@ -38,7 +38,6 @@ const friendStatus = computed(() => {
 
 const route = useRoute()
 const sentOutRequests = computed(() => AppState.mySentOutRequests)
-// const myFriends = computed(() => AppState.myFriends)
 
 watch(route, () => {
     getProfileById()
@@ -46,7 +45,7 @@ watch(route, () => {
 }, { immediate: true })
 
 watch(account, () => {//account contains more info details about this person
-    if(AppState.identity !== null){//who's logged into Auth 0;(if you're logged in) identity is always there before account is there
+    if (AppState.identity !== null) {//who's logged into Auth 0;(if you're logged in) identity is always there before account is there
         getMySentOutRequests()
         getMyFriends()
     }

@@ -4,16 +4,17 @@ import GroupCard from "@/components/GroupCard.vue";
 import { groupsService } from "@/services/GroupsService";
 import { logger } from "@/utils/Logger";
 import Pop from "@/utils/Pop";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 
 const groups = computed(() => AppState.groups);
-const account = computed(() => AppState.account)
+// const account = computed(() => AppState.account)
 
 const editableSearchQuery = ref('')
 
 onMounted(() => {
   getAllGroups();
 });
+
 
 async function getAllGroups() {
   try {
@@ -72,7 +73,7 @@ async function searchGroups() {
               Discover
             </div>
             <router-link :to="{ name: 'Create' }">
-              <div v-if="account" role="button" class="create-btn d-flex justify-content-center align-items-center">
+              <div role="button" class="create-btn d-flex justify-content-center align-items-center">
                 <i class="mdi mdi-plus"></i>
                 <span>Create New Group</span>
               </div>
