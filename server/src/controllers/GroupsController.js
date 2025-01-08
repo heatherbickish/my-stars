@@ -12,11 +12,11 @@ export class GroupsController extends BaseController {
     this.router
       .get('/:groupId/events', this.getEventByGroupId)
       .get('', this.getAllGroups)
+      .get('/search', this.getGroupsByQuery)
       .get('/:groupId', this.getGroupById)
       .get('/:groupId/posts', this.getPostByGroupId)
       .get('/:groupId/members', this.getMembersByGroupId)
       .get('/:groupId/comments', this.getCommentsByGroupId)
-      .get('/search', this.getGroupsByQuery)
       .use(Auth0Provider.getAuthorizedUserInfo)
       .post('', this.createGroup)
       .put('/:groupId', this.editGroup)
@@ -75,7 +75,7 @@ export class GroupsController extends BaseController {
       const groups = await groupsService.getGroupsByQuery(groupQuery)
       response.send(groups)
     } catch (error) {
-
+      next(error)
     }
   }
 

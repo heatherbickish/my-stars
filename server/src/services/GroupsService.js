@@ -10,6 +10,9 @@ class GroupsService {
     return groupToVoid
   }
   async getGroupsByQuery(groupQuery) {
+    const searchGroups = groupQuery.name ? { $regex: new RegExp(groupQuery.name, 'ig') } : null
+    if (searchGroups) groupQuery.name = searchGroups
+
     const sortBy = groupQuery.sortBy
     const groups = await dbContext.Groups
       .find(groupQuery)
@@ -21,6 +24,7 @@ class GroupsService {
       count: groupCount,
       results: groups
     }
+    return groups
   }
 
   async editGroup(groupId, updateData, userInfo) {

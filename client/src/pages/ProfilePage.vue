@@ -150,9 +150,9 @@ async function confirmStatus(friendRequestId) {
                                 class="btn btn-outline-primary">
                                 <span class="mdi mdi-account-multiple-plus-outline me-1"></span>Add Friend
                             </button>
-                            <button v-if="friendStatus == 'pending'" class="btn btn-outline-primary">
+                            <p v-if="friendStatus == 'pending'" class="outline-primary d-inline-block">
                                 Pending
-                            </button>
+                            </p>
                             <div v-if="friendStatus == 'accepted'" class="bg-info d-inline-block p-3">
                                 <span>{{ profile.name }} has accepted your friend request</span>
                                 <button @click="confirmStatus(friendStatus['show the blue box'].id)"
@@ -207,5 +207,16 @@ async function confirmStatus(friendRequestId) {
     position: absolute;
     left: 10%;
     top: 15%;
+}
+
+.outline-primary {
+    border: 2px solid blue;
+    /* Creates a blue border */
+    padding: 5px 10px;
+    /* Adds some padding around the text */
+    border-radius: 5px;
+    /* Optional: rounded corners */
+    color: blue;
+    /* Text color to match the border */
 }
 </style>
