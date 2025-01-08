@@ -4,7 +4,7 @@ import { creatorEventsService } from "../services/CreatorEventsService";
 
 export class CreatorEventsController extends BaseController {
   constructor() {
-    super('api/creatorevents')
+    super('api/events')
     this.router
       .use(Auth0Provider.getAuthorizedUserInfo)
       .post('', this.createEvent)

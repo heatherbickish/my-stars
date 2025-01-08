@@ -14,15 +14,23 @@ const pointSchema = new Schema({
 
 
 export const CreatorEventSchema = new Schema({
-  creatorId: { type: Schema.ObjectId, ref: 'Account' },
-  title: { type: String, maxLength: 100, minLength: 3 },
-  description: { type: String, maxLength: 2000, minLength: 15 },
+  creatorId: { type: Schema.ObjectId, ref: 'Account', required: true },
+  title: { type: String, maxLength: 100, minLength: 3, required: true },
+  description: { type: String, maxLength: 2000, minLength: 15, required: true },
   location: {
     type: pointSchema,
-    // required: true
+    required: true
   },
 
 },
   {
-    timestamps: true
+    timestamps: true,
+    toJSON: { virtuals: true }
   })
+
+CreatorEventSchema.virtual('creator', {
+  localField: 'creatorId',
+  ref: 'Account',
+  foreignField: '_id',
+  justOne: true
+})

@@ -4,11 +4,13 @@ import BaseController from "../utils/BaseController";
 import { postsService } from "../services/PostsService";
 import { membersService } from "../services/MembersService";
 import { commentsService } from "../services/CommentsService";
+import { creatorEventsService } from "../services/CreatorEventsService";
 
 export class GroupsController extends BaseController {
   constructor() {
     super('api/groups')
     this.router
+      .get('/:groupId/events', this.getEventByGroupId)
       .get('', this.getAllGroups)
       .get('/:groupId', this.getGroupById)
       .get('/:groupId/posts', this.getPostByGroupId)
@@ -20,6 +22,16 @@ export class GroupsController extends BaseController {
       .put('/:groupId', this.editGroup)
       .post('/:groupId/posts/:postId/comments', this.createComment)
       .delete('/:groupId', this.voidGroup)
+  }
+
+  async getEventByGroupId(request, response, next) {
+    try {
+      const groupId = request.params.groupId;
+      const createdEvent = await creatorEventsService.getEventByGroupId(groupId)
+      response.send(createdEvent)
+    } catch (error) {
+      next(error)
+    }
   }
 
   async voidGroup(request, response, next) {
