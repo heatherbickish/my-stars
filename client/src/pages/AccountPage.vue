@@ -29,7 +29,7 @@ onMounted(() => {
 watch(
   account,
   () => {
-    if(account.value){
+    if (account.value) {
       editableAccountData.value = { ...account.value };
     }
   },
@@ -65,45 +65,45 @@ async function getMyJoinedGroups() {
   }
 }
 
-async function getMyFriends(){
-  try{
+async function getMyFriends() {
+  try {
     await friendshipsService.getMyFriends();
-  }catch (error) {
+  } catch (error) {
     Pop.meow(error);
     logger.error(error);
   }
 }
 
-async function rejectRequest(friendRequestId){
-  try{
+async function rejectRequest(friendRequestId) {
+  try {
     await friendRequestsService.rejectRequest(friendRequestId);
-  }catch (error) {
+  } catch (error) {
     Pop.meow(error);
     logger.error(error);
   }
 }
 
-async function acceptRequest(friendRequest){
-  try{
+async function acceptRequest(friendRequest) {
+  try {
     await friendRequestsService.updateRequest(friendRequest.id);
     const requestData = {
       userAId: account.value.id,
       userBId: friendRequest.senderId
     };
     await friendshipsService.createFriendship(requestData);
-  }catch (error) {
+  } catch (error) {
     Pop.meow(error);
     logger.error(error);
   }
 }
 
-async function deleteFriend(friendshipId){
-  try{
+async function deleteFriend(friendshipId) {
+  try {
     const message = "Are you sure you want to delete this friend?";
     const confirmed = await Pop.confirm(message);
-    if(!confirmed) return;
+    if (!confirmed) return;
     await friendshipsService.deleteFriendship(friendshipId);
-  }catch (error) {
+  } catch (error) {
     Pop.meow(error);
     logger.error(error);
   }
@@ -127,8 +127,8 @@ async function deleteFriend(friendshipId){
             placeholder="Cover Image url..." />
         </div>
         <div>
-          <textarea v-model="editableAccountData.bio" name="bio" id="bio" class="form-control" rows="10" maxlength="1000"
-            placeholder="Bio..."></textarea>
+          <textarea v-model="editableAccountData.bio" name="bio" id="bio" class="form-control" rows="10"
+            maxlength="1000" placeholder="Bio..."></textarea>
         </div>
         <div class="mt-3 text-end">
           <button class="btn btn-success" type="submit">Submit Changes</button>
@@ -165,7 +165,7 @@ async function deleteFriend(friendshipId){
             <div class="d-flex justify-content-between align-items-center bg-info p-2">
               <div>
                 <img :src="friendRequest.profile.picture" alt="" class="sender-pic me-2">
-                <span class="sender-name">{{friendRequest.profile.name}}</span>
+                <span class="sender-name">{{ friendRequest.profile.name }}</span>
               </div>
               <div>
                 <button @click="acceptRequest(friendRequest)" class="btn btn-success me-1">Accept</button>
@@ -185,9 +185,10 @@ async function deleteFriend(friendshipId){
           <div v-for="myFriend in myFriends" :key="myFriend.id" class="col-md-4 col-11 mb-3">
             <div class="d-flex justify-content-between align-items-center bg-warning p-2">
               <div>
-                <img v-if="myFriend.userAId == account?.id" :src="myFriend.profileB?.picture" alt="" class="friend-pic me-2">
+                <img v-if="myFriend.userAId == account?.id" :src="myFriend.profileB?.picture" alt=""
+                  class="friend-pic me-2">
                 <img v-else :src="myFriend.profileA?.picture" alt="" class="friend-pic me-2">
-                <span v-if="myFriend.userAId == account?.id" class="sender-name">{{ myFriend.profileB?.name}}</span>
+                <span v-if="myFriend.userAId == account?.id" class="sender-name">{{ myFriend.profileB?.name }}</span>
                 <span v-else class="sender-name">{{ myFriend.profileA?.name }}</span>
               </div>
               <div>
@@ -202,7 +203,7 @@ async function deleteFriend(friendshipId){
   </section>
   <section v-if="account" class="row justify-content-around">
     <div class="col-md-12">
-      <div class="text-center">
+      <div class="text-center text-light">
         <h4 class="mb-3 mt-3">Joined Groups</h4>
         <section class="row justify-content-center">
           <div v-for="joinedGroup in joinedGroups" :key="joinedGroup.id"
@@ -264,12 +265,14 @@ textarea {
 .sender-name {
   margin: 0 auto;
 }
-.sender-pic{
+
+.sender-pic {
   border-radius: 50%;
   aspect-ratio: 1/1;
   height: 3em;
 }
-.friend-pic{
+
+.friend-pic {
   border-radius: 50%;
   aspect-ratio: 1/1;
   height: 3em;
