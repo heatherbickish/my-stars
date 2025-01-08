@@ -44,16 +44,10 @@ const routes = [
     name: 'Create',
     component: loadPage('CreatePage')
   },
-
   {
     path: '/search',
     name: 'Search',
     component: loadPage('SearchPage')
-  },
-  {
-    path: '/groups/:groupId/gallery',
-    name: 'Group Gallery Page',
-    component: loadPage('GroupGalleryPage')
   },
   {
     path: '/profiles/:profileId',
