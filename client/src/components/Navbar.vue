@@ -18,13 +18,13 @@ onMounted(() => {
 
 <template>
   <section class="row w-100 m-0">
-    <nav class="navbar navbar-expand-sm px-3 d-flex justify-content-between">
+    <nav class="navbar navbar-expand-sm px-3 py-5 d-flex justify-content-between">
       <div class="col-md-2">
         <router-link class="navbar-brand d-flex" :to="{ name: 'Home' }">
           <div class="d-flex align-items-center">
             <img alt="logo" src="../assets/img/telescope.png" height="45" class="" />
-            <span class="site-name fs-1">Spacebook</span>
-             <!-- <div class="dropdown my-2 my-lg-0">
+            <span class="site-name fs-1 ms-2">Spacebook</span>
+            <!-- <div class="dropdown my-2 my-lg-0">
                   <div type="button" class="tab border-0 selectable no-select" data-bs-toggle="dropdown"
                     aria-expanded="false">
                     Spacebook
@@ -129,8 +129,8 @@ onMounted(() => {
       <div class="col-md-2 d-flex justify-content-end align-items-center">
         <div class="me-4">
           <router-link :to="{ name: 'Star Map Page' }" class="btn lighten-30 selectable routerlink">
-                Star Map
-              </router-link>
+            Star Map
+          </router-link>
         </div>
         <Login />
       </div>
@@ -152,6 +152,8 @@ onMounted(() => {
 </template>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+
 a {
   color: #ffff00;
 }
@@ -171,19 +173,21 @@ a:hover {
 }
 
 nav {
-  background-color: #24093e;
-  font-family: "Island Moments", serif;
+  background-color: #312c36;
+  font-family: "Luckiest Guy", serif;
+
 }
 
 .site-name {
-  color: #ffff00;
+  color: #d8d8d5;
 }
 
 .routerlink {
-  color: #ffff00;
-  font-size: 30px;
+  color: #d8d8d5;
+  font-size: 25px;
 }
-.routerlink:hover{
+
+.routerlink:hover {
   color: white;
 }
 

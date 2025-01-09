@@ -84,7 +84,7 @@ async function searchGroups() {
     </div>
     <div class="col-md-9">
       <section class="row groups-box p-3">
-        <h2>List of Groups</h2>
+        <h2>A Universe of Groups</h2>
         <div v-for="group in groups" :key="group.id" class="col-md-3 mb-4">
           <GroupCard :groupProp="group" />
         </div>
@@ -94,6 +94,8 @@ async function searchGroups() {
 </template>
 
 <style lang="scss" scoped>
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+
 .top-box {
   background-color: rgba(100, 100, 100, 0.5);
   border-radius: 20px;
@@ -101,22 +103,24 @@ async function searchGroups() {
 }
 
 h2 {
-  color: yellow;
-  font-family: "Island Moments", serif;
+  color: #d8d8d5;
+  font-family: "Luckiest Guy", serif;
 }
 
 .search-btn {
   color: white;
   border: 1px solid white;
+
 }
 
 .create-btn {
   width: 100%;
   height: 40px;
-  background-color: #0E07D0;
+  background-color: #a58b18;
   color: white;
   font-family: "Island Moments", serif;
   font-size: 1.5em;
+  border-radius: 9px;
 }
 
 .groups-box {
