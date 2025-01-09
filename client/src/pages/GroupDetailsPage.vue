@@ -10,8 +10,6 @@ import Pop from "@/utils/Pop";
 import { computed, ref, watch } from "vue";
 import { onBeforeRouteLeave, useRoute } from "vue-router";
 
-
-
 const route = useRoute();
 
 const group = computed(() => AppState.activeGroup);
@@ -22,8 +20,10 @@ const members = computed(() => AppState.members);
 const hasJoined = computed(() =>
   members.value.some((member) => member.accountId == account.value?.id)
 );
-const foundPosts = computed(() => AppState.posts.filter(post => post.imgUrl != ''))
-const firstFourPosts = computed(() => foundPosts.value.slice(0, 4))
+const foundPosts = computed(() =>
+  AppState.posts.filter((post) => post.imgUrl != "")
+);
+const firstFourPosts = computed(() => foundPosts.value.slice(0, 4));
 const joinedGroups = computed(() => AppState.joinedGroups);
 const foundMember = computed(() =>
   joinedGroups.value.find((member) => member.groupId == route.params.groupId)
@@ -32,13 +32,13 @@ const foundMember = computed(() =>
 const editableCommentData = ref({
   body: "",
   postId: "",
-  groupId: route.params.groupId
+  groupId: route.params.groupId,
 });
 
 watch(
   route,
   () => {
-    postsService.clearPosts()
+    postsService.clearPosts();
     getGroupById();
     getPostsByGroupId();
     getMembersByGroupId();
@@ -62,44 +62,53 @@ onBeforeRouteLeave(() => {
 
 async function voidGroup() {
   try {
-    const yes = await Pop.confirm(`Are you sure you want ${group.value.isVoided ? 'unvoid' : 'void'} the ${group.value.name} group?`, "Yes i am sure!")
-    if (!yes) return
-    const groupId = route.params.groupId
-    await groupsService.voidGroup(groupId)
-  }
-  catch (error) {
+    const yes = await Pop.confirm(
+      `Are you sure you want ${group.value.isVoided ? "unvoid" : "void"} the ${
+        group.value.name
+      } group?`,
+      "Yes i am sure!"
+    );
+    if (!yes) return;
+    const groupId = route.params.groupId;
+    await groupsService.voidGroup(groupId);
+  } catch (error) {
     Pop.meow(error);
-    logger.error(error)
+    logger.error(error);
   }
 }
 
 async function deleteComment(commentId, comment) {
   try {
-    const yes = await Pop.confirm('Are you sure you want to delete this comment?')
-    if (!yes) return
-    await commentsService.deleteComment(commentId)
-    console.log('posts value', posts.value)
+    const yes = await Pop.confirm(
+      "Are you sure you want to delete this comment?"
+    );
+    if (!yes) return;
+    await commentsService.deleteComment(commentId);
+    console.log("posts value", posts.value);
     const foundPost = posts.value.find((post) => {
       if (post.commentsArr.length != 0)
         for (let i = 0; i < post.commentsArr.length; i++) {
-          if (post.commentsArr[i] == comment) return true
+          if (post.commentsArr[i] == comment) return true;
         }
-    })
-    console.log('foundpost', foundPost)
-    const commentIndex = foundPost.commentsArr.findIndex((comment) => comment.id == commentId)
-    console.log('comment index', commentIndex)
-    foundPost.commentsArr.splice(commentIndex, 1)
-  }
-  catch (error) {
+    });
+    console.log("foundpost", foundPost);
+    const commentIndex = foundPost.commentsArr.findIndex(
+      (comment) => comment.id == commentId
+    );
+    console.log("comment index", commentIndex);
+    foundPost.commentsArr.splice(commentIndex, 1);
+  } catch (error) {
     Pop.meow(error);
-    logger.error(error)
+    logger.error(error);
   }
 }
 
 async function createComment(postId) {
   try {
     editableCommentData.value.postId = postId;
-    const commentResult = await commentsService.createComment(editableCommentData.value);
+    const commentResult = await commentsService.createComment(
+      editableCommentData.value
+    );
     // let foundPost = posts.value.find((post) => postId == post.id)
     // if (foundPost) {
     //   foundPost.commentsArr.push(commentResult)
@@ -108,7 +117,7 @@ async function createComment(postId) {
     editableCommentData.value = {
       body: "",
       postId: "",
-      groupId: route.params.groupId
+      groupId: route.params.groupId,
     };
   } catch (error) {
     Pop.meow(error);
@@ -201,8 +210,8 @@ async function getCommentsByGroupId() {
     await commentsService.getCommentsByGroupId(groupId);
 
     comments.value.forEach((comment) => {
-      let foundPost = posts.value.find((post) => comment.postId == post.id)
-      foundPost?.commentsArr.push(comment)
+      let foundPost = posts.value.find((post) => comment.postId == post.id);
+      foundPost?.commentsArr.push(comment);
     });
   } catch (error) {
     Pop.meow(error);
@@ -220,76 +229,121 @@ async function likeUnlikePost(postId) {
 }
 
 function joinGroupRoom() {
-  groupHandler.emit('JOIN_ROOM', route.params.groupId);
+  groupHandler.emit("JOIN_ROOM", route.params.groupId);
 }
 
 function leaveGroupRoom() {
-  groupHandler.emit('LEAVE_ROOM', route.params.groupId);
+  groupHandler.emit("LEAVE_ROOM", route.params.groupId);
 }
 </script>
 
 <template>
   <div v-if="group">
-    <section class="row img-box mb-4 pb-3">
-      <div class="col-md-12 px-5">
+    <section class="row mb-4 pb-3 top-section">
+      <div class="col-md-12">
         <div>
-          <div class="mt-3">
-            <img :src="group.coverImg" alt="" class="cover-image" />
-          </div>
-          <div class="d-flex justify-content-between align-items-center">
-            <div>
-              <div class="d-flex align-items-center">
-                <h1>{{ group.name }}</h1>
-                <span v-if="group.creatorId == account?.id"
-                  class="fs-5 fw-bold bg-success text-light ms-4 span-pill px-2">Creator</span>
-              </div>
-              <div class="d-flex ">
-                <p class="me-3">{{ group.memberCount }} members</p>
-                <div v-for="member in members" :key="member.id" class="text-start">
-                  <span>
-                    <router-link :to="{ name: 'Profile', params: { profileId: member.profile.id } }">
-                      <img :src="member.profile.picture" alt="" class="member-img">
-                    </router-link>
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div v-if="group.isVoided" class="text-warning">
-              <h3>THIS GROUP HAS BEEN VOIDED</h3>
-              <p class="text-center">No longer accepting members</p>
-            </div>
-            <div>
-              <div v-if="group.creatorId == account?.id">
-                <button :disabled="group.isVoided" type="button" class="btn btn-primary me-3" data-bs-toggle="modal"
-                  data-bs-target="#postModal">
-                  Create Post
-                </button>
-                <button v-if="group.creatorId == account?.id" @click="voidGroup()"
-                  class=" btn btn-outline-warning me-3">
-                  {{ group.isVoided ? 'Unvoid' : 'Void' }}
-                </button>
-              </div>
-              <div v-else>
-                <button v-if="hasJoined && (group.isVoided == false)" class="btn btn-primary me-3"
-                  data-bs-toggle="modal" data-bs-target="#postModal">Create
-                  Post</button>
-                <button v-if="hasJoined" @click="deleteMember(foundMember.id)" class="btn btn-outline-danger">
-                  Leave Group
-                </button>
-                <button v-if="(hasJoined == false) && (group.isVoided == false)" @click="createMember"
-                  class="btn btn-outline-primary">
-                  Join Group
-                </button>
+          <div class="big-box">
+            <div
+              class="img-box"
+              :style="{
+                backgroundImage: `url(${group.coverImg})`,
+              }"
+            >
+              <div class="glass-box text-center">
+                <img :src="group.coverImg" alt="" class="co-img" />
               </div>
             </div>
 
+            <div class="d-flex justify-content-between align-items-center p-2 bg-light">
+              <div>
+                <div class="d-flex align-items-center">
+                  <h1>{{ group.name }}</h1>
+                  <span
+                    v-if="group.creatorId == account?.id"
+                    class="fs-5 fw-bold bg-success text-light ms-4 span-pill px-2"
+                    >Creator</span
+                  >
+                </div>
+                <div class="d-flex">
+                  <p class="me-3">{{ group.memberCount }} members</p>
+                  <div
+                    v-for="member in members"
+                    :key="member.id"
+                    class="text-start"
+                  >
+                    <span>
+                      <router-link
+                        :to="{
+                          name: 'Profile',
+                          params: { profileId: member.profile.id },
+                        }"
+                      >
+                        <img
+                          :src="member.profile.picture"
+                          alt=""
+                          class="member-img"
+                        />
+                      </router-link>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div v-if="group.isVoided" class="text-warning">
+                <h3>THIS GROUP HAS BEEN VOIDED</h3>
+                <p class="text-center">No longer accepting members</p>
+              </div>
+              <div>
+                <div v-if="group.creatorId == account?.id">
+                  <button
+                    :disabled="group.isVoided"
+                    type="button"
+                    class="btn btn-primary me-3"
+                    data-bs-toggle="modal"
+                    data-bs-target="#postModal"
+                  >
+                    Create Post
+                  </button>
+                  <button
+                    v-if="group.creatorId == account?.id"
+                    @click="voidGroup()"
+                    class="btn btn-outline-warning me-3"
+                  >
+                    {{ group.isVoided ? "Unvoid" : "Void" }}
+                  </button>
+                </div>
+                <div v-else>
+                  <button
+                    v-if="hasJoined && group.isVoided == false"
+                    class="btn btn-primary me-3"
+                    data-bs-toggle="modal"
+                    data-bs-target="#postModal"
+                  >
+                    Create Post
+                  </button>
+                  <button
+                    v-if="hasJoined"
+                    @click="deleteMember(foundMember.id)"
+                    class="btn btn-outline-danger"
+                  >
+                    Leave Group
+                  </button>
+                  <button
+                    v-if="hasJoined == false && group.isVoided == false"
+                    @click="createMember"
+                    class="btn btn-outline-primary"
+                  >
+                    Join Group
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- SECTION posts -->
-    <section class="row justify-content-center">
+    <section class="row justify-content-center bottom-section">
       <div class="col-md-6">
         <section v-for="post in posts" :key="post.id" class="row">
           <div>
@@ -298,11 +352,17 @@ function leaveGroupRoom() {
                 <div class="d-flex justify-content-between p-3">
                   <div class="d-flex">
                     <div>
-                      <router-link :to="{
-                        name: 'Profile',
-                        params: { profileId: post.creatorId },
-                      }">
-                        <img :src="post.creator?.picture" alt="" class="creator-img me-2" />
+                      <router-link
+                        :to="{
+                          name: 'Profile',
+                          params: { profileId: post.creatorId },
+                        }"
+                      >
+                        <img
+                          :src="post.creator?.picture"
+                          alt=""
+                          class="creator-img me-2"
+                        />
                       </router-link>
                     </div>
                     <div class="p-2">
@@ -311,7 +371,11 @@ function leaveGroupRoom() {
                     </div>
                   </div>
                   <div>
-                    <button v-if="post.creatorId == account?.id" @click="deletePost(post.id)" class="btn bg-warning">
+                    <button
+                      v-if="post.creatorId == account?.id"
+                      @click="deletePost(post.id)"
+                      class="btn bg-warning"
+                    >
                       Delete
                     </button>
                   </div>
@@ -326,29 +390,54 @@ function leaveGroupRoom() {
                 </div>
                 <div v-if="hasJoined">
                   <div class="bg-light d-flex justify-content-center">
-                    <div v-if="post.likes.findIndex((like) => like.id == account.id) !== -1"
-                      @click="likeUnlikePost(post.id)" class="me-5 selectable rounded p-3 d-flex align-items-center">
+                    <div
+                      v-if="
+                        post.likes.findIndex(
+                          (like) => like.id == account.id
+                        ) !== -1
+                      "
+                      @click="likeUnlikePost(post.id)"
+                      class="me-5 selectable rounded p-3 d-flex align-items-center"
+                    >
                       <span class="mdi mdi-thumb-up me-1 fs-4"></span>
                       <span>Unlike</span>
                     </div>
-                    <div v-else @click="likeUnlikePost(post.id)"
-                      class="me-5 selectable rounded p-3 d-flex align-items-center">
+                    <div
+                      v-else
+                      @click="likeUnlikePost(post.id)"
+                      class="me-5 selectable rounded p-3 d-flex align-items-center"
+                    >
                       <span class="mdi mdi-thumb-up-outline me-1 fs-4"></span>
                       <span>Like</span>
                     </div>
-                    <div class="selectable rounded p-3 d-flex align-items-center">
-                      <span class="mdi mdi-comment-text-outline me-1 fs-4"></span>
+                    <div
+                      class="selectable rounded p-3 d-flex align-items-center"
+                    >
+                      <span
+                        class="mdi mdi-comment-text-outline me-1 fs-4"
+                      ></span>
                       <span>Comment</span>
                     </div>
                   </div>
                   <div class="p-3">
                     <form @submit.prevent="createComment(post.id)">
                       <div class="mb-3">
-                        <textarea v-model="editableCommentData.body" class="form-control" id="body" rows="3"
-                          maxlength="1000" placeholder="What's on your mind?" required></textarea>
+                        <textarea
+                          v-model="editableCommentData.body"
+                          class="form-control"
+                          id="body"
+                          rows="3"
+                          maxlength="1000"
+                          placeholder="What's on your mind?"
+                          required
+                        ></textarea>
                       </div>
                       <div class="text-end mt-3 mb-3">
-                        <button class="btn btn-success" title="Post comment" type="submit">
+                        <button
+                          class="btn btn-success"
+                          title="Post comment"
+                          type="submit"
+                        >
                           Post Comment
                         </button>
                       </div>
@@ -356,11 +445,23 @@ function leaveGroupRoom() {
                   </div>
                 </div>
                 <div>
-                  <div v-for="comment in post?.commentsArr" :key="comment.id" class="d-flex justify-content-between">
+                  <div
+                    v-for="comment in post?.commentsArr"
+                    :key="comment.id"
+                    class="d-flex justify-content-between"
+                  >
                     <div class="d-flex">
                       <div class="ms-2">
-                        <router-link :to="{ name: 'Profile', params: { profileId: post.creator.id } }">
-                          <img :src="comment.creator?.picture" class="comment-creator-img me-2" />
+                        <router-link
+                          :to="{
+                            name: 'Profile',
+                            params: { profileId: post.creator.id },
+                          }"
+                        >
+                          <img
+                            :src="comment.creator?.picture"
+                            class="comment-creator-img me-2"
+                          />
                         </router-link>
                       </div>
                       <div>
@@ -369,8 +470,14 @@ function leaveGroupRoom() {
                       </div>
                     </div>
                     <div>
-                      <button @click="deleteComment(comment.id, comment)" class="btn btn"><i
-                          class="mdi mdi-delete-empty-outline fs-5 text-danger"></i></button>
+                      <button
+                        @click="deleteComment(comment.id, comment)"
+                        class="btn btn"
+                      >
+                        <i
+                          class="mdi mdi-delete-empty-outline fs-5 text-danger"
+                        ></i>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -396,16 +503,22 @@ function leaveGroupRoom() {
           <div class="bg-light snapshot-box p-3">
             <p class="fw-bold fs-3">Recent snapshots</p>
             <section class="row">
-              <div v-for="post in firstFourPosts" :key="post.id" class="col-md-6 mb-3">
+              <div
+                v-for="post in firstFourPosts"
+                :key="post.id"
+                class="col-md-6 mb-3"
+              >
                 <div class="text-center">
                   <img :src="post.imgUrl" alt="" class="snapshot-img" />
                 </div>
               </div>
             </section>
-            <router-link :to="{
-              name: 'Group Gallery Page',
-              params: { groupId: group.id },
-            }">
+            <router-link
+              :to="{
+                name: 'Group Gallery Page',
+                params: { groupId: group.id },
+              }"
+            >
               <div class="text-end">
                 <button class="btn btn-success">See all photos</button>
               </div>
@@ -413,16 +526,16 @@ function leaveGroupRoom() {
           </div>
           <div class="bg-light snapshot-box p-3 mt-3">
             <p class="fw-bold fs-3">Map</p>
-            <router-link :to="{ name: 'Group Events Page', params: { groupId: group.id } }">
+            <router-link
+              :to="{ name: 'Group Events Page', params: { groupId: group.id } }"
+            >
               <button class="btn btn-success text-end mt-3">See Events</button>
             </router-link>
             <section class="row">
               <div class="col-md-6 mb-3">
-                <div>
-                </div>
+                <div></div>
               </div>
             </section>
-
           </div>
         </div>
       </div>
@@ -431,18 +544,22 @@ function leaveGroupRoom() {
 </template>
 
 <style lang="scss" scoped>
-.cover-image {
-  height: 400px;
-  width: 100%;
-  border-radius: 15px;
-  object-position: center;
-  object-fit: cover;
-}
-
 .img-box {
-  background-color: #fff;
+  // min-height: 10dvh;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
 }
-
+.glass-box {
+  // min-height: 10dvh;
+  height: 100%;
+  border-radius: 12px;
+  background-color: rgba(0, 0, 0, 0.01);
+  backdrop-filter: blur(10px);
+}
+.img-box .co-img {
+  height: 100%;
+}
 .creator-img {
   height: 5rem;
   border-radius: 50%;
@@ -483,5 +600,12 @@ function leaveGroupRoom() {
 .span-pill {
   height: 2rem;
   border-radius: 10px;
+}
+.big-box {
+  background-color: white;
+  height: 40dvh;
+}
+.bottom-section{
+  margin-top: 7%;
 }
 </style>

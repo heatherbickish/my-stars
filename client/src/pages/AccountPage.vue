@@ -22,7 +22,6 @@ const editableAccountData = ref({
 
 onMounted(() => {
   getMyFriends();
-  getMyJoinedGroups();
   getMyReceivedRequests();
 });
 
@@ -31,6 +30,7 @@ watch(
   () => {
     if (account.value) {
       editableAccountData.value = { ...account.value };
+      getMyJoinedGroups();
     }
   },
   { immediate: true }
@@ -162,7 +162,7 @@ async function deleteFriend(friendshipId) {
         <h4 class="mb-3 text-light">Pending Friend Requests</h4>
         <section class="row justify-content-center">
           <div v-for="friendRequest in receivedRequests" :key="friendRequest.id" class="col-md-4 col-11 mb-3">
-            <div class="d-flex justify-content-between align-items-center bg-info p-2">
+            <div class="d-flex justify-content-between align-items-center p-2 pending-request">
               <div>
                 <img :src="friendRequest.profile.picture" alt="" class="sender-pic me-2">
                 <span class="sender-name">{{ friendRequest.profile.name }}</span>
@@ -180,10 +180,10 @@ async function deleteFriend(friendshipId) {
   <section v-if="account" class="row justify-content-center my-5 mx-0">
     <div class="col-md-10 border border-primary p-3">
       <div class="text-center">
-        <h4 class="mb-3 text-light">Friends</h4>
+        <h4 class="mb-3 text-light">Star Buddies</h4>
         <section class="row justify-content-center">
           <div v-for="myFriend in myFriends" :key="myFriend.id" class="col-md-4 col-11 mb-3">
-            <div class="d-flex justify-content-between align-items-center bg-warning p-2">
+            <div class="d-flex justify-content-between align-items-center p-2 friend-item">
               <div>
                 <img v-if="myFriend.userAId == account?.id" :src="myFriend.profileB?.picture" alt=""
                   class="friend-pic me-2">
@@ -276,5 +276,11 @@ textarea {
   border-radius: 50%;
   aspect-ratio: 1/1;
   height: 3em;
+}
+.pending-request{
+  background-color: rgb(185, 184, 184);
+}
+.friend-item{
+  background-color: white;
 }
 </style>
