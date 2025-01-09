@@ -1,6 +1,5 @@
 <script setup>
 import { AppState } from "@/AppState";
-import Maps from "@/components/Maps.vue";
 import { groupHandler } from "@/handlers/GroupHandler";
 import { commentsService } from "@/services/CommentsService";
 import { groupsService } from "@/services/GroupsService";
@@ -414,10 +413,12 @@ function leaveGroupRoom() {
           </div>
           <div class="bg-light snapshot-box p-3 mt-3">
             <p class="fw-bold fs-3">Map</p>
+            <router-link :to="{ name: 'Group Events Page', params: { groupId: group.id } }">
+              <button class="btn btn-success text-end mt-3">See Events</button>
+            </router-link>
             <section class="row">
               <div class="col-md-6 mb-3">
                 <div>
-                  <Maps />
                 </div>
               </div>
             </section>

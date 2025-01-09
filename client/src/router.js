@@ -59,6 +59,11 @@ const routes = [
     component: loadPage('GroupGalleryPage')
   },
   {
+    path: '/groups/:groupId/events',
+    name: 'Group Events Page',
+    component: loadPage('GroupEventsPage')
+  },
+  {
     path: '/profiles/:profileId',
     name: 'Profile',
     component: loadPage('ProfilePage')
