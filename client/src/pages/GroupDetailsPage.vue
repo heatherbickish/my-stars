@@ -100,10 +100,10 @@ async function createComment(postId) {
   try {
     editableCommentData.value.postId = postId;
     const commentResult = await commentsService.createComment(editableCommentData.value);
-    let foundPost = posts.value.find((post) => postId == post.id)
-    if (foundPost) {
-      foundPost.commentsArr.push(commentResult)
-    }
+    // let foundPost = posts.value.find((post) => postId == post.id)
+    // if (foundPost) {
+    //   foundPost.commentsArr.push(commentResult)
+    // }
 
     editableCommentData.value = {
       body: "",
