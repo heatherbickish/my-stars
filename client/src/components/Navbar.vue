@@ -184,7 +184,7 @@ nav {
 
 .routerlink {
   color: #d8d8d5;
-  font-size: 25px;
+  font-size: 17px;
 }
 
 .routerlink:hover {
