@@ -219,11 +219,11 @@ async function likeUnlikePost(postId) {
   }
 }
 
-function joinGroupRoom(){
+function joinGroupRoom() {
   groupHandler.emit('JOIN_ROOM', route.params.groupId);
 }
 
-function leaveGroupRoom(){
+function leaveGroupRoom() {
   groupHandler.emit('LEAVE_ROOM', route.params.groupId);
 }
 </script>
@@ -360,11 +360,11 @@ function leaveGroupRoom(){
                     <div class="d-flex">
                       <div class="ms-2">
                         <router-link :to="{ name: 'Profile', params: { profileId: post.creator.id } }">
-                          <img :src="comment.creator.picture" class="comment-creator-img me-2" />
+                          <img :src="comment.creator?.picture" class="comment-creator-img me-2" />
                         </router-link>
                       </div>
                       <div>
-                        <span class="fw-bold">{{ comment.creator.name }}</span>
+                        <span class="fw-bold">{{ comment.creator?.name }}</span>
                         <p>{{ comment.body }}</p>
                       </div>
                     </div>
