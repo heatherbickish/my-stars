@@ -46,7 +46,7 @@ async function createGroup() {
   <section class="row">
     <div class="col-md-4">
       <div>
-        <h1>Create Group</h1>
+        <h1 class="text-light">Create Group</h1>
       </div>
       <form @submit.prevent="createGroup()" class="mt-5">
         <div class="form-floating mb-3">
@@ -71,7 +71,7 @@ async function createGroup() {
     </div>
     <div class="col-md-8">
       <div class="mt-3">
-        <h4>Group Preview</h4>
+        <h4 class="text-light">Group Preview</h4>
         <div class="mt-4">
           <img :src="editableGroupFormData.coverImg" alt="" class="cover-image">
         </div>
@@ -83,7 +83,7 @@ async function createGroup() {
       </div>
       <div>
         <div>
-          <h4>About</h4>
+          <h4 class="text-light">About</h4>
         </div>
         <p>{{ editableGroupFormData.description }}</p>
       </div>

@@ -137,7 +137,7 @@ async function deleteFriend(friendshipId) {
     </div>
     <div class="col-md-8">
       <div>
-        <h5>Profile Preview</h5>
+        <h5 class="text-light">Profile Preview</h5>
         <div>
           <img :src="editableAccountData.coverImg" class="cover-img" alt="" />
         </div>
@@ -159,7 +159,7 @@ async function deleteFriend(friendshipId) {
   <section v-if="account" class="row justify-content-center my-5 mx-0">
     <div class="col-md-10 border border-primary p-3">
       <div class="text-center">
-        <h4 class="mb-3">Pending Friend Requests</h4>
+        <h4 class="mb-3 text-light">Pending Friend Requests</h4>
         <section class="row justify-content-center">
           <div v-for="friendRequest in receivedRequests" :key="friendRequest.id" class="col-md-4 col-11 mb-3">
             <div class="d-flex justify-content-between align-items-center bg-info p-2">
@@ -180,7 +180,7 @@ async function deleteFriend(friendshipId) {
   <section v-if="account" class="row justify-content-center my-5 mx-0">
     <div class="col-md-10 border border-primary p-3">
       <div class="text-center">
-        <h4 class="mb-3">Friends</h4>
+        <h4 class="mb-3 text-light">Friends</h4>
         <section class="row justify-content-center">
           <div v-for="myFriend in myFriends" :key="myFriend.id" class="col-md-4 col-11 mb-3">
             <div class="d-flex justify-content-between align-items-center bg-warning p-2">
