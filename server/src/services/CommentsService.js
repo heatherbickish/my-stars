@@ -20,5 +20,10 @@ class CommentsService {
     return comments;
   }
 
+  async getCommentsByPostId(postId) {
+    const comments = await dbContext.Comments.find({postId: postId}).populate('creator', 'name picture').sort('-createdAt');
+    return comments;
+  }
+
 }
 export const commentsService = new CommentsService()

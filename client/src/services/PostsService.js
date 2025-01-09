@@ -30,6 +30,8 @@ class PostsService {
 
     async likeUnlikePost(postId) {
         const response = await api.post(`api/posts/${postId}/like`);
+        const comments = await api.get(`api/posts/${postId}/comments`);
+        response.data.commentsArr = comments.data;
         const foundIndex = AppState.posts.findIndex(post => post.id == postId);
         AppState.posts.splice(foundIndex, 1, new Post(response.data));
     }

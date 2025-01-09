@@ -3,6 +3,7 @@ import BaseController from "../utils/BaseController";
 import { postsService } from "../services/PostsService";
 import { groupsService } from "../services/GroupsService";
 import { socketProvider } from "../SocketProvider";
+import { commentsService } from "../services/CommentsService";
 
 export class PostsController extends BaseController {
   constructor() {
@@ -14,6 +15,7 @@ export class PostsController extends BaseController {
       .post('', this.createPost)
       .delete('/:postId', this.deletePost)
       .post('/:postId/like', this.likeUnlikePost)
+      .get('/:postId/comments', this.getCommentsByPostId)
   }
 
 
@@ -56,6 +58,16 @@ export class PostsController extends BaseController {
       const userId = request.userInfo.id;
       const post = await postsService.likeUnlikePost(postId, userId);
       response.send(post);
+    }catch (error) {
+      next(error)
+    }
+  }
+
+  async getCommentsByPostId(request, response, next){
+    try{
+      const postId = request.params.postId;
+      const comments = await commentsService.getCommentsByPostId(postId);
+      response.send(comments);
     }catch (error) {
       next(error)
     }
