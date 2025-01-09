@@ -1,5 +1,6 @@
 <script setup>
 import { AppState } from "@/AppState";
+import Maps from "@/components/Maps.vue";
 import { groupHandler } from "@/handlers/GroupHandler";
 import { commentsService } from "@/services/CommentsService";
 import { groupsService } from "@/services/GroupsService";
@@ -415,7 +416,8 @@ function leaveGroupRoom() {
             <p class="fw-bold fs-3">Map</p>
             <section class="row">
               <div class="col-md-6 mb-3">
-                <div class="text-center">
+                <div>
+                  <Maps />
                 </div>
               </div>
             </section>

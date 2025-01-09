@@ -1,5 +1,12 @@
 <script setup>
+import { ref } from "vue";
+import { useRoute } from "vue-router";
+
 const map = "https://maps.googleapis.com/maps/api/js?key=AIzaSyBwCLDIAKLwX6ND-ePFOscwUzhJjUL9X54&callback=console.debug&libraries=maps,marker&v=beta"
+const route = useRoute()
+const editableMapData = ref({
+
+})
 </script>
 
 
@@ -8,6 +15,19 @@ const map = "https://maps.googleapis.com/maps/api/js?key=AIzaSyBwCLDIAKLwX6ND-eP
     <gmp-map center="40.12150192260742,-100.45039367675781" zoom="4" map-id="DEMO_MAP_ID">
       <gmp-advanced-marker position="40.12150192260742,-100.45039367675781" title="My location"></gmp-advanced-marker>
     </gmp-map>
+  </div>
+  <div>
+    <form>
+      <div class="mb-3">
+        <input type="text" name="" id="" class="form-control">
+      </div class="mb-3">
+      <div>
+        <input type="text" name="" id="" class="form-control">
+      </div>
+      <div>
+        <button class="btn btn-success text end">Find</button>
+      </div>
+    </form>
   </div>
 </template>
 
