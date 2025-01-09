@@ -173,7 +173,7 @@ a:hover {
 }
 
 nav {
-  background-color: #312c36;
+  background-color: rgb(52 52 51);
   font-family: "Luckiest Guy", serif;
 
 }
