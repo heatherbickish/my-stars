@@ -74,7 +74,7 @@ async function searchGroups() {
             <router-link :to="{ name: 'Create' }" v-if="account">
               <div role="button" class="create-btn d-flex justify-content-center align-items-center">
                 <i class="mdi mdi-plus"></i>
-                <span>Create New Group</span>
+                <span>Create Group</span>
               </div>
             </router-link>
           </div>
@@ -118,8 +118,7 @@ h2 {
   height: 40px;
   background-color: #a58b18;
   color: white;
-  font-family: "Island Moments", serif;
-  font-size: 1.5em;
+  font-family: "Luckiest Guy", serif;
   border-radius: 9px;
 }
 

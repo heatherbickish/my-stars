@@ -45,13 +45,13 @@ async function createGroup() {
 <template>
   <section class="row">
     <div class="col-md-4">
-      <div>
-        <h1 class="text-light">Create Group</h1>
+      <div class="mt-2 ms-3">
+        <h4 class="text-light">Create your group</h4>
       </div>
       <form @submit.prevent="createGroup()" class="mt-5">
         <div class="form-floating mb-3">
           <input v-model="editableGroupFormData.name" type="text" class="form-control" id="name"
-            placeholder="Group Name" required>
+            placeholder="Group Name" maxlength="25" required>
           <label for="name">Group Name</label>
         </div>
         <div class="form-floating mb-3">
@@ -69,7 +69,7 @@ async function createGroup() {
         </div>
       </form>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-7">
       <div class="mt-3">
         <h4 class="text-light">Group Preview</h4>
         <div class="mt-4">

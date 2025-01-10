@@ -18,11 +18,11 @@ onMounted(() => {
 
 <template>
   <section class="row w-100 m-0">
-    <nav class="navbar navbar-expand-sm px-3 py-5 d-flex justify-content-between">
+    <nav class="navbar navbar-expand-sm px-3 py-4 d-flex justify-content-between">
       <div class="col-md-2">
         <router-link class="navbar-brand d-flex" :to="{ name: 'Home' }">
           <div class="d-flex align-items-center">
-            <img alt="logo" src="../assets/img/telescope.png" height="45" class="" />
+            <img alt="logo" src="../assets/img/telescope.png" height="45" class="ms-4 " />
             <span class="site-name fs-1 ms-2">Spacebook</span>
             <!-- <div class="dropdown my-2 my-lg-0">
                   <div type="button" class="tab border-0 selectable no-select" data-bs-toggle="dropdown"
