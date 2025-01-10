@@ -126,11 +126,11 @@ async function cancelEvent(eventId) {
         </div>
         <div class="col-md-8">
           <section class="row text-center justify-content-center mx-0">
-            <span>{{ group?.name }}</span>
+            <em><span>{{ group?.name }}</span></em>
             <h3>Celestial Gatherings</h3>
             <div class="col-md-10">
               <section class="row justify-content-center">
-                <div v-for="event in creatorEvents" :key="event.id" class="col-md-6">
+                <div v-for="event in creatorEvents" :key="event.id" class="col-md-7">
                   <div class="card">
                     <div class="card-body">
                       <div>

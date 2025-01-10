@@ -418,13 +418,13 @@ function leaveGroupRoom() {
       <div class="col-md-4">
         <div>
           <div class="p-3 about-box bg-light mb-3">
-            <p class="fw-bold fs-3">About</p>
+            <h2 class="fw-bold ">About</h2>
             <p>
               {{ group.description }}
             </p>
           </div>
           <div class="bg-light snapshot-box p-3">
-            <p class="fw-bold fs-3">Recent snapshots</p>
+            <h2 class="fw-bold ">Recent snapshots</h2>
             <section class="row mx-0">
               <div v-for="post in firstFourPosts" :key="post.id" class="col-md-6 mb-3">
                 <div class="text-center">
