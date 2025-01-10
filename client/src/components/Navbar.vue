@@ -18,29 +18,45 @@ onMounted(() => {
 
 <template>
   <section class="row w-100 m-0">
-    <nav class="navbar navbar-expand-sm px-3 d-flex justify-content-between">
+    <nav class="navbar navbar-expand-sm px-3 py-4 d-flex justify-content-between">
       <div class="col-md-2">
         <router-link class="navbar-brand d-flex" :to="{ name: 'Home' }">
           <div class="d-flex align-items-center">
-            <img alt="logo" src="../assets/img/telescope.png" height="45" class="" />
-            <span class="site-name fs-1">My Stars</span>
+            <img alt="logo" src="../assets/img/telescope.png" height="45" class="ms-4 " />
+            <span class="site-name fs-1 ms-2">Spacebook</span>
+            <!-- <div class="dropdown my-2 my-lg-0">
+                  <div type="button" class="tab border-0 selectable no-select" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    Spacebook
+                  </div>
+                  <div class="dropdown-menu p-0" style="left: -100%; margin-top: 40%" aria-labelledby="authDropdown">
+                    <div class="list-group">
+                      <div class="list-group-item dropdown-item list-group-item-action text-center"
+                        style="background-color: #24093e">
+                        <router-link :to="{ name: 'Star Map Page' }" id="gallery-1" class="fs-5">
+                          Star Map
+                        </router-link>
+                      </div>
+                    </div>
+                  </div>
+              </div> -->
           </div>
         </router-link>
       </div>
-      <div class="col-md-5 col-12">
+      <!-- <div class="col-md-5 col-12">
         <div>
           <ul class="w-100 d-flex justify-content-around align-items-center p-0 m-0">
             <li>
-              <!-- <router-link
+              <router-link
             :to="{ name: 'About' }"
             class="btn text-success lighten-30 selectable text-uppercase"
           >
             About
-          </router-link> -->
+          </router-link>
             </li>
             <li>
-              <router-link :to="{ name: 'Groups' }" class="btn lighten-30 selectable routerlink">
-                Groups
+              <router-link :to="{ name: 'Star Map Page' }" class="btn lighten-30 selectable routerlink">
+                Star Map
               </router-link>
             </li>
             <li>
@@ -81,7 +97,7 @@ onMounted(() => {
             </li>
             <li>
               <div>
-                <div class="dropdown my-2 my-lg-0">
+                 <div class="dropdown my-2 my-lg-0">
                   <div type="button" class="tab border-0 selectable no-select" data-bs-toggle="dropdown"
                     aria-expanded="false">
                     More
@@ -109,8 +125,13 @@ onMounted(() => {
             </li>
           </ul>
         </div>
-      </div>
-      <div class="col-md-2 text-end">
+      </div> -->
+      <div class="col-md-2 d-flex justify-content-end align-items-center">
+        <div class="me-4">
+          <router-link :to="{ name: 'Star Map Page' }" class="btn lighten-30 selectable routerlink">
+            Star Map
+          </router-link>
+        </div>
         <Login />
       </div>
       <!-- <div class="collapse navbar-collapse" id="navbarText"> -->
@@ -131,6 +152,8 @@ onMounted(() => {
 </template>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+
 a {
   color: #ffff00;
 }
@@ -150,17 +173,22 @@ a:hover {
 }
 
 nav {
-  background-color: #24093e;
-  font-family: "Island Moments", serif;
+  background-color: rgb(52 52 51);
+  font-family: "Luckiest Guy", serif;
+
 }
 
 .site-name {
-  color: #ffff00;
+  color: #d8d8d5;
 }
 
 .routerlink {
-  color: #ffff00;
-  font-size: 30px;
+  color: #d8d8d5;
+  font-size: 17px;
+}
+
+.routerlink:hover {
+  color: white;
 }
 
 .tab {

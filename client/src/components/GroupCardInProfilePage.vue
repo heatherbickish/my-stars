@@ -13,7 +13,7 @@ defineProps({
       <h5>{{ groupProp.name }}</h5>
       <div>
         <!-- <span>{{groupProp.memberCount}} members</span> -->
-        <span>{{groupProp.memberCount}} members</span>
+        <span>{{ groupProp.memberCount }} members</span>
       </div>
       <router-link :to="{ name: 'Group Details Page', params: { groupId: groupProp.id } }">
         <div role="button" class="join-btn d-flex justify-content-center align-items-center">

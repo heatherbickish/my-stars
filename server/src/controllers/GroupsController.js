@@ -4,22 +4,35 @@ import BaseController from "../utils/BaseController";
 import { postsService } from "../services/PostsService";
 import { membersService } from "../services/MembersService";
 import { commentsService } from "../services/CommentsService";
+import { creatorEventsService } from "../services/CreatorEventsService";
+import { socketProvider } from "../SocketProvider";
 
 export class GroupsController extends BaseController {
   constructor() {
     super('api/groups')
     this.router
+      .get('/:groupId/events', this.getEventByGroupId)
       .get('', this.getAllGroups)
+      .get('/search', this.getGroupsByQuery)
       .get('/:groupId', this.getGroupById)
       .get('/:groupId/posts', this.getPostByGroupId)
       .get('/:groupId/members', this.getMembersByGroupId)
       .get('/:groupId/comments', this.getCommentsByGroupId)
-      .get('/search', this.getGroupsByQuery)
       .use(Auth0Provider.getAuthorizedUserInfo)
       .post('', this.createGroup)
       .put('/:groupId', this.editGroup)
       .post('/:groupId/posts/:postId/comments', this.createComment)
       .delete('/:groupId', this.voidGroup)
+  }
+
+  async getEventByGroupId(request, response, next) {
+    try {
+      const groupId = request.params.groupId;
+      const createdEvent = await creatorEventsService.getEventByGroupId(groupId)
+      response.send(createdEvent)
+    } catch (error) {
+      next(error)
+    }
   }
 
   async voidGroup(request, response, next) {
@@ -42,6 +55,7 @@ export class GroupsController extends BaseController {
       const foundGroup = await groupsService.getGroupById(groupId);
       const comment = await commentsService.createComment(commentData);
       response.send(comment);
+      socketProvider.messageRoom(groupId, 'CREATED_COMMENT', comment);
     } catch (error) {
       next(error)
     }
@@ -63,7 +77,7 @@ export class GroupsController extends BaseController {
       const groups = await groupsService.getGroupsByQuery(groupQuery)
       response.send(groups)
     } catch (error) {
-
+      next(error)
     }
   }
 
@@ -82,6 +96,7 @@ export class GroupsController extends BaseController {
       groupData.creatorId = request.userInfo.id
       const group = await groupsService.createGroup(groupData)
       response.send(group)
+      socketProvider.messageAll('CREATED_GROUP', group);
     } catch (error) {
       next(error)
     }

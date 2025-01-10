@@ -14,7 +14,7 @@ async function logout() {
 </script>
 
 <template>
-  <span class="navbar-text">
+  <span class="navbar-text ms-5">
     <button
       class="btn selectable lighten-30 text-uppercase my-2 my-lg-0 login-btn"
       @click="login"

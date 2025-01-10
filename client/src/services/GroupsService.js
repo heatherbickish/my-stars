@@ -11,14 +11,15 @@ class GroupsService {
     logger.log(response.data)
   }
   async searchGroups(searchQuery) {
-    const response = await api.get(`api/groups?query=${searchQuery}`)
+    const response = await api.get(`api/groups/search?name=${searchQuery}`)
     const groups = response.data.map(group => new Group(group))
     AppState.groups = groups
   }
   async createGroup(groupData) {
     const response = await api.post('api/groups', groupData)
     const group = new Group(response.data)
-    AppState.groups.push(group)
+    // AppState.groups.unshift(group)
+    AppState.activeGroup = group
     return group
   }
   async getGroupById(groupId) {

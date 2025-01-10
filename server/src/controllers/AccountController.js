@@ -70,8 +70,8 @@ export class AccountController extends BaseController {
   async getSentOutRequests(request, response, next) {
     try {
       const userId = request.userInfo.id;
-      const friendrequests = await friendRequestsService.getSentOutRequests(userId)
-      response.send(friendrequests)
+      const friendRequests = await friendRequestsService.getSentOutRequests(userId)
+      response.send(friendRequests);
     } catch (error) {
       next(error)
     }

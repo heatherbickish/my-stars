@@ -21,10 +21,16 @@ const routes = [
     name: 'Groups',
     component: loadPage('GroupsPage')
   },
+
   {
     path: '/groups/:groupId',
     name: 'Group Details Page',
     component: loadPage('GroupDetailsPage')
+  },
+  {
+    path: '/starmap',
+    name: 'Star Map Page',
+    component: loadPage('StarMapPage')
   },
   {
     path: '/account',
@@ -43,11 +49,6 @@ const routes = [
     component: loadPage('CreatePage')
   },
   {
-    path: '/newsfeed',
-    name: 'News Feed',
-    component: loadPage('NewsFeedPage'),
-  },
-  {
     path: '/search',
     name: 'Search',
     component: loadPage('SearchPage')
@@ -56,6 +57,11 @@ const routes = [
     path: '/groups/:groupId/gallery',
     name: 'Group Gallery Page',
     component: loadPage('GroupGalleryPage')
+  },
+  {
+    path: '/groups/:groupId/events',
+    name: 'Group Events Page',
+    component: loadPage('GroupEventsPage')
   },
   {
     path: '/profiles/:profileId',

@@ -6,27 +6,22 @@ import { Friendship } from "@/models/Friendship.js";
 
 class FriendRequestsService {
   async getMySentOutRequests() {
-    AppState.mySentOutRequest = [];
-    if (AppState.account == null)
-      return
+    AppState.mySentOutRequests = [];
     const response = await api.get('account/sentoutrequests')
-    logger.log(response.data)
     const sentOutRequests = response.data.map(sentOutRequest => new FriendRequest(sentOutRequest));
-    AppState.mySentOutRequest = sentOutRequests;
+    AppState.mySentOutRequests = sentOutRequests;
   }
   async getMyReceivedRequests() {
     AppState.receivedRequests = [];
     const response = await api.get('account/receivedfriendrequests')
-    logger.log(response.data)
     const receivedRequests = response.data.map(receivedRequest => new FriendRequest(receivedRequest));
     AppState.receivedRequests = receivedRequests;
   }
   async createFriendRequest(requestData) {
     const response = await api.post('api/friendrequests', requestData)
     const friendRequest = new FriendRequest(response.data)
-    AppState.friendRequests.push(friendRequest)
-    console.log(response.data)
-    AppState.activeFriendRequest = friendRequest
+    AppState.friendRequests.push(friendRequest);
+    AppState.mySentOutRequests.push(friendRequest)
     return friendRequest
   }
   async rejectRequest(friendRequestId) {
@@ -41,8 +36,8 @@ class FriendRequestsService {
     console.log("client service output updated friendrequest:", response.data)
     const foundIndex = AppState.friendRequests.findIndex(friendRequest => friendRequest.id = friendRequestId);
     AppState.friendRequests.splice(foundIndex, 1, new FriendRequest(response.data));
-    const foundIndex1 = AppState.myFriends.findIndex(myFriend => myFriend.id == friendRequestId);
-    AppState.myFriends.splice(foundIndex1, 1);
+    const foundIndex1 = AppState.receivedRequests.findIndex(receivedRequest => receivedRequest.id == friendRequestId);
+    AppState.receivedRequests.splice(foundIndex1, 1);
   }
 }
 export const friendRequestsService = new FriendRequestsService()

@@ -6,6 +6,7 @@ import { PostSchema } from "../models/Post";
 import { CommentSchema } from "../models/Comment";
 import { FriendRequestSchema } from "../models/FriendRequest";
 import { FriendshipSchema } from '../models/Friendship';
+import { CreatorEventSchema } from "../models/CreatorEvent";
 
 class DbContext {
   Account = mongoose.model('Account', AccountSchema);
@@ -15,6 +16,7 @@ class DbContext {
   Comments = mongoose.model('Comment', CommentSchema);
   FriendRequests = mongoose.model('FriendRequest', FriendRequestSchema);
   Friendships = mongoose.model('Friendship', FriendshipSchema);
+  CreatorEvents = mongoose.model('CreatorEvent', CreatorEventSchema);
 }
 
 export const dbContext = new DbContext()

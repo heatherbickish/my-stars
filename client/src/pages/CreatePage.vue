@@ -1,31 +1,36 @@
 <script setup>
 import { AppState } from "@/AppState";
 import { groupsService } from "@/services/GroupsService";
+import { membersService } from "@/services/MembersService";
 import { logger } from "@/utils/Logger";
 import Pop from "@/utils/Pop";
-import { Modal } from "bootstrap";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 
 
 const router = useRouter()
-// const group = computed(() => AppState.groups)
-
+// const account = computed(() => AppState.account)
 const editableGroupFormData = ref({
   name: '',
   description: '',
   coverImg: ''
 })
 
+
+
 async function createGroup() {
   try {
+
     const group = await groupsService.createGroup(editableGroupFormData.value)
+    const memberData = { groupId: group.id };
+    await membersService.createMember(memberData)
     editableGroupFormData.value = {
       name: '',
       description: '',
       coverImg: ''
     }
     router.push({ name: 'Group Details Page', params: { groupId: group.id } })
+
   }
   catch (error) {
     Pop.meow(error);
@@ -40,13 +45,13 @@ async function createGroup() {
 <template>
   <section class="row">
     <div class="col-md-4">
-      <div>
-        <h1>Create Group</h1>
+      <div class="mt-2 ms-3">
+        <h4 class="text-light">Create your group</h4>
       </div>
       <form @submit.prevent="createGroup()" class="mt-5">
         <div class="form-floating mb-3">
           <input v-model="editableGroupFormData.name" type="text" class="form-control" id="name"
-            placeholder="Group Name" required>
+            placeholder="Group Name" maxlength="25" required>
           <label for="name">Group Name</label>
         </div>
         <div class="form-floating mb-3">
@@ -64,9 +69,9 @@ async function createGroup() {
         </div>
       </form>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-7">
       <div class="mt-3">
-        <h4>Group Preview</h4>
+        <h4 class="text-light">Group Preview</h4>
         <div class="mt-4">
           <img :src="editableGroupFormData.coverImg" alt="" class="cover-image">
         </div>
@@ -78,7 +83,7 @@ async function createGroup() {
       </div>
       <div>
         <div>
-          <h4>About</h4>
+          <h4 class="text-light">About</h4>
         </div>
         <p>{{ editableGroupFormData.description }}</p>
       </div>

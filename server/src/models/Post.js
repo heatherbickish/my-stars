@@ -5,7 +5,8 @@ export const PostSchema = new Schema({
   imgUrl: { type: String, maxLength: 2000 },
   groupId: { type: Schema.ObjectId, ref: 'Group' },
   body: { type: String, minLength: 3, maxLength: 1000 },
-  commentsArr: {type: []}
+  commentsArr: { type: [] },
+  likes: {type: []}
   // location: { type: String, maxLength: 100, }
 },
   {
@@ -19,9 +20,3 @@ PostSchema.virtual('creator', {
   foreignField: '_id',
   justOne: true
 })
-
-// PostSchema.virtual('comment', {
-//   localField: '_id',
-//   ref: 'Comment',
-//   foreignField: 'commentId'
-// })

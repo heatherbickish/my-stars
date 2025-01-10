@@ -5,7 +5,8 @@ export const GroupSchema = new Schema({
   name: { type: String, maxLength: 50, minLength: 3, required: true },
   description: { type: String, maxLength: 1000, minLength: 15, required: true },
   coverImg: { type: String, maxLength: 2000, required: true },
-  isVoided: { type: Boolean, required: true, default: false }
+  isVoided: { type: Boolean, required: true, default: false },
+  // isDeleted: { type: Boolean, required: true, default: false }
 },
   {
     timestamps: true,
@@ -25,3 +26,7 @@ GroupSchema.virtual('memberCount', {
   foreignField: 'groupId',
   count: true
 })
+
+GroupSchema.post('deleteOne', function (doc) {
+  console.log('%s has been deleted', doc._id);
+});

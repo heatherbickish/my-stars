@@ -2,11 +2,6 @@ import { dbContext } from "../db/DbContext"
 import { Forbidden } from "../utils/Errors"
 
 class FriendRequestsService {
-
-  async getSentOutRequests(userId) {
-    const friendrequests = await dbContext.FriendRequests.find({ senderId: userId }).populate('profile1', 'name picture').populate('profile', 'name picture')
-    return friendrequests
-  }
   async getMyReceivedRequests(userId) {
     const friendRequests = await dbContext.FriendRequests.find({ receiverId: userId, reqStatus: "pending" }).populate('profile', 'name picture')
     return friendRequests
@@ -31,10 +26,17 @@ class FriendRequestsService {
   async updateFriendRequest(friendRequestId, userId) {
     const originalRequest = await dbContext.FriendRequests.findById(friendRequestId);
     if (!originalRequest) throw new Error('No friend request to update at this Id');
-    if (originalRequest.receiverId != userId) throw new Forbidden("You are not allowed to update this friend request");
+    if (originalRequest.receiverId != userId && originalRequest.senderId != userId) throw new Forbidden("You are not allowed to update this friend request");
     originalRequest.reqStatus = "accepted";
+    if (originalRequest.receiverId == userId) { originalRequest.reqStatus = "accepted"; }
+    else { originalRequest.reqStatus = 'confirmed' }
     await originalRequest.save();
     return originalRequest;
+  }
+
+  async getSentOutRequests(userId) {
+    const friendRequests = await dbContext.FriendRequests.find({ senderId: userId }).populate('profile1', 'name picture').populate('profile', 'name picture')
+    return friendRequests
   }
 }
 export const friendRequestsService = new FriendRequestsService()
