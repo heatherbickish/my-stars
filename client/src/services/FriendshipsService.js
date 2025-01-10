@@ -17,10 +17,10 @@ class FriendshipsService {
     AppState.myFriends = [];
     // if (AppState.account == null) return
     const response = await api.get('account/friends');
-    logger.log(response.data);
+    // logger.log(response.data);
     const myFriends = response.data.map(myFriend => new Friendship(myFriend));
     AppState.myFriends = myFriends;
-    console.log('my friends', AppState.myFriends)
+    // console.log('my friends', AppState.myFriends)
   }
 
   async deleteFriendship(friendshipId) {

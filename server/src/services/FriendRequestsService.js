@@ -2,11 +2,6 @@ import { dbContext } from "../db/DbContext"
 import { Forbidden } from "../utils/Errors"
 
 class FriendRequestsService {
-
-  async getSentOutRequests(userId) {
-    const friendrequests = await dbContext.FriendRequests.find({ senderId: userId }).populate('profile1', 'name picture').populate('profile', 'name picture')
-    return friendrequests
-  }
   async getMyReceivedRequests(userId) {
     const friendRequests = await dbContext.FriendRequests.find({ receiverId: userId, reqStatus: "pending" }).populate('profile', 'name picture')
     return friendRequests
@@ -37,6 +32,11 @@ class FriendRequestsService {
     else { originalRequest.reqStatus = 'confirmed' }
     await originalRequest.save();
     return originalRequest;
+  }
+
+  async getSentOutRequests(userId) {
+    const friendRequests = await dbContext.FriendRequests.find({ senderId: userId }).populate('profile1', 'name picture').populate('profile', 'name picture')
+    return friendRequests
   }
 }
 export const friendRequestsService = new FriendRequestsService()
