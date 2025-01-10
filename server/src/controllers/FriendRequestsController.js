@@ -8,8 +8,8 @@ export class FriendRequestsController extends BaseController {
     this.router
       .use(Auth0Provider.getAuthorizedUserInfo)
       .post('', this.createFriendRequest)
-      .delete('/:friendRequestId', this.deleteFriendRequest)
       .put('/:friendRequestId', this.updateFriendRequest)
+      .delete('/:friendRequestId', this.deleteFriendRequest)
   }
 
   async createFriendRequest(request, response, next) {
@@ -17,6 +17,17 @@ export class FriendRequestsController extends BaseController {
       const requestData = request.body
       const friendRequest = await friendRequestsService.createFriendRequest(requestData)
       response.send(friendRequest)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async updateFriendRequest(request, response, next) {
+    try {
+      const friendRequestId = request.params.friendRequestId;
+      const userId = request.userInfo.id;
+      const updatedRequest = await friendRequestsService.updateFriendRequest(friendRequestId, userId);
+      response.send(updatedRequest);
     } catch (error) {
       next(error)
     }
@@ -32,18 +43,4 @@ export class FriendRequestsController extends BaseController {
       next(error)
     }
   }
-
-
-  async updateFriendRequest(request, response, next) {
-    try {
-      const friendRequestId = request.params.friendRequestId;
-      const userId = request.userInfo.id;
-      const updatedRequest = await friendRequestsService.updateFriendRequest(friendRequestId, userId);
-      response.send(updatedRequest);
-    } catch (error) {
-      next(error)
-    }
-  }
-
-
 }

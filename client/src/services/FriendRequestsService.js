@@ -39,5 +39,13 @@ class FriendRequestsService {
     const foundIndex1 = AppState.receivedRequests.findIndex(receivedRequest => receivedRequest.id == friendRequestId);
     AppState.receivedRequests.splice(foundIndex1, 1);
   }
+  async deleteRequest(friendRequestId) {
+    const response = await api.delete(`api/friendrequests/${friendRequestId}`);
+    console.log(response.data)
+    const foundIndex = AppState.friendRequests.findIndex(friendRequest => friendRequest.id == friendRequestId);
+    AppState.friendRequests.splice(foundIndex, 1);
+    const foundIndex1 = AppState.mySentOutRequests.findIndex(sentOutRequest => sentOutRequest.id == friendRequestId);
+    AppState.mySentOutRequests.splice(foundIndex1, 1);
+}
 }
 export const friendRequestsService = new FriendRequestsService()
