@@ -147,11 +147,16 @@ async function cancelEvent(eventId) {
                       </div>
                       <div>
                         <h5 class="mt-2">{{ event.title }}</h5>
+                        <b v-if="event.isCanceled == true">
+                          <h1 class="text-danger">--HAS BEEN CANCELED--</h1>
+                        </b>
                         <!-- <p>Event starts at {{ event.startDate.toLocaleDateString() }}</p> -->
-                        <p>{{ event.description }}</p>
-                        <a href="#">
-                          <p>Get Directions</p>
-                        </a>
+                        <div v-if="event.isCanceled == false">
+                          <p>{{ event.description }}</p>
+                          <a href="#">
+                            <p>Get Directions</p>
+                          </a>
+                        </div>
                       </div>
                     </div>
                   </div>
