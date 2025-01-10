@@ -17,9 +17,10 @@ export const CreatorEventSchema = new Schema(
   {
     groupId: { type: Schema.ObjectId, ref: 'Group', required: true },
     creatorId: { type: Schema.ObjectId, ref: 'Account', required: true },
-    title: { type: String, maxLength: 20, minLength: 3, required: true },
+    title: { type: String, maxLength: 25, minLength: 3, required: true },
     description: { type: String, maxLength: 2000, minLength: 5, required: true },
-    startDate: { type: Date, required: true },
+    // startDate: { type: Date, required: true },
+    isCanceled: { type: Boolean, required: true, default: false },
     location: {
       type: pointSchema,
       required: true

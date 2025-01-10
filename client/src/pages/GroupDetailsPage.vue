@@ -36,6 +36,8 @@ const editableCommentData = ref({
   groupId: route.params.groupId,
 });
 
+const showForm = ref(false)
+
 watch(
   route,
   () => {
@@ -239,7 +241,7 @@ function leaveGroupRoom() {
 
 <template>
   <div v-if="group">
-    <section class="row mb-4 pb-3 top-section">
+    <section class="row mb-md-4 pb-3 top-section mx-0">
       <div class="col-md-12">
         <div>
           <div class="big-box">
@@ -278,7 +280,7 @@ function leaveGroupRoom() {
               </div>
               <div>
                 <div v-if="group.creatorId == account?.id">
-                  <button :disabled="group.isVoided" type="button" class="btn btn-primary me-3" data-bs-toggle="modal"
+                  <button :disabled="group.isVoided" type="button" class="btn btn-primary me-4 " data-bs-toggle="modal"
                     data-bs-target="#postModal">
                     Create Post
                   </button>
@@ -288,7 +290,12 @@ function leaveGroupRoom() {
                   </button>
                 </div>
                 <div v-else>
-                  <button v-if="hasJoined && group.isVoided == false" class="btn btn-primary me-3"
+                  <router-link :to="{ name: 'Group Events Page', params: { groupId: group.id } }"
+                    v-if="hasJoined && group.isVoided == false">
+                    <button class="btn text-end me-3">Celestial Gatherings <i
+                        class="mdi mdi-creation-outline"></i></button>
+                  </router-link>
+                  <button v-if="hasJoined && group.isVoided == false" class="btn btn-primary me-4"
                     data-bs-toggle="modal" data-bs-target="#postModal">
                     Create Post
                   </button>
@@ -308,11 +315,11 @@ function leaveGroupRoom() {
     </section>
 
     <!-- SECTION posts -->
-    <section class="row justify-content-center bottom-section">
+    <section class="row justify-content-center bottom-section mx-0">
       <div class="col-md-6">
         <section v-for="post in posts" :key="post.id" class="row">
           <div>
-            <div class="col-md-12 shadow mb-5">
+            <div class="col-md-12 shadow mb-md-5">
               <div class="bg-light post-box p-3">
                 <div class="d-flex justify-content-between p-3">
                   <div class="d-flex">
@@ -330,7 +337,8 @@ function leaveGroupRoom() {
                     </div>
                   </div>
                   <div>
-                    <button v-if="post.creatorId == account?.id" @click="deletePost(post.id)" class="btn bg-warning">
+                    <button v-if="post.creatorId == account?.id" @click="deletePost(post.id)"
+                      class="btn btn-outline-danger">
                       Delete
                     </button>
                   </div>
@@ -351,19 +359,20 @@ function leaveGroupRoom() {
                       ) !== -1
                     " @click="likeUnlikePost(post.id)" class="me-5 selectable rounded p-3 d-flex align-items-center">
                       <span class="mdi mdi-thumb-up me-1 fs-4"></span>
-                      <span>Unlike</span>
+                      <span>You liked this</span>
                     </div>
                     <div v-else @click="likeUnlikePost(post.id)"
                       class="me-5 selectable rounded p-3 d-flex align-items-center">
                       <span class="mdi mdi-thumb-up-outline me-1 fs-4"></span>
                       <span>Like</span>
                     </div>
-                    <div class="selectable rounded p-3 d-flex align-items-center">
+                    <div @click="showForm = !showForm" class="selectable rounded p-3 d-flex align-items-center"
+                      role="button">
                       <span class="mdi mdi-comment-text-outline me-1 fs-4"></span>
-                      <span>Comment</span>
+                      <span>Leave a comment</span>
                     </div>
                   </div>
-                  <div class="p-3">
+                  <div v-if="showForm" class="p-3">
                     <form @submit.prevent="createComment(post.id)">
                       <div class="mb-3">
                         <textarea v-model="editableCommentData.body" class="form-control" id="body" rows="3"
@@ -413,14 +422,10 @@ function leaveGroupRoom() {
             <p>
               {{ group.description }}
             </p>
-            <p>
-              <span class="mdi mdi-map-marker"></span>
-              <span>Boise, ID</span>
-            </p>
           </div>
           <div class="bg-light snapshot-box p-3">
             <p class="fw-bold fs-3">Recent snapshots</p>
-            <section class="row">
+            <section class="row mx-0">
               <div v-for="post in firstFourPosts" :key="post.id" class="col-md-6 mb-3">
                 <div class="text-center">
                   <img :src="post.imgUrl" alt="" class="snapshot-img" />
@@ -435,19 +440,6 @@ function leaveGroupRoom() {
                 <button class="btn btn-success">See all photos</button>
               </div>
             </router-link>
-          </div>
-          <div class="bg-light snapshot-box p-3 mt-3">
-            <p class="fw-bold fs-3">Map</p>
-            <router-link :to="{ name: 'Group Events Page', params: { groupId: group.id } }">
-              <button class="btn btn-success text-end mt-3">See Events</button>
-            </router-link>
-            <section class="row">
-              <div class="col-md-6 mb-3">
-                <div>
-                  <!-- <MapsComponent /> -->
-                </div>
-              </div>
-            </section>
           </div>
         </div>
       </div>

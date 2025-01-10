@@ -36,14 +36,14 @@ async function searchGroups() {
 </script>
 
 <template>
-  <section class="row justify-content-center">
+  <section class="row justify-content-center mx-0">
     <div class="col-md-2">
       <div>
         <!-- <h2>All Groups</h2> -->
       </div>
     </div>
   </section>
-  <section class="row justify-content-around py-4">
+  <section class="row justify-content-around py-4 mx-0">
     <div class="col-md-2">
       <section class="row mb-4">
         <div class="col-md-12">
@@ -83,7 +83,7 @@ async function searchGroups() {
 
     </div>
     <div class="col-md-9">
-      <section class="row groups-box p-3">
+      <section class="row groups-box p-3 mx-0">
         <h2>A Universe of Groups</h2>
         <div v-for="group in groups" :key="group.id" class="col-md-3 mb-4">
           <GroupCard :groupProp="group" />

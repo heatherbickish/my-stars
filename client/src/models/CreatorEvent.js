@@ -21,6 +21,7 @@ export class CreatorEvent {
     this.title = data.title
     this.description = data.description
     this.location = new Location(data.location)
-    this.startDate = new Date(data.startDate)
+    // this.startDate = new Date(data.startDate)
+    this.isCanceled = data.isCanceled
   }
 }
