@@ -126,11 +126,11 @@ async function cancelEvent(eventId) {
         </div>
         <div class="col-md-8">
           <section class="row text-center justify-content-center mx-0">
-            <span>{{ group?.name }}</span>
+            <em><span>{{ group?.name }}</span></em>
             <h3>Celestial Gatherings</h3>
             <div class="col-md-10">
               <section class="row justify-content-center">
-                <div v-for="event in creatorEvents" :key="event.id" class="col-md-6">
+                <div v-for="event in creatorEvents" :key="event.id" class="col-md-7">
                   <div class="card">
                     <div class="card-body">
                       <div>
@@ -147,11 +147,16 @@ async function cancelEvent(eventId) {
                       </div>
                       <div>
                         <h5 class="mt-2">{{ event.title }}</h5>
+                        <b v-if="event.isCanceled == true">
+                          <h1 class="text-danger">--HAS BEEN CANCELED--</h1>
+                        </b>
                         <!-- <p>Event starts at {{ event.startDate.toLocaleDateString() }}</p> -->
-                        <p>{{ event.description }}</p>
-                        <a href="#">
-                          <p>Get Directions</p>
-                        </a>
+                        <div v-if="event.isCanceled == false">
+                          <p>{{ event.description }}</p>
+                          <a href="#">
+                            <p>Get Directions</p>
+                          </a>
+                        </div>
                       </div>
                     </div>
                   </div>

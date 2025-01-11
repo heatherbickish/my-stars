@@ -16,7 +16,7 @@ class FriendRequestsService {
     if (requestToDelete == null) {
       throw new Error('Invalid friend request Id');
     }
-    if (requestToDelete.receiverId != userId) {
+    if (requestToDelete.senderId != userId) {
       throw new Forbidden("You are not allowed to delete this friend request");
     }
     await requestToDelete.deleteOne();
@@ -26,10 +26,8 @@ class FriendRequestsService {
   async updateFriendRequest(friendRequestId, userId) {
     const originalRequest = await dbContext.FriendRequests.findById(friendRequestId);
     if (!originalRequest) throw new Error('No friend request to update at this Id');
-    if (originalRequest.receiverId != userId && originalRequest.senderId != userId) throw new Forbidden("You are not allowed to update this friend request");
+    if (originalRequest.receiverId != userId) throw new Forbidden("You are not allowed to update this friend request");
     originalRequest.reqStatus = "accepted";
-    if (originalRequest.receiverId == userId) { originalRequest.reqStatus = "accepted"; }
-    else { originalRequest.reqStatus = 'confirmed' }
     await originalRequest.save();
     return originalRequest;
   }
