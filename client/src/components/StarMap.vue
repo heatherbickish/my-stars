@@ -137,8 +137,7 @@ const myConfig = {
     show: false,
     stroke: "#cccccc", // Line
     width: 1.0,
-    fill: "#000000", // Area below horizon
-    opacity: 0.5,
+    fill: "#FFFFFF", // Area below horizon
   },
   daylight: {
     //Show day sky as a gradient, if location is set and map projection is hemispheric
@@ -236,7 +235,7 @@ onMounted(() => {
 #celestial-map {
   background-size: cover;
   background-attachment: fixed;
-  background-image: url(https://images.unsplash.com/photo-1449100840062-49e9aca7c8ec?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8ODB8fHNwYWNlfGVufDB8fDB8fHwy);
+  // background-image: url(https://images.unsplash.com/photo-1449100840062-49e9aca7c8ec?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8ODB8fHNwYWNlfGVufDB8fDB8fHwy);
   min-height: 94dvh;
   padding-top: 1.5em;
 }
