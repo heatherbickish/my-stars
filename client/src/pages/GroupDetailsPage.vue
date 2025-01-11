@@ -241,7 +241,7 @@ function leaveGroupRoom() {
 
 <template>
   <div v-if="group">
-    <section class="row mb-md-4 pb-3 top-section mx-0">
+    <section class="row pb-3 top-section mx-0">
       <div class="col-md-12">
         <div>
           <div class="big-box">
@@ -258,10 +258,10 @@ function leaveGroupRoom() {
                 <div class="d-flex align-items-center">
                   <h1>{{ group.name }}</h1>
                   <span v-if="group.creatorId == account?.id"
-                    class="fs-5 fw-bold bg-success text-light ms-4 span-pill px-2">Creator</span>
+                    class="fs-5 fw-bold bg-success text-light ms-md-4 span-pill px-2">Creator</span>
                 </div>
                 <div class="d-flex">
-                  <p class="me-3">{{ group.memberCount }} members</p>
+                  <p class="me-md-3">{{ group.memberCount }} members</p>
                   <div v-for="member in members" :key="member.id" class="text-start">
                     <span>
                       <router-link :to="{
@@ -319,7 +319,7 @@ function leaveGroupRoom() {
       <div class="col-md-6">
         <section v-for="post in posts" :key="post.id" class="row">
           <div>
-            <div class="col-md-12 shadow mb-md-5">
+            <div class="col-md-12 shadow mb-2 mb-md-3">
               <div class="bg-light post-box p-3">
                 <div class="d-flex justify-content-between p-3">
                   <div class="d-flex">
@@ -415,15 +415,15 @@ function leaveGroupRoom() {
 
         <!-- SECTION about/group description and pics -->
       </div>
-      <div class="col-md-4">
+      <div class="col-md-4 order-md-last order-first mt-5 mt-md-0">
         <div>
-          <div class="p-3 about-box bg-light mb-3">
+          <div class="p-3 about-box bg-light mb-3 ">
             <h2 class="fw-bold ">About</h2>
             <p>
               {{ group.description }}
             </p>
           </div>
-          <div class="bg-light snapshot-box p-3">
+          <div class="bg-light snapshot-box p-3 d-none d-md-block">
             <h2 class="fw-bold ">Recent snapshots</h2>
             <section class="row mx-0">
               <div v-for="post in firstFourPosts" :key="post.id" class="col-md-6 mb-3">
@@ -516,5 +516,11 @@ function leaveGroupRoom() {
 
 .bottom-section {
   margin-top: 7%;
+}
+
+@media screen and (max-width: 768px) {
+  .about-box {
+    margin-top: 125px;
+  }
 }
 </style>
