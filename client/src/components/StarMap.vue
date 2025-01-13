@@ -225,7 +225,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
+  <div class="">
     <!-- <button @click="showPlanets">Toggle Planets 🌎</button> -->
     <div class="d-flex justify-content-center" id="celestial-map"></div>
   </div>
@@ -238,5 +238,12 @@ onMounted(() => {
   // background-image: url(https://images.unsplash.com/photo-1449100840062-49e9aca7c8ec?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8ODB8fHNwYWNlfGVufDB8fDB8fHwy);
   min-height: 94dvh;
   padding-top: 1.5em;
+}
+
+@media (max-width: 600px) {
+  #celestialMap {
+    height: 20vh;
+    /* Adjust height on smaller screens */
+  }
 }
 </style>
